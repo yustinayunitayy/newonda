@@ -1,38 +1,23 @@
----
-import SEO from '../components/seo/SEO.astro'
-import JsonLd from '../components/seo/JsonLd.astro'
-import GlobalLoader from '../components/layout/GlobalLoader'
-import { resolveSeo } from '../lib/data/seo-fetch'
-import GTMHeader from '../components/seo/GTMHeader.astro'
-import GTMBody from '../components/seo/GTMBody.astro'
-
-interface Props {
-  title?: string
-  description?: string
-  ogImage?: string
-  noIndex?: boolean
-}
-
-const { title, description, ogImage, noIndex = false } = Astro.props
-const isHome = Astro.url.pathname === '/'
-
-const seo = await resolveSeo({ title, description, ogImage })
----
-
 <!doctype html>
-<html lang="id">
-  <head>
-    <GTMHeader/>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <SEO {...seo} {noIndex} />
-    <JsonLd />
-  </head>
-  <body>
-    <GTMBody/>
-    <GlobalLoader client:only="react" isHome={isHome} />
-    <slot />
-  </body>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Astro Basics</title>
+	</head>
+	<body>
+		<slot />
+	</body>
 </html>
+
+<style>
+	html,
+	body {
+		margin: 0;
+		width: 100%;
+		height: 100%;
+	}
+</style>
