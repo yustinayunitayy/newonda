@@ -18,8 +18,14 @@ const {
 } = Astro.props
 
 const fullTitle = title ? titleTemplate.replace('%s', title) : siteName
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href
-const ogImageUrl = ogImage.startsWith('http') ? ogImage : new URL(ogImage, Astro.site).href
+const canonicalUrl = Astro.site 
+  ? new URL(Astro.url.pathname, Astro.site).href 
+  : Astro.url.pathname
+const ogImageUrl = ogImage.startsWith('http') 
+  ? ogImage 
+  : Astro.site 
+    ? new URL(ogImage, Astro.site).href 
+    : ogImage
 ---
 
 <title>{fullTitle}</title>
