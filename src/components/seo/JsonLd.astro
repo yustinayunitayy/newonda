@@ -1,7 +1,7 @@
 ---
-import { SiteSettings } from '../../lib/data/site-settings'
+import { fetchSiteSettings } from '../../lib/data/site-settings'
 
-const site = await SiteSettings()
+const site = await fetchSiteSettings()
 
 const jsonLd = {
   '@context': 'https://schema.org',

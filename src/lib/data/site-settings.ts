@@ -31,6 +31,6 @@ export interface SiteSettings {
   copyright?: string;
 }
 
-export async function SiteSettings(): Promise<SiteSettings | null> {
+export async function fetchSiteSettings(): Promise<SiteSettings | null> {
   return getOne("site-settings", { title: { equals: "Site Settings" } }, 1);
 }
