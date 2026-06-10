@@ -1,0 +1,26 @@
+---
+import { SiteSettings } from '../../lib/data/site-settings'
+
+const site = await SiteSettings()
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'ONDA Sanitary & Plumbing',
+  url: Astro.site,
+  logo: site?.logo?.url ?? '',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site?.headOffice?.address ?? '',
+  },
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: site?.contact?.phone ?? '',
+    email: site?.contact?.email ?? '',
+    contactType: 'customer service',
+  },
+  sameAs: site?.socialMedia?.map((s: any) => s.link) ?? [],
+}
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
