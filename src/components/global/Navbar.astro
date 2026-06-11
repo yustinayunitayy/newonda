@@ -80,19 +80,19 @@ const currentPath = Astro.url.pathname
     </button>
   </nav>
 </header>
-
 <!-- Mobile Sidebar -->
 <div id="drawer" class="pointer-events-none fixed inset-0 z-50 lg:hidden">
+  <!-- Overlay nutup seluruh layar -->
   <div
     id="drawer-overlay"
-    class="absolute inset-x-0 top-16 bottom-0 bg-black/50 opacity-0 transition-opacity duration-300"
+    class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300"
   >
   </div>
   <div
     id="drawer-panel"
     class="absolute top-0 bottom-0 left-0 w-72 -translate-x-full bg-white shadow-xl transition-transform duration-300"
   >
-    <div class="flex h-16 items-center border-b border-gray-100 px-7">
+    <div class="flex h-16 items-center border-b border-gray-100 px-4">
       <a href="/" id="drawer-logo">
         <Image src={LogoBlue} alt="ONDA Logo" class="h-8 w-auto" loading="eager" />
       </a>
@@ -150,8 +150,6 @@ const currentPath = Astro.url.pathname
   overlay?.addEventListener('click', closeDrawer)
   document.getElementById('drawer-logo')?.addEventListener('click', closeDrawer)
   window.addEventListener('resize', () => {
-    if (window.innerWidth >= 1024 && isOpen) {
-      closeDrawer()
-    }
+    if (window.innerWidth >= 1024 && isOpen) closeDrawer()
   })
 </script>
