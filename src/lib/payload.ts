@@ -9,14 +9,14 @@ interface FetchOptions {
   page?: number;
 }
 
-export async function fetchFromCMS({
+export async function fetchFromCMS<T = any>({
   collection,
   where,
   limit,
   sort,
   depth,
   page,
-}: FetchOptions) {
+}: FetchOptions): Promise<T | null> {
   try {
     if (!PAYLOAD_API) {
       console.error("PAYLOAD_URL not set");
@@ -51,19 +51,24 @@ export async function fetchFromCMS({
       return null;
     }
 
-    return res.json();
+    return res.json() as Promise<T>;
   } catch (error) {
     console.error(`Error fetching ${collection}:`, error);
     return null;
   }
 }
 
-export async function getOne(
+export async function getOne<T = any>(
   collection: string,
   where: Record<string, any>,
   depth = 1,
-) {
-  const data = await fetchFromCMS({ collection, where, limit: 1, depth });
+): Promise<T | null> {
+  const data = await fetchFromCMS<{ docs: T[] }>({
+    collection,
+    where,
+    limit: 1,
+    depth,
+  });
   return data?.docs?.[0] ?? null;
 }
 

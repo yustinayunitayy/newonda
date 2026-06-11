@@ -1,7 +1,8 @@
 ---
+import '../styles/global.css'
 import SEO from '../components/seo/SEO.astro'
 import JsonLd from '../components/seo/JsonLd.astro'
-import GlobalLoader from '../components/layout/GlobalLoader'
+import GlobalLoader from '../components/react/GlobalLoader'
 import { resolveSeo } from '../lib/data/seo-fetch'
 import GTMHeader from '../components/seo/GTMHeader.astro'
 import GTMBody from '../components/seo/GTMBody.astro'
@@ -22,16 +23,22 @@ const seo = await resolveSeo({ title, description, ogImage })
 <!doctype html>
 <html lang="id">
   <head>
-    <GTMHeader/>
+    <GTMHeader />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
     <SEO {...seo} {noIndex} />
     <JsonLd />
   </head>
-  <body>
-    <GTMBody/>
+  <body class="bg-black">
+    <GTMBody />
     <GlobalLoader client:only="react" isHome={isHome} />
     <slot />
   </body>

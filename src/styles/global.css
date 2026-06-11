@@ -1,1 +1,16 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@theme {
+  --color-onda-blue: #005da6;
+  --color-onda-yellow: ##fedd00;
+  --color-light-blue-shade: #d0eaff;
+  --color-light-yellow-shade: #fff8ca;
+  --color-dark-blue-shade: #002440;
+  --font: 'Montserrat', sans-serif;
+}
+
+@layer base {
+  body {
+    font-family: var(--font);
+  }
+}

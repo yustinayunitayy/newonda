@@ -4,6 +4,7 @@ import { loadEnv } from "vite";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
+import icon from 'astro-icon'
 
 const env = loadEnv("", process.cwd(), "");
 console.log("SITE_URL:", env.SITE_URL);
@@ -23,5 +24,5 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 
-  integrations: [react(), sitemap()],
+  integrations: [react(), sitemap(), icon()],
 });
