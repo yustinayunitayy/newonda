@@ -87,13 +87,13 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
         <video
           autoPlay
           muted
-          playsInline
           loop
-          preload="auto"
-          onCanPlayThrough={() => setVideoReady(true)}
-          className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-700 ${
-            videoReady ? 'opacity-100' : 'opacity-0'
-          }`}
+          playsInline
+          preload="metadata"
+          disablePictureInPicture
+          controls={false}
+          className="absolute inset-0 h-full w-full object-cover"
+          onCanPlay={() => setVideoReady(true)}
         >
           <source src={videoUrl} type="video/mp4" />
         </video>

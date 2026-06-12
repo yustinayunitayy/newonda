@@ -9,9 +9,7 @@ const page = await getPage('home')
 
 const heroBlock = page?.blocks.find((b) => b.blockType === 'hero') as HeroBlock | undefined
 
-const videoUrl = heroBlock?.video?.streamUid
-  ? `https://customer-${import.meta.env.CF_CUSTOMER}.cloudflarestream.com/${heroBlock.video.streamUid}/downloads/default.mp4`
-  : undefined
+const videoUrl = heroBlock?.video?.url
 ---
 
 <Layout>
