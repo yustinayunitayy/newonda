@@ -81,7 +81,7 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
   }
 
   return (
-    <section className="relative min-h-[70svh] w-full overflow-hidden bg-black pb-24 md:min-h-screen">
+    <section className="relative min-h-svh w-full overflow-hidden bg-black pb-24 md:min-h-screen">
       {!videoReady && mediaType === 'video' && <div className="absolute inset-0 bg-black" />}
       {mediaType === 'video' ? (
         <video
