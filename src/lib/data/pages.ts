@@ -1,43 +1,8 @@
 import { fetchFromCMS } from '../payload'
+import type { HeroBlock } from './blocks'
+import type { StatsBarBlock } from './blocks'
 
-export interface MediaFile {
-  url: string
-  alt?: string
-  streamUid?: string
-}
-
-type TextColor = 'white' | 'black' | 'blue' | 'yellow'
-export type ButtonVariant =
-  | 'blue'
-  | 'blue-outline'
-  | 'white'
-  | 'white-outline'
-  | 'yellow'
-  | 'transparent'
-type ButtonType = 'link' | 'scroll'
-
-export interface HeroButton {
-  text: string
-  type: ButtonType
-  url?: string
-  scrollTarget?: string
-  variant: ButtonVariant
-}
-
-export interface HeroBlock {
-  blockType: 'hero'
-  mediaType: 'video' | 'image'
-  video?: MediaFile
-  image?: MediaFile
-  headingText: string
-  headingTextColor: TextColor
-  subheadingText?: string
-  subheadingTextColor?: TextColor
-  buttonEnabled: boolean
-  buttons?: HeroButton[]
-}
-
-export type PageBlock = HeroBlock
+export type PageBlock = HeroBlock | StatsBarBlock
 
 export interface Page {
   id: number
@@ -46,12 +11,8 @@ export interface Page {
   blocks: PageBlock[]
 }
 
-interface PayloadResponse<T> {
-  docs: T[]
-}
-
 export async function getPage(slug: string) {
-  const data = await fetchFromCMS<PayloadResponse<Page>>({
+  const data = await fetchFromCMS<{ docs: Page[] }>({
     collection: 'pages',
     where: { slug: { equals: slug } },
     limit: 1,

@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'motion/react'
 import { useEffect, useState } from 'react'
-import type { HeroBlock } from '../../lib/data/pages'
+import type { HeroBlock } from '../../lib/data/blocks'
 import { textColorMap, buttonStyleMap } from '../../lib/colour'
 
 type Phase = 'intro' | 'content' | 'done'
@@ -81,7 +81,7 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
   }
 
   return (
-    <section className="relative min-h-screen w-full overflow-hidden bg-black">
+    <section className="relative min-h-[70svh] w-full overflow-hidden bg-black pb-24 md:min-h-screen">
       {!videoReady && mediaType === 'video' && <div className="absolute inset-0 bg-black" />}
       {mediaType === 'video' ? (
         <video

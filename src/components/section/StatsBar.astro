@@ -1,0 +1,138 @@
+---
+type Props = {
+  items: { value: string; label: string }[]
+}
+
+const { items } = Astro.props
+const useMarquee = items.length > 4
+---
+
+<div class="stats-bar-outer" id="stats-bar">
+  <div class="stats-bar-inner">
+    {useMarquee ? (
+      <div class="marquee-track">
+        {[...items, ...items].map((item) => (
+          <div class="stat-item">
+            <p class="value">{item.value}</p>
+            <p class="label">{item.label}</p>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <div class="stats-grid">
+        {items.map((item) => (
+          <div class="stat-item">
+            <p class="value">{item.value}</p>
+            <p class="label">{item.label}</p>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</div>
+
+<style>
+  .stats-bar-outer {
+    position: relative;
+    z-index: 10;
+    margin-top: -3rem;
+    padding: 0 1.5rem;
+    opacity: 0;
+    transform: translateY(2rem);
+    /* Tambah ini — bikin dia invisible dari layout perspective */
+    visibility: hidden;
+    transition: opacity 0.7s ease, transform 0.7s ease, visibility 0s linear 0s;
+  }
+
+ .stats-bar-outer.visible {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+    transition: opacity 0.7s ease, transform 0.7s ease, visibility 0s linear 0s;
+  }
+  .stats-bar-inner {
+    background: white;
+    border: 1.5px solid #bfdbfe;
+    border-radius: 1rem;
+    padding: 1.25rem 0;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .stat-item {
+    text-align: center;
+    padding: 0.5rem 1rem;
+    border-right: 1px solid #bfdbfe;
+  }
+
+  .stat-item:last-child {
+    border-right: none;
+  }
+
+  .value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin: 0 0 4px;
+  }
+
+  .label {
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #2563eb;
+    margin: 0;
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 20s linear infinite;
+  }
+
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+
+  .marquee-track .stat-item {
+    flex-shrink: 0;
+    padding: 0 2.5rem;
+    border-right: 1px solid #bfdbfe;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  const el = document.getElementById('stats-bar')
+  const alreadySeen = sessionStorage.getItem('intro-seen')
+
+  if (el) {
+    if (alreadySeen) {
+      // Revisit — langsung visible tanpa delay
+      el.classList.add('visible')
+    } else {
+      // First visit — tunggu intro selesai (5s intro + 1.2s transition + buffer)
+      setTimeout(() => {
+        el.classList.add('visible')
+      }, 6800)
+    }
+  }
+</script>

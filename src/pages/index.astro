@@ -2,17 +2,23 @@
 import Layout from '../layouts/Layout.astro'
 import Navbar from '../components/global/Navbar.astro'
 import Hero from '../components/react/IntroHero'
+import StatsBar from '../components/section/StatsBar.astro'
 import { getPage } from '../lib/data/pages'
-import type { HeroBlock } from '../lib/data/pages'
+import type { HeroBlock } from '../lib/data/blocks/'
+import type { StatsBarBlock } from '../lib/data/blocks/'
 
 const page = await getPage('home')
 
-const heroBlock = page?.blocks.find((b) => b.blockType === 'hero') as HeroBlock | undefined
+const heroBlock = page?.blocks.find((b) => b.blockType === 'intro-hero') as HeroBlock | undefined
+const statsBarBlock = page?.blocks.find((b) => b.blockType === 'statsBar') as StatsBarBlock | undefined
 
 const videoUrl = heroBlock?.video?.url
 ---
 
 <Layout>
   <Navbar variant="transparent" />
-  {heroBlock && <Hero client:only="react" {...heroBlock} videoUrl={videoUrl} />}
+  <div class="relative">
+    {heroBlock && <Hero client:only="react" {...heroBlock} videoUrl={videoUrl} />}
+    {statsBarBlock && <StatsBar items={statsBarBlock.items} />}
+  </div>
 </Layout>
