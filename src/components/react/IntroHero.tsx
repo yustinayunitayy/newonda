@@ -28,13 +28,14 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
 
   useEffect(() => {
     if (phase !== 'intro') return
+    if (mediaType === 'video' && !videoReady) return // tunggu video siap
 
     const t = setTimeout(() => {
       setPhase('content')
     }, 5000)
 
     return () => clearTimeout(t)
-  }, [phase])
+  }, [phase, videoReady, mediaType])
 
   useEffect(() => {
     if (phase !== 'content') return
@@ -89,7 +90,7 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           disablePictureInPicture
           controls={false}
           className="absolute inset-0 h-full w-full object-cover"
