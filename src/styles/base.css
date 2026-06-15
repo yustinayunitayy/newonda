@@ -1,0 +1,14 @@
+.marquee-active {
+  animation: marquee 25s linear infinite;
+  will-change: transform;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(var(--marquee-distance));
+  }
+}

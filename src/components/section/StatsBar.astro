@@ -2,136 +2,48 @@
 type Props = {
   items: { value: string; label: string }[]
 }
-
 const { items } = Astro.props
 const useMarquee = items.length > 4
 ---
 
-<div class="stats-bar-outer" id="stats-bar">
-  <div class="stats-bar-inner">
-    {useMarquee ? (
-      <div class="marquee-track">
-        {[...items, ...items].map((item) => (
-          <div class="stat-item">
-            <p class="value">{item.value}</p>
-            <p class="label">{item.label}</p>
+<div
+  id="stats-bar"
+  class="invisible relative z-10 -mt-12 translate-y-8 px-6 opacity-0 transition-[opacity,transform] duration-700 ease-out"
+>
+  <div class="overflow-hidden rounded-2xl border border-blue-100 bg-white py-7 shadow-xl">
+    <div class={useMarquee ? 'marquee-track flex w-max' : 'grid grid-cols-4'}>
+      {
+        [...items, ...items].map((item, i) => (
+          <div
+            data-marquee-item
+            class:list={[
+              'shrink-0 px-10 text-center',
+              !useMarquee && i < items.length - 1 && 'border-onda-blue/20 border-r',
+              useMarquee && 'border-onda-blue/20 border-r',
+            ]}
+          >
+            <p class="text-onda-blue mb-1 text-xl font-bold">{item.value}</p>
+            <p class="text-onda-blue text-[0.65rem] tracking-[0.12em] uppercase">{item.label}</p>
           </div>
-        ))}
-      </div>
-    ) : (
-      <div class="stats-grid">
-        {items.map((item) => (
-          <div class="stat-item">
-            <p class="value">{item.value}</p>
-            <p class="label">{item.label}</p>
-          </div>
-        ))}
-      </div>
-    )}
+        ))
+      }
+    </div>
   </div>
 </div>
-
-<style>
-  .stats-bar-outer {
-    position: relative;
-    z-index: 10;
-    margin-top: -3rem;
-    padding: 0 1.5rem;
-    opacity: 0;
-    transform: translateY(2rem);
-    /* Tambah ini — bikin dia invisible dari layout perspective */
-    visibility: hidden;
-    transition: opacity 0.7s ease, transform 0.7s ease, visibility 0s linear 0s;
-  }
-
- .stats-bar-outer.visible {
-    opacity: 1;
-    transform: translateY(0);
-    visibility: visible;
-    transition: opacity 0.7s ease, transform 0.7s ease, visibility 0s linear 0s;
-  }
-  .stats-bar-inner {
-    background: white;
-    border: 1.5px solid #bfdbfe;
-    border-radius: 1rem;
-    padding: 1.25rem 0;
-    overflow: hidden;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-  }
-
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .stat-item {
-    text-align: center;
-    padding: 0.5rem 1rem;
-    border-right: 1px solid #bfdbfe;
-  }
-
-  .stat-item:last-child {
-    border-right: none;
-  }
-
-  .value {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #1e3a8a;
-    margin: 0 0 4px;
-  }
-
-  .label {
-    font-size: 0.65rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #2563eb;
-    margin: 0;
-  }
-
-  .marquee-track {
-    display: flex;
-    width: max-content;
-    animation: marquee 20s linear infinite;
-  }
-
-  .marquee-track:hover {
-    animation-play-state: paused;
-  }
-
-  .marquee-track .stat-item {
-    flex-shrink: 0;
-    padding: 0 2.5rem;
-    border-right: 1px solid #bfdbfe;
-  }
-
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .marquee-track {
-      animation: none;
-      flex-wrap: wrap;
-      justify-content: center;
-      width: 100%;
-    }
-  }
-</style>
-
 <script>
+  import { initMarquee } from '../../utils/marquee'
+  initMarquee('.marquee-track')
+
   const el = document.getElementById('stats-bar')
   const alreadySeen = sessionStorage.getItem('intro-seen')
-
   if (el) {
     if (alreadySeen) {
-      // Revisit — langsung visible tanpa delay
-      el.classList.add('visible')
+      el.classList.remove('opacity-0', 'translate-y-8', 'invisible')
+      el.classList.add('opacity-100', 'translate-y-0', 'visible')
     } else {
-      // First visit — tunggu intro selesai (5s intro + 1.2s transition + buffer)
       setTimeout(() => {
-        el.classList.add('visible')
+        el.classList.remove('opacity-0', 'translate-y-8', 'invisible')
+        el.classList.add('opacity-100', 'translate-y-0', 'visible')
       }, 6800)
     }
   }
