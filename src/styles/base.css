@@ -1,4 +1,6 @@
 .marquee-active {
+  display: flex;
+  width: max-content;
   animation: marquee 25s linear infinite;
   will-change: transform;
 }
