@@ -2,7 +2,7 @@ export function initMarquee(trackSelector: string) {
   const track = document.querySelector<HTMLElement>(trackSelector)
   if (!track) return
 
-  const items = track.querySelectorAll('[data-marquee-item]')
+  const items = track.querySelectorAll<HTMLElement>('[data-marquee-item]')
   const itemCount = items.length
 
   const isMobile = window.innerWidth < 768
@@ -10,21 +10,29 @@ export function initMarquee(trackSelector: string) {
   const shouldMarquee = isMobile ? itemCount > 2 : itemCount > 5
 
   if (!shouldMarquee) {
-    track.classList.remove('marquee-track')
+    track.classList.remove('marquee-active')
     return
   }
 
   if (track.dataset.initialized) return
-
   track.dataset.initialized = 'true'
+
+  // ukur lebar 1 kolom dari container PARENT (sebelum di-flex-kan)
+  const containerWidth = track.parentElement!.getBoundingClientRect().width
+  const columns = isMobile ? 2 : 5
+  const itemWidth = containerWidth / columns
+
+  track.style.setProperty('--marquee-item-width', `${itemWidth}px`)
 
   items.forEach((item) => {
     track.appendChild(item.cloneNode(true))
   })
 
-  const originalWidth = track.scrollWidth / 2
+  const setWidth = itemWidth * itemCount
+  const pixelsPerSecond = 80
+  const duration = setWidth / pixelsPerSecond
 
-  track.style.setProperty('--marquee-distance', `-${originalWidth}px`)
+  track.style.setProperty('--marquee-duration', `${duration}s`)
 
   track.classList.add('marquee-active')
 }

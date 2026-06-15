@@ -1,16 +1,31 @@
+.marquee-track {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 768px) {
+  .marquee-track {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
 .marquee-active {
   display: flex;
   width: max-content;
-  animation: marquee 25s linear infinite;
+  animation: marquee var(--marquee-duration, 25s) linear infinite;
   will-change: transform;
+}
+
+.marquee-active [data-marquee-item] {
+  width: var(--marquee-item-width);
+  flex: 0 0 var(--marquee-item-width);
 }
 
 @keyframes marquee {
   from {
     transform: translateX(0);
   }
-
   to {
-    transform: translateX(var(--marquee-distance));
+    transform: translateX(-50%);
   }
 }
