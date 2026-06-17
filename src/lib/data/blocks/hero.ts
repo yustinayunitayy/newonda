@@ -21,7 +21,7 @@ export interface HeroButton {
 }
 
 export interface HeroBlock {
-  blockType: 'intro-hero'
+  blockType: 'hero'
   mediaType: 'video' | 'image'
   video?: { url: string; alt?: string }
   image?: { url: string; alt?: string }

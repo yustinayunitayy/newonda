@@ -1,2 +1,2 @@
-export * from './intro-hero'
+export * from './hero'
 export * from './stats-bar'
