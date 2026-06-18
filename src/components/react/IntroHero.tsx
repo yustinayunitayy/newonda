@@ -1,10 +1,66 @@
 import { motion, AnimatePresence } from 'motion/react'
 import { useEffect, useState } from 'react'
 import type { HeroBlock } from '../../lib/data/blocks'
-import { textColorMap, textPositionMap, buttonStyleMap } from '../../lib/colour'
+import {
+  textColorMap,
+  textPositionMap,
+  buttonStyleMap,
+  buttonHoverStyleMap,
+} from '../../lib/colour'
 
 type Phase = 'intro' | 'content' | 'done'
 
+// ─── Hover-aware button ───────────────────────────────────────────────────────
+function HeroButton({
+  style,
+  hoverStyle,
+  onClick,
+  href,
+  target,
+  children,
+  className,
+}: {
+  style: React.CSSProperties
+  hoverStyle: React.CSSProperties
+  onClick?: () => void
+  href?: string
+  target?: string
+  children: React.ReactNode
+  className: string
+}) {
+  const [hovered, setHovered] = useState(false)
+  const merged = { ...style, ...(hovered ? hoverStyle : {}) }
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        target={target}
+        rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+        className={className}
+        style={merged}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        {children}
+      </a>
+    )
+  }
+
+  return (
+    <button
+      className={className}
+      style={merged}
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {children}
+    </button>
+  )
+}
+
+// ─── Hero ────────────────────────────────────────────────────────────────────
 export default function Hero(block: HeroBlock & { videoUrl?: string }) {
   const {
     headingText,
@@ -71,6 +127,9 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
     document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' })
   }
 
+  const btnClass =
+    'rounded-xl px-3 py-2 text-xs font-medium md:px-8 md:text-sm transition-all duration-200 cursor-pointer'
+
   return (
     <section className="relative min-h-svh w-full overflow-hidden bg-black pb-24 md:min-h-screen">
       {!videoReady && mediaType === 'video' && <div className="absolute inset-0 bg-black" />}
@@ -103,10 +162,11 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
         {phase !== 'intro' && (
           <motion.div
             key="content"
-            className="absolute inset-0 flex flex-col px-6 pb-20"
+            className="absolute inset-0 flex flex-col px-10 pb-20 md:px-16"
             style={{
               justifyContent: position.justifyContent,
               alignItems: position.alignItems,
+              gap: position.gap,
             }}
           >
             <motion.h1
@@ -114,7 +174,12 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="text-base leading-tight font-bold md:text-3xl"
-              style={{ color: headingColor, textAlign: position.textAlign as any }}
+              style={{
+                color: headingColor,
+                textAlign: position.textAlign as React.CSSProperties['textAlign'],
+                textShadow: '0 2px 12px rgba(0,0,0,0.5)',
+                maxWidth: position.maxWidth,
+              }}
             >
               {headingText}
             </motion.h1>
@@ -124,8 +189,13 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-                className="max-w-xl text-sm md:text-lg"
-                style={{ color: subheadingColor, textAlign: position.textAlign as any }}
+                className="text-sm md:text-lg"
+                style={{
+                  color: subheadingColor,
+                  textAlign: position.textAlign as React.CSSProperties['textAlign'],
+                  textShadow: '0 1px 8px rgba(0,0,0,0.4)',
+                  maxWidth: position.maxWidth,
+                }}
               >
                 {subheadingText}
               </motion.p>
@@ -139,25 +209,28 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
                 className="mt-2 flex flex-wrap items-center gap-3"
                 style={{ justifyContent: position.alignItems }}
               >
-                {buttons?.map((btn, i) =>
+                {buttons.map((btn, i) =>
                   btn.type === 'scroll' ? (
-                    <button
+                    <HeroButton
                       key={i}
+                      className={btnClass}
+                      style={buttonStyleMap[btn.variant]}
+                      hoverStyle={buttonHoverStyleMap[btn.variant]}
                       onClick={() => handleScroll(btn.scrollTarget ?? '')}
-                      className="rounded-xl px-3 py-2 text-xs font-medium md:px-8 md:text-sm"
-                      style={buttonStyleMap[btn.variant]}
                     >
                       {btn.text}
-                    </button>
+                    </HeroButton>
                   ) : (
-                    <a
+                    <HeroButton
                       key={i}
-                      href={btn.url}
-                      className="rounded-xl px-3 py-2 text-xs font-medium md:px-8 md:text-sm"
+                      className={btnClass}
                       style={buttonStyleMap[btn.variant]}
+                      hoverStyle={buttonHoverStyleMap[btn.variant]}
+                      href={btn.url}
+                      target={btn.openInNewTab ? '_blank' : undefined}
                     >
                       {btn.text}
-                    </a>
+                    </HeroButton>
                   )
                 )}
               </motion.div>

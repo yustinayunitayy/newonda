@@ -5,7 +5,7 @@ export function initMarquee(trackSelector: string) {
   const items = track.querySelectorAll<HTMLElement>('[data-marquee-item]')
   const itemCount = items.length
 
-  const isMobile = /Mobi|Android/i.test(navigator.userAgent)
+  const isMobile = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent)
 
   const shouldMarquee = isMobile ? itemCount > 2 : itemCount > 5
   console.log({ itemCount, isMobile, shouldMarquee })

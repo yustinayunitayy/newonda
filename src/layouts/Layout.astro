@@ -19,7 +19,6 @@ const { title, description, ogImage, noIndex = false } = Astro.props
 const isHome = Astro.url.pathname === '/'
 
 const seo = await resolveSeo({ title, description, ogImage })
-
 ---
 
 <!doctype html>
@@ -38,7 +37,7 @@ const seo = await resolveSeo({ title, description, ogImage })
       eruda.init()
     </script>
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
       rel="stylesheet"
     />
     <SEO {...seo} {noIndex} />
@@ -50,4 +49,3 @@ const seo = await resolveSeo({ title, description, ogImage })
     <slot />
   </body>
 </html>
-

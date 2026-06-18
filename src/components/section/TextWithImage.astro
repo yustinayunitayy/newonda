@@ -1,0 +1,100 @@
+---
+import { RichTextRenderer } from '../react/RichTextRenderer'
+import type { TextWithImageBlock } from '../../lib/data/blocks/text-with-image'
+import { buttonStyleMap } from '../../lib/colour'
+
+type Props = TextWithImageBlock
+
+const {
+  layout = 'text-left',
+  miniLabel,
+  heading,
+  body,
+  buttonEnabled,
+  buttons,
+  image,
+} = Astro.props
+
+const isTextLeft = layout === 'text-left'
+---
+
+<section class="px-10 py-16 md:px-24 md:py-24">
+  <div
+    class:list={[
+      'flex flex-col items-center gap-10 md:gap-32',
+      isTextLeft ? 'md:flex-row' : 'md:flex-row-reverse',
+    ]}
+  >
+    <!-- Text side -->
+    <div class="flex flex-1 flex-col gap-4">
+      {
+        miniLabel && (
+          <p class="text-onda-blue text-xs font-semibold tracking-widest uppercase">{miniLabel}</p>
+        )
+      }
+
+      <h2 class="text-onda-blue text-xl leading-tight font-bold md:text-4xl">
+        {heading}
+      </h2>
+
+      {body && <RichTextRenderer content={body} client:load />}
+
+      {
+        buttonEnabled && buttons && buttons.length > 0 && (
+          <div class="flex flex-wrap gap-3">
+            {buttons.map((btn) =>
+              btn.buttonType === 'scroll' ? (
+                <button
+                  data-scroll-target={btn.scrollTarget}
+                  class="cursor-pointer rounded-xl text-sm font-semibold transition-all duration-200"
+                  style={Object.entries(buttonStyleMap[btn.variant] ?? {})
+                    .map(([k, v]) => `${k.replace(/([A-Z])/g, '-$1').toLowerCase()}:${v}`)
+                    .join(';')}
+                >
+                  {btn.text}
+                </button>
+              ) : (
+                <a
+                  href={btn.url}
+                  target={btn.openInNewTab ? '_blank' : '_self'}
+                  rel={btn.openInNewTab ? 'noopener noreferrer' : undefined}
+                  class="rounded-xl text-sm font-semibold transition-all duration-200"
+                  style={Object.entries(buttonStyleMap[btn.variant] ?? {})
+                    .map(([k, v]) => `${k.replace(/([A-Z])/g, '-$1').toLowerCase()}:${v}`)
+                    .join(';')}
+                >
+                  {btn.text}
+                </a>
+              )
+            )}
+          </div>
+        )
+      }
+    </div>
+
+    <!-- Image side -->
+    {
+      image && (
+        <div class="w-full flex-1">
+          <img
+            src={image.url}
+            alt={image.alt ?? heading}
+            width={image.width}
+            height={image.height}
+            class="h-auto w-full rounded-2xl object-cover shadow-lg"
+            loading="lazy"
+          />
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-scroll-target]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.scrollTarget
+      if (target) document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' })
+    })
+  })
+</script>

@@ -3,24 +3,29 @@ import Layout from '../layouts/Layout.astro'
 import Navbar from '../components/global/Navbar.astro'
 import Hero from '../components/react/IntroHero'
 import StatsBar from '../components/section/StatsBar.astro'
+import TextWithImage from '../components/section/TextWithImage.astro'
 import { getPage } from '../lib/data/pages'
-import type { HeroBlock } from '../lib/data/blocks/'
-import type { StatsBarBlock } from '../lib/data/blocks/'
 
 const page = await getPage('home')
-
-const heroBlock = page?.blocks.find((b) => b.blockType === 'hero') as HeroBlock | undefined
-const statsBarBlock = page?.blocks.find((b) => b.blockType === 'statsBar') as
-  | StatsBarBlock
-  | undefined
-
-const videoUrl = heroBlock?.video?.url
+const blocks = page?.blocks ?? []
 ---
 
 <Layout>
   <Navbar variant="transparent" />
   <div class="relative">
-    {heroBlock && <Hero client:only="react" {...heroBlock} videoUrl={videoUrl} />}
-    {statsBarBlock && <StatsBar items={statsBarBlock.items} />}
+    {
+      blocks.map((block: any) => {
+        switch (block.blockType) {
+          case 'hero':
+            return <Hero client:only="react" {...block} videoUrl={block.video?.url} />
+          case 'statsBar':
+            return <StatsBar items={block.items} />
+          case 'text-with-image':
+            return <TextWithImage {...block} />
+          default:
+            return null
+        }
+      })
+    }
   </div>
 </Layout>
