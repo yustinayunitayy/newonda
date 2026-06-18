@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react'
 import { useEffect, useState } from 'react'
 import type { HeroBlock } from '../../lib/data/blocks'
-import { textColorMap, buttonStyleMap } from '../../lib/colour'
+import { textColorMap, textPositionMap, buttonStyleMap } from '../../lib/colour'
 
 type Phase = 'intro' | 'content' | 'done'
 
@@ -15,6 +15,7 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
     buttons,
     mediaType,
     videoUrl,
+    textAlign = 'bottom-center',
   } = block
 
   const [videoReady, setVideoReady] = useState(false)
@@ -25,31 +26,25 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
 
   const headingColor = textColorMap[headingTextColor]
   const subheadingColor = subheadingTextColor ? textColorMap[subheadingTextColor] : '#ffffff'
+  const position = textPositionMap[textAlign] ?? textPositionMap['bottom-center']
 
   useEffect(() => {
     if (phase !== 'intro') return
-
-    const t = setTimeout(() => {
-      setPhase('content')
-    }, 5000)
-
+    const t = setTimeout(() => setPhase('content'), 5000)
     return () => clearTimeout(t)
   }, [phase])
 
   useEffect(() => {
     if (phase !== 'content') return
-
     const t = setTimeout(() => {
       sessionStorage.setItem('intro-seen', 'true')
       setPhase('done')
     }, 1200)
-
     return () => clearTimeout(t)
   }, [phase])
 
   useEffect(() => {
     document.body.style.overflow = phase === 'done' ? '' : 'hidden'
-
     return () => {
       document.body.style.overflow = ''
     }
@@ -57,7 +52,6 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
 
   useEffect(() => {
     const navbar = document.getElementById('navbar')
-
     if (!navbar) return
 
     if (phase === 'done') {
@@ -69,20 +63,18 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
       const t = setTimeout(() => {
         navbar.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-full')
       }, 800)
-
       return () => clearTimeout(t)
     }
   }, [phase])
 
   function handleScroll(target: string) {
-    document.getElementById(target)?.scrollIntoView({
-      behavior: 'smooth',
-    })
+    document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
     <section className="relative min-h-svh w-full overflow-hidden bg-black pb-24 md:min-h-screen">
       {!videoReady && mediaType === 'video' && <div className="absolute inset-0 bg-black" />}
+
       {mediaType === 'video' ? (
         <video
           autoPlay
@@ -105,23 +97,24 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
         />
       )}
 
-      <div className="absolute inset-0 bg-black/50 via-black/10 to-transparent" />
+      <div className="absolute inset-0 bg-black/50" />
 
       <AnimatePresence>
         {phase !== 'intro' && (
           <motion.div
             key="content"
-            className="absolute inset-0 flex flex-col items-center justify-end px-6 pb-20"
+            className="absolute inset-0 flex flex-col px-6 pb-20"
+            style={{
+              justifyContent: position.justifyContent,
+              alignItems: position.alignItems,
+            }}
           >
             <motion.h1
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.8,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className="text-center text-base leading-tight font-bold md:text-3xl"
-              style={{ color: headingColor }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="text-base leading-tight font-bold md:text-3xl"
+              style={{ color: headingColor, textAlign: position.textAlign as any }}
             >
               {headingText}
             </motion.h1>
@@ -130,13 +123,9 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
               <motion.p
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.8,
-                  delay: 0.15,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="max-w-xl text-center text-sm md:text-lg"
-                style={{ color: subheadingColor }}
+                transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                className="max-w-xl text-sm md:text-lg"
+                style={{ color: subheadingColor, textAlign: position.textAlign as any }}
               >
                 {subheadingText}
               </motion.p>
@@ -146,12 +135,9 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.8,
-                  delay: 0.3,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="mt-2 flex flex-wrap items-center justify-center gap-3"
+                transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="mt-2 flex flex-wrap items-center gap-3"
+                style={{ justifyContent: position.alignItems }}
               >
                 {buttons?.map((btn, i) =>
                   btn.type === 'scroll' ? (

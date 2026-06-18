@@ -30,6 +30,7 @@
     "@types/react-dom": "^19.2.3",
     "prettier": "^3.8.4",
     "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-tailwindcss": "^0.8.0"
+    "prettier-plugin-tailwindcss": "^0.8.0",
+    "rollup": "4.9.6"
   }
 }

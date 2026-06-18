@@ -16,7 +16,9 @@ const { items } = Astro.props
         items.map((item, i) => (
           <div data-marquee-item class="border-onda-blue/20 border-r px-5 text-center md:px-10">
             <p class="text-onda-blue mb-1 text-lg font-bold md:text-2xl">{item.value}</p>
-            <p class="text-onda-blue text-xs tracking-[0.12em] uppercase">{item.label}</p>
+            <p class="text-onda-blue text-[0.50rem] tracking-[0.12em] uppercase md:text-xs">
+              {item.label}
+            </p>
           </div>
         ))
       }

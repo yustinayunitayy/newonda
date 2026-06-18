@@ -7,9 +7,11 @@ export interface MediaFile {
 export type ButtonVariant =
   | 'blue'
   | 'blue-outline'
+  | 'blue-text'
   | 'white'
   | 'white-outline'
   | 'yellow'
+  | 'yellow-outline'
   | 'transparent'
 
 export interface HeroButton {
@@ -17,6 +19,7 @@ export interface HeroButton {
   type: 'link' | 'scroll'
   url?: string
   scrollTarget?: string
+  openInNewTab?: boolean
   variant: ButtonVariant
 }
 
@@ -29,6 +32,7 @@ export interface HeroBlock {
   headingTextColor: 'white' | 'black' | 'blue' | 'yellow'
   subheadingText?: string
   subheadingTextColor?: 'white' | 'black' | 'blue' | 'yellow'
+  textAlign?: 'center-left' | 'center-center' | 'center-right' | 'bottom-center'
   buttonEnabled: boolean
   buttons?: HeroButton[]
 }

@@ -5,9 +5,10 @@ export function initMarquee(trackSelector: string) {
   const items = track.querySelectorAll<HTMLElement>('[data-marquee-item]')
   const itemCount = items.length
 
-  const isMobile = window.innerWidth < 768
+  const isMobile = /Mobi|Android/i.test(navigator.userAgent)
 
   const shouldMarquee = isMobile ? itemCount > 2 : itemCount > 5
+  console.log({ itemCount, isMobile, shouldMarquee })
 
   if (!shouldMarquee) {
     track.classList.remove('marquee-active')
@@ -17,7 +18,6 @@ export function initMarquee(trackSelector: string) {
   if (track.dataset.initialized) return
   track.dataset.initialized = 'true'
 
-  // ukur lebar 1 kolom dari container PARENT (sebelum di-flex-kan)
   const containerWidth = track.parentElement!.getBoundingClientRect().width
   const columns = isMobile ? 2 : 5
   const itemWidth = containerWidth / columns
