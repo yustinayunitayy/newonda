@@ -97,6 +97,8 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
         />
       )}
 
+      <div className="absolute inset-0 bg-black/30" />
+
       <AnimatePresence>
         {phase !== 'intro' && (
           <motion.div
