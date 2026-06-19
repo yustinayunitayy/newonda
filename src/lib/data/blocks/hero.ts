@@ -16,7 +16,7 @@ export type ButtonVariant =
 
 export interface HeroButton {
   text: string
-  type: 'link' | 'scroll'
+  buttonType: 'link' | 'scroll'
   url?: string
   scrollTarget?: string
   openInNewTab?: boolean

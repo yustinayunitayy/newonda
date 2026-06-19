@@ -4,24 +4,45 @@ import Navbar from '../components/global/Navbar.astro'
 import Hero from '../components/react/IntroHero'
 import StatsBar from '../components/section/StatsBar.astro'
 import TextWithImage from '../components/section/TextWithImage.astro'
+import BrandTabs from '../components/react/BrandTab'
 import { getPage } from '../lib/data/pages'
 
 const page = await getPage('home')
 const blocks = page?.blocks ?? []
+
+import type { HeroBlock, StatsBarBlock } from '../lib/data/blocks'
+import type { TextWithImageBlock } from '../lib/data/blocks/text-with-image'
+import type { BrandTabsBlock } from '../lib/data/blocks/brand-tab'
+
+const heroBlock = blocks.find((b: any) => b.blockType === 'hero') as HeroBlock | undefined
+const statsBlock = blocks.find((b: any) => b.blockType === 'statsBar') as StatsBarBlock | undefined
+const twiBlock = blocks.find((b: any) => b.blockType === 'text-with-image') as
+  | TextWithImageBlock
+  | undefined
+const brandTabsBlock = blocks.find((b: any) => b.blockType === 'brand-tabs') as
+  | BrandTabsBlock
+  | undefined
+const restBlocks = blocks.filter(
+  (b: any) => !['hero', 'statsBar', 'text-with-image', 'brand-tabs'].includes(b.blockType)
+)
 ---
 
 <Layout>
-  <Navbar variant="transparent" />
+  <Navbar variant="transparent" scrollBehavior="scroll-to-white" />
   <div class="relative">
+    {heroBlock && <Hero client:only="react" {...heroBlock} videoUrl={heroBlock.video?.url} />}
+    {statsBlock && <StatsBar items={statsBlock.items} />}
+
+    <!-- Text with Image + Brand Tabs dengan background image -->
+    <div class="bg-[url('/bg.png')] bg-cover bg-center">
+      {twiBlock && <TextWithImage {...twiBlock} />}
+      {brandTabsBlock && <BrandTabs client:load {...brandTabsBlock} />}
+    </div>
+
+    <!-- Sisa blocks -->
     {
-      blocks.map((block: any) => {
+      restBlocks.map((block: any) => {
         switch (block.blockType) {
-          case 'hero':
-            return <Hero client:only="react" {...block} videoUrl={block.video?.url} />
-          case 'statsBar':
-            return <StatsBar items={block.items} />
-          case 'text-with-image':
-            return <TextWithImage {...block} />
           default:
             return null
         }

@@ -210,7 +210,7 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
                 style={{ justifyContent: position.alignItems }}
               >
                 {buttons.map((btn, i) =>
-                  btn.type === 'scroll' ? (
+                  btn.buttonType === 'scroll' ? (
                     <HeroButton
                       key={i}
                       className={btnClass}

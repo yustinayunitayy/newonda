@@ -6,6 +6,8 @@ import { buttonStyleMap } from '../../lib/colour'
 type Props = TextWithImageBlock
 
 const {
+  enableSectionId,
+  sectionId,
   layout = 'text-left',
   miniLabel,
   heading,
@@ -16,10 +18,12 @@ const {
 } = Astro.props
 
 const isTextLeft = layout === 'text-left'
+const resolvedId = enableSectionId && sectionId ? sectionId : undefined
 ---
 
 <section class="px-10 py-16 md:px-24 md:py-24">
   <div
+    id={resolvedId}
     class:list={[
       'flex flex-col items-center gap-10 md:gap-32',
       isTextLeft ? 'md:flex-row' : 'md:flex-row-reverse',

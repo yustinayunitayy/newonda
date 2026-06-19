@@ -13,6 +13,8 @@ export interface ButtonField {
 
 export interface TextWithImageBlock {
   blockType: 'text-with-image'
+  enableSectionId?: boolean
+  sectionId?: string
   layout: 'text-left' | 'text-right'
   miniLabel?: string
   heading: string

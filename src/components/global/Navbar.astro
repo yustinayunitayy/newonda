@@ -7,9 +7,10 @@ import { Icon } from 'astro-icon/components'
 
 interface Props {
   variant?: 'transparent' | 'white'
+  scrollBehavior?: 'static' | 'scroll-to-white'
 }
 
-const { variant = 'white' } = Astro.props
+const { variant = 'white', scrollBehavior = 'static' } = Astro.props
 const nav = await getNavigation('official')
 const menu = nav?.menu ?? []
 
@@ -30,19 +31,28 @@ const currentPath = Astro.url.pathname
 
 <header
   id="navbar"
-  class={`fixed top-0 left-0 right-0 z-50 -translate-y-full opacity-0 pointer-events-none transition-all duration-700 ${s.nav}`}
+  data-variant={variant}
+  data-scroll-behavior={scrollBehavior}
+  class={`fixed top-0 left-0 right-0 z-50 -translate-y-full opacity-0 pointer-events-none transition-all duration-500 ${s.nav}`}
 >
   <nav class="mx-auto flex h-16 max-w-7xl items-center justify-between px-7 md:px-0">
-    <!-- Desktop -->
+    <!-- Logo -->
     <a href="/">
-      {
-        variant === 'transparent' ? (
-          <Image src={LogoWhite} alt="ONDA Logo" class="h-8 w-auto" />
-        ) : (
-          <Image src={LogoBlue} alt="ONDA Logo" class="h-8 w-auto" />
-        )
-      }
+      <Image
+        id="logo-white"
+        src={LogoWhite}
+        alt="ONDA Logo"
+        class:list={['h-8 w-auto', variant === 'transparent' ? 'block' : 'hidden']}
+      />
+      <Image
+        id="logo-blue"
+        src={LogoBlue}
+        alt="ONDA Logo"
+        class:list={['h-8 w-auto', variant === 'white' ? 'block' : 'hidden']}
+      />
     </a>
+
+    <!-- Desktop -->
     <ul class="hidden items-center gap-6 lg:flex">
       {
         menu.map((item) => {
@@ -53,7 +63,7 @@ const currentPath = Astro.url.pathname
               <a
                 href={item.link}
                 class:list={[
-                  'text-sm font-medium transition-all',
+                  'nav-link text-sm font-medium transition-all',
                   s.text,
                   { 'font-semibold underline': isActive },
                 ]}
@@ -68,10 +78,11 @@ const currentPath = Astro.url.pathname
       }
     </ul>
 
-    <!-- Mobile -->
+    <!-- Mobile hamburger -->
     <button
       id="hamburger"
-      class={`lg:hidden p-2 ${variant === 'transparent' ? 'text-white' : 'text-onda-blue'}`}
+      class:list={['p-2 lg:hidden', variant === 'transparent' ? 'text-white' : 'text-onda-blue']}
+      id="hamburger-btn"
       aria-label="Toggle menu"
       aria-expanded="false"
     >
@@ -80,9 +91,9 @@ const currentPath = Astro.url.pathname
     </button>
   </nav>
 </header>
+
 <!-- Mobile Sidebar -->
 <div id="drawer" class="pointer-events-none fixed inset-0 z-50 lg:hidden">
-  <!-- Overlay nutup seluruh layar -->
   <div
     id="drawer-overlay"
     class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300"
@@ -117,37 +128,84 @@ const currentPath = Astro.url.pathname
 </div>
 
 <script>
-  const hamburger = document.getElementById('hamburger')
-  const drawer = document.getElementById('drawer')
-  const overlay = document.getElementById('drawer-overlay')
-  const panel = document.getElementById('drawer-panel')
-  const iconMenu = document.getElementById('icon-menu')
-  const iconClose = document.getElementById('icon-close')
+  const navbar = document.getElementById('navbar')!
+  const logoWhite = document.getElementById('logo-white')!
+  const logoBlue = document.getElementById('logo-blue')!
+  const hamburger = document.getElementById('hamburger')!
+  const drawer = document.getElementById('drawer')!
+  const overlay = document.getElementById('drawer-overlay')!
+  const panel = document.getElementById('drawer-panel')!
+  const iconMenu = document.getElementById('icon-menu')!
+  const iconClose = document.getElementById('icon-close')!
 
+  const initialVariant = navbar.dataset.variant as 'transparent' | 'white'
+  const scrollBehavior = navbar.dataset.scrollBehavior as 'static' | 'scroll-to-white'
+
+  // ─── Scroll handler ──────────────────────────────────────────────────────────
+  function applyScrollVariant() {
+    if (scrollBehavior !== 'scroll-to-white') return
+
+    const scrolled = window.scrollY > 20
+
+    if (scrolled) {
+      // Switch ke white
+      navbar.classList.remove('bg-transparent')
+      navbar.classList.add('bg-white', 'shadow-sm')
+      logoWhite.classList.add('hidden')
+      logoBlue.classList.remove('hidden')
+      hamburger.classList.remove('text-white')
+      hamburger.classList.add('text-onda-blue')
+      document.querySelectorAll('.nav-link').forEach((el) => {
+        el.classList.remove('text-white', 'hover:font-bold')
+        el.classList.add('text-onda-blue', 'hover:text-dark-blue-shade')
+      })
+    } else {
+      // Balik ke initial variant
+      if (initialVariant === 'transparent') {
+        navbar.classList.add('bg-transparent')
+        navbar.classList.remove('bg-white', 'shadow-sm')
+        logoWhite.classList.remove('hidden')
+        logoBlue.classList.add('hidden')
+        hamburger.classList.add('text-white')
+        hamburger.classList.remove('text-onda-blue')
+        document.querySelectorAll('.nav-link').forEach((el) => {
+          el.classList.add('text-white', 'hover:font-bold')
+          el.classList.remove('text-onda-blue', 'hover:text-dark-blue-shade')
+        })
+      }
+    }
+  }
+
+  if (scrollBehavior === 'scroll-to-white') {
+    window.addEventListener('scroll', applyScrollVariant, { passive: true })
+    applyScrollVariant()
+  }
+
+  // ─── Drawer ──────────────────────────────────────────────────────────────────
   let isOpen = false
 
   function openDrawer() {
     isOpen = true
-    drawer!.classList.remove('pointer-events-none')
-    overlay!.classList.replace('opacity-0', 'opacity-100')
-    panel!.classList.replace('-translate-x-full', 'translate-x-0')
-    iconMenu!.classList.add('hidden')
-    iconClose!.classList.remove('hidden')
-    hamburger!.setAttribute('aria-expanded', 'true')
+    drawer.classList.remove('pointer-events-none')
+    overlay.classList.replace('opacity-0', 'opacity-100')
+    panel.classList.replace('-translate-x-full', 'translate-x-0')
+    iconMenu.classList.add('hidden')
+    iconClose.classList.remove('hidden')
+    hamburger.setAttribute('aria-expanded', 'true')
   }
 
   function closeDrawer() {
     isOpen = false
-    drawer!.classList.add('pointer-events-none')
-    overlay!.classList.replace('opacity-100', 'opacity-0')
-    panel!.classList.replace('translate-x-0', '-translate-x-full')
-    iconMenu!.classList.remove('hidden')
-    iconClose!.classList.add('hidden')
-    hamburger!.setAttribute('aria-expanded', 'false')
+    drawer.classList.add('pointer-events-none')
+    overlay.classList.replace('opacity-100', 'opacity-0')
+    panel.classList.replace('translate-x-0', '-translate-x-full')
+    iconMenu.classList.remove('hidden')
+    iconClose.classList.add('hidden')
+    hamburger.setAttribute('aria-expanded', 'false')
   }
 
-  hamburger?.addEventListener('click', () => (isOpen ? closeDrawer() : openDrawer()))
-  overlay?.addEventListener('click', closeDrawer)
+  hamburger.addEventListener('click', () => (isOpen ? closeDrawer() : openDrawer()))
+  overlay.addEventListener('click', closeDrawer)
   document.getElementById('drawer-logo')?.addEventListener('click', closeDrawer)
   window.addEventListener('resize', () => {
     if (window.innerWidth >= 1024 && isOpen) closeDrawer()
