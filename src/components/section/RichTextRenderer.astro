@@ -1,0 +1,133 @@
+---
+interface Props {
+  content: any
+  className?: string
+}
+
+const { content, className = '' } = Astro.props
+
+const IS_BOLD = 1
+const IS_ITALIC = 2
+const IS_STRIKETHROUGH = 4
+const IS_UNDERLINE = 8
+const IS_CODE = 16
+const IS_SUBSCRIPT = 32
+const IS_SUPERSCRIPT = 64
+
+function esc(str: string): string {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+}
+
+function renderNodes(nodes: any[]): string {
+  return (nodes ?? []).map(renderNode).join('')
+}
+
+function renderText(node: any): string {
+  if (node.text === undefined) return ''
+  let text = esc(node.text)
+  const f = node.format || 0
+
+  if (f & IS_CODE)
+    text = `<code class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-sm">${text}</code>`
+  if (f & IS_SUBSCRIPT) text = `<sub>${text}</sub>`
+  if (f & IS_SUPERSCRIPT) text = `<sup>${text}</sup>`
+  if (f & IS_STRIKETHROUGH) text = `<s>${text}</s>`
+  if (f & IS_UNDERLINE) text = `<u>${text}</u>`
+  if (f & IS_ITALIC) text = `<em>${text}</em>`
+  if (f & IS_BOLD) text = `<strong>${text}</strong>`
+
+  return text
+}
+
+function renderNode(node: any): string {
+  if (!node) return ''
+  if (node.text !== undefined) return renderText(node)
+
+  const children = renderNodes(node.children ?? [])
+
+  switch (node.type) {
+    case 'heading': {
+      const lvl = node.tag ? parseInt(node.tag.replace('h', '')) : 2
+      const cls: Record<number, string> = {
+        1: 'font-bold text-3xl text-onda-blue mt-6 mb-4',
+        2: 'font-bold text-2xl text-onda-blue mt-6 mb-4',
+        3: 'font-semibold text-xl text-onda-blue mt-5 mb-3',
+        4: 'font-semibold text-lg text-onda-blue mt-4 mb-3',
+        5: 'font-semibold text-base text-onda-blue mt-3 mb-2',
+        6: 'font-semibold text-sm text-onda-blue mt-3 mb-2',
+      }
+      return `<h${lvl} class="${cls[lvl] ?? cls[2]}">${children}</h${lvl}>`
+    }
+
+    case 'paragraph':
+      return `<p class="mb-4 text-sm md:text-lg text-dark-blue-shade">${children}</p>`
+
+    case 'list': {
+      const tag = node.listType === 'number' ? 'ol' : 'ul'
+      const listCls =
+        node.listType === 'number'
+          ? 'list-decimal'
+          : node.listType === 'check'
+            ? 'list-none'
+            : 'list-disc'
+      return `<${tag} class="${listCls} mb-4 ml-6 list-outside space-y-2">${children}</${tag}>`
+    }
+
+    case 'listitem': {
+      const checkbox =
+        node.checked !== undefined
+          ? `<input type="checkbox" ${node.checked ? 'checked' : ''} disabled class="mr-2 align-middle" />`
+          : ''
+      const inner = (node.children ?? [])
+        .map((child: any) =>
+          child.type === 'paragraph' ? renderNodes(child.children ?? []) : renderNode(child)
+        )
+        .join('')
+      return `<li class="leading-relaxed text-gray-600">${checkbox}${inner}</li>`
+    }
+
+    case 'link':
+    case 'autolink': {
+      const href = node.fields?.url || node.url || node.fields?.doc?.value?.slug || '#'
+      const newTab = node.fields?.newTab !== false
+      const attrs = newTab ? 'target="_blank" rel="noopener noreferrer"' : 'target="_self"'
+      return `<a href="${esc(href)}" ${attrs} class="text-onda-blue underline transition-opacity hover:opacity-75">${children}</a>`
+    }
+
+    case 'upload': {
+      const img = node.value
+      if (!img) return ''
+      const caption = img.caption
+        ? `<p class="mt-2 text-center text-sm text-gray-400 italic">${esc(img.caption)}</p>`
+        : ''
+      return `<div class="my-6"><img src="${esc(img.url)}" alt="${esc(img.alt || img.filename || '')}" class="h-auto w-full rounded-lg" loading="lazy" />${caption}</div>`
+    }
+
+    case 'quote':
+      return `<blockquote class="border-onda-blue my-4 border-l-4 pl-4 text-gray-500 italic">${children}</blockquote>`
+
+    case 'code': {
+      const code = esc((node.children ?? []).map((c: any) => c.text ?? '').join(''))
+      return `<pre class="mb-4 overflow-x-auto rounded-lg bg-gray-100 p-4 font-mono text-sm"><code>${code}</code></pre>`
+    }
+
+    case 'horizontalrule':
+      return '<hr class="my-8 border-gray-200" />'
+
+    default:
+      return children
+  }
+}
+
+// ─── Entry point ─────────────────────────────────────────────────────────────
+const contentArray =
+  content?.root?.children ?? content?.children ?? (Array.isArray(content) ? content : [])
+
+const html = Array.isArray(contentArray) ? renderNodes(contentArray) : ''
+---
+
+{html && <div class:list={['max-w-none', className]} set:html={html} />}

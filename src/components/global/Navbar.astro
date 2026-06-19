@@ -82,7 +82,6 @@ const currentPath = Astro.url.pathname
     <button
       id="hamburger"
       class:list={['p-2 lg:hidden', variant === 'transparent' ? 'text-white' : 'text-onda-blue']}
-      id="hamburger-btn"
       aria-label="Toggle menu"
       aria-expanded="false"
     >
@@ -141,14 +140,37 @@ const currentPath = Astro.url.pathname
   const initialVariant = navbar.dataset.variant as 'transparent' | 'white'
   const scrollBehavior = navbar.dataset.scrollBehavior as 'static' | 'scroll-to-white'
 
-  // ─── Scroll handler ──────────────────────────────────────────────────────────
+  // ─── Show navbar ─────────────────────────────────────────────────────────────
+  function showNavbar() {
+    navbar.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-full')
+  }
+
+  // IntroHero dispatches 'navbar:show' with a delay when the intro finishes.
+  // On pages without IntroHero, we show the navbar immediately on DOMContentLoaded.
+  const hasIntroHero = document.querySelector('[data-component="intro-hero"]') !== null
+
+  if (hasIntroHero) {
+    window.addEventListener(
+      'navbar:show',
+      (e) => {
+        const { delay } = (e as CustomEvent<{ delay: number }>).detail
+        if (delay > 0) setTimeout(showNavbar, delay)
+        else showNavbar()
+      },
+      { once: false }
+    )
+  } else {
+    // No intro — show immediately
+    showNavbar()
+  }
+
+  // ─── Scroll handler ───────────────────────────────────────────────────────────
   function applyScrollVariant() {
     if (scrollBehavior !== 'scroll-to-white') return
 
     const scrolled = window.scrollY > 20
 
     if (scrolled) {
-      // Switch ke white
       navbar.classList.remove('bg-transparent')
       navbar.classList.add('bg-white', 'shadow-sm')
       logoWhite.classList.add('hidden')
@@ -160,7 +182,6 @@ const currentPath = Astro.url.pathname
         el.classList.add('text-onda-blue', 'hover:text-dark-blue-shade')
       })
     } else {
-      // Balik ke initial variant
       if (initialVariant === 'transparent') {
         navbar.classList.add('bg-transparent')
         navbar.classList.remove('bg-white', 'shadow-sm')
@@ -181,7 +202,7 @@ const currentPath = Astro.url.pathname
     applyScrollVariant()
   }
 
-  // ─── Drawer ──────────────────────────────────────────────────────────────────
+  // ─── Drawer ───────────────────────────────────────────────────────────────────
   let isOpen = false
 
   function openDrawer() {

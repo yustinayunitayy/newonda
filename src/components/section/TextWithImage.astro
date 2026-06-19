@@ -1,7 +1,7 @@
 ---
-import { RichTextRenderer } from '../react/RichTextRenderer'
+import RichTextRenderer from './RichTextRenderer.astro'
 import type { TextWithImageBlock } from '../../lib/data/blocks/text-with-image'
-import { buttonStyleMap } from '../../lib/colour'
+import { buttonClassMap } from '../../lib/colour'
 
 type Props = TextWithImageBlock
 
@@ -19,13 +19,15 @@ const {
 
 const isTextLeft = layout === 'text-left'
 const resolvedId = enableSectionId && sectionId ? sectionId : undefined
+
+const btnBase = 'rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer'
 ---
 
 <section class="px-10 py-16 md:px-24 md:py-24">
   <div
     id={resolvedId}
     class:list={[
-      'flex flex-col items-center gap-10 md:gap-32',
+      'flex scroll-mt-40 flex-col items-center gap-10 md:gap-32',
       isTextLeft ? 'md:flex-row' : 'md:flex-row-reverse',
     ]}
   >
@@ -41,7 +43,7 @@ const resolvedId = enableSectionId && sectionId ? sectionId : undefined
         {heading}
       </h2>
 
-      {body && <RichTextRenderer content={body} client:load />}
+      {body && <RichTextRenderer content={body} />}
 
       {
         buttonEnabled && buttons && buttons.length > 0 && (
@@ -50,10 +52,7 @@ const resolvedId = enableSectionId && sectionId ? sectionId : undefined
               btn.buttonType === 'scroll' ? (
                 <button
                   data-scroll-target={btn.scrollTarget}
-                  class="cursor-pointer rounded-xl text-sm font-semibold transition-all duration-200"
-                  style={Object.entries(buttonStyleMap[btn.variant] ?? {})
-                    .map(([k, v]) => `${k.replace(/([A-Z])/g, '-$1').toLowerCase()}:${v}`)
-                    .join(';')}
+                  class={`${btnBase} ${buttonClassMap[btn.variant]}`}
                 >
                   {btn.text}
                 </button>
@@ -62,10 +61,7 @@ const resolvedId = enableSectionId && sectionId ? sectionId : undefined
                   href={btn.url}
                   target={btn.openInNewTab ? '_blank' : '_self'}
                   rel={btn.openInNewTab ? 'noopener noreferrer' : undefined}
-                  class="rounded-xl text-sm font-semibold transition-all duration-200"
-                  style={Object.entries(buttonStyleMap[btn.variant] ?? {})
-                    .map(([k, v]) => `${k.replace(/([A-Z])/g, '-$1').toLowerCase()}:${v}`)
-                    .join(';')}
+                  class={`${btnBase} ${buttonClassMap[btn.variant]}`}
                 >
                   {btn.text}
                 </a>

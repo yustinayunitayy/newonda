@@ -41,84 +41,17 @@ export const textPositionMap: Record<
   },
 }
 
-export const buttonStyleMap: Record<ButtonVariant, React.CSSProperties> = {
-  blue: {
-    background: 'var(--color-onda-blue)',
-    color: '#ffffff',
-    border: 'none',
-  },
-  'blue-outline': {
-    background: 'transparent',
-    color: 'var(--color-onda-blue)',
-    border: '2px solid var(--color-onda-blue)',
-  },
-  'blue-text': {
-    background: 'transparent',
-    color: 'var(--color-onda-blue)',
-    border: 'none',
-  },
-  white: {
-    background: '#ffffff',
-    color: 'var(--color-onda-blue)',
-    border: 'none',
-  },
-  'white-outline': {
-    background: 'rgba(255,255,255,0.15)',
-    color: '#ffffff',
-    border: '1px solid rgba(255,255,255,0.5)',
-  },
-  yellow: {
-    background: 'var(--color-onda-yellow)',
-    color: 'var(--color-onda-blue)',
-    border: 'none',
-  },
-  'yellow-outline': {
-    background: 'rgba(254,221,0,0.1)',
-    color: 'var(--color-onda-yellow)',
-    fontWeight: '700',
-    border: '1px solid var(--color-onda-yellow)',
-  },
-  transparent: {
-    background: 'transparent',
-    color: '#ffffff',
-    border: 'none',
-  },
-}
-
-export const buttonHoverStyleMap: Record<ButtonVariant, React.CSSProperties> = {
-  blue: {
-    filter: 'brightness(1.15)',
-    transform: 'translateY(-1px)',
-    boxShadow: '0 4px 16px rgba(0,0,0,0.25)',
-  },
-  'blue-outline': {
-    background: 'var(--color-onda-blue)',
-    color: '#ffffff',
-    transform: 'translateY(-1px)',
-  },
-  'blue-text': {
-    textDecoration: 'underline',
-    opacity: 0.8,
-  },
-  white: {
-    transform: 'translateY(-1px)',
-    boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
-  },
-  'white-outline': {
-    background: 'rgba(255,255,255,0.28)',
-    transform: 'translateY(-1px)',
-  },
-  yellow: {
-    transform: 'translateY(-1px)',
-    boxShadow: '0 4px 16px rgba(254,221,0,0.3)',
-  },
-  'yellow-outline': {
-    background: 'var(--color-onda-yellow)',
-    color: 'var(--color-onda-blue)',
-    transform: 'translateY(-1px)',
-  },
-  transparent: {
-    background: 'rgba(255,255,255,0.12)',
-    transform: 'translateY(-1px)',
-  },
+export const buttonClassMap: Record<ButtonVariant, string> = {
+  blue: 'bg-onda-blue text-white border-none hover:brightness-110 hover:-translate-y-px hover:shadow-lg',
+  'blue-outline':
+    'bg-transparent text-onda-blue border-2 border-onda-blue hover:bg-onda-blue hover:text-white hover:-translate-y-px',
+  'blue-text': 'bg-transparent text-onda-blue border-none hover:underline hover:opacity-80',
+  white: 'bg-white text-onda-blue border-none hover:-translate-y-px hover:shadow-lg',
+  'white-outline':
+    'bg-white/15 text-white border border-white/50 hover:bg-white/[0.28] hover:-translate-y-px',
+  yellow:
+    'bg-onda-yellow text-onda-blue border-none hover:-translate-y-px hover:shadow-[0_4px_16px_rgba(254,221,0,0.3)]',
+  'yellow-outline':
+    'bg-onda-yellow/10 text-onda-yellow font-bold border border-onda-yellow hover:bg-onda-yellow hover:text-onda-blue hover:-translate-y-px',
+  transparent: 'bg-transparent text-white border-none hover:bg-white/12 hover:-translate-y-px',
 }

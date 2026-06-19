@@ -3,6 +3,8 @@ interface Props {
   title: string
   description: string
   ogImage: string
+  ogImageWidth?: number
+  ogImageHeight?: number
   siteName: string
   titleTemplate: string
   noIndex?: boolean
@@ -12,19 +14,19 @@ const {
   title,
   description,
   ogImage,
+  ogImageWidth = 1200,
+  ogImageHeight = 630,
   siteName,
   titleTemplate,
   noIndex = false,
 } = Astro.props
 
 const fullTitle = title ? titleTemplate.replace('%s', title) : siteName
-const canonicalUrl = Astro.site 
-  ? new URL(Astro.url.pathname, Astro.site).href 
-  : Astro.url.pathname
-const ogImageUrl = ogImage.startsWith('http') 
-  ? ogImage 
-  : Astro.site 
-    ? new URL(ogImage, Astro.site).href 
+const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : Astro.url.pathname
+const ogImageUrl = ogImage.startsWith('http')
+  ? ogImage
+  : Astro.site
+    ? new URL(ogImage, Astro.site).href
     : ogImage
 ---
 
@@ -36,6 +38,9 @@ const ogImageUrl = ogImage.startsWith('http')
 <meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={ogImageUrl} />
+<meta property="og:image:width" content={String(ogImageWidth)} />
+<meta property="og:image:height" content={String(ogImageHeight)} />
+<meta property="og:image:type" content="image/jpeg" />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content={siteName} />

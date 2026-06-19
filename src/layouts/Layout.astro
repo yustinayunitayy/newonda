@@ -13,9 +13,10 @@ interface Props {
   description?: string
   ogImage?: string
   noIndex?: boolean
+  preloadImage?: string
 }
 
-const { title, description, ogImage, noIndex = false } = Astro.props
+const { title, description, ogImage, noIndex = false, preloadImage } = Astro.props
 const isHome = Astro.url.pathname === '/'
 
 const seo = await resolveSeo({ title, description, ogImage })
@@ -29,23 +30,20 @@ const seo = await resolveSeo({ title, description, ogImage })
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
+    {preloadImage && <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-    <script>
-      declare const eruda: any
-      eruda.init()
-    </script>
     <link
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
       rel="stylesheet"
     />
+
     <SEO {...seo} {noIndex} />
-    <JsonLd />
+    <JsonLd description={seo.description} />
   </head>
   <body>
     <GTMBody />
-    <GlobalLoader client:only="react" isHome={isHome} />
+    <GlobalLoader isHome={isHome} client:only="react" />
     <slot />
   </body>
 </html>

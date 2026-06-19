@@ -29,8 +29,9 @@ const { items } = Astro.props
 <script>
   import { initMarquee } from '../../utils/marquee'
   initMarquee('.marquee-track')
+
   const el = document.getElementById('stats-bar')
-  const alreadySeen = sessionStorage.getItem('intro-seen')
+  const alreadySeen = sessionStorage.getItem('introPlayed') === '1'
 
   if (el) {
     if (alreadySeen) {
