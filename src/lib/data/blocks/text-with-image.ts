@@ -18,7 +18,7 @@ export interface TextWithImageBlock {
   layout: 'text-left' | 'text-right'
   miniLabel?: string
   heading: string
-  body?: any
+  body?: any // Lexical rich text
   buttonEnabled?: boolean
   buttons?: ButtonField[]
   image?: {

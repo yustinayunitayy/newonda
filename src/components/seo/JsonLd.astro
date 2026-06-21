@@ -1,59 +1,26 @@
 ---
 import { fetchSiteSettings } from '../../lib/data/site-settings'
 
-interface Props {
-  description?: string
-}
-
-const { description } = Astro.props
 const site = await fetchSiteSettings()
 
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': ['LocalBusiness', 'Organization'],
+  '@type': 'Organization',
   name: 'ONDA Sanitary & Plumbing',
   url: Astro.site,
-  logo: {
-    '@type': 'ImageObject',
-    url: site?.logo?.url ?? '',
-  },
-  image: site?.logo?.url ?? '',
-  description: description ?? '',
-  areaServed: {
-    '@type': 'Country',
-    name: 'Indonesia',
-  },
+  logo: site?.logo?.url ?? '',
   address: {
     '@type': 'PostalAddress',
     streetAddress: site?.headOffice?.address ?? '',
-    addressCountry: 'ID',
   },
-  geo: site?.headOffice?.coordinates
-    ? {
-        '@type': 'GeoCoordinates',
-        latitude: site.headOffice.coordinates.lat,
-        longitude: site.headOffice.coordinates.lng,
-      }
-    : undefined,
-  contactPoint: [
-    {
-      '@type': 'ContactPoint',
-      telephone: site?.contact?.phone ?? '',
-      contactType: 'customer service',
-      areaServed: 'ID',
-      availableLanguage: 'Indonesian',
-    },
-    {
-      '@type': 'ContactPoint',
-      telephone: site?.contact?.csPhone ?? '',
-      email: site?.contact?.email ?? '',
-      contactType: 'customer service',
-      areaServed: 'ID',
-      availableLanguage: 'Indonesian',
-    },
-  ].filter((cp) => cp.telephone || cp.email),
-  sameAs: site?.socialMedia?.map((s) => s.link) ?? [],
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: site?.contact?.phone ?? '',
+    email: site?.contact?.email ?? '',
+    contactType: 'customer service',
+  },
+  sameAs: site?.socialMedia?.map((s: any) => s.link) ?? [],
 }
 ---
 
-<script type="application/ld+json" set:html={JSON.stringify(jsonLd, null, 0)} />
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

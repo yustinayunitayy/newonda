@@ -1,13 +1,66 @@
 import { motion, AnimatePresence } from 'motion/react'
 import { useEffect, useState } from 'react'
 import type { HeroBlock } from '../../lib/data/blocks'
-import { textColorMap, textPositionMap, buttonClassMap } from '../../lib/colour'
+import {
+  textColorMap,
+  textPositionMap,
+  buttonStyleMap,
+  buttonHoverStyleMap,
+} from '../../lib/colour'
 
 type Phase = 'intro' | 'content' | 'done'
 
-const btnBase =
-  'rounded-xl px-3 py-2 text-xs font-medium md:px-8 md:text-sm transition-all duration-200 cursor-pointer'
+// ─── Hover-aware button ───────────────────────────────────────────────────────
+function HeroButton({
+  style,
+  hoverStyle,
+  onClick,
+  href,
+  target,
+  children,
+  className,
+}: {
+  style: React.CSSProperties
+  hoverStyle: React.CSSProperties
+  onClick?: () => void
+  href?: string
+  target?: string
+  children: React.ReactNode
+  className: string
+}) {
+  const [hovered, setHovered] = useState(false)
+  const merged = { ...style, ...(hovered ? hoverStyle : {}) }
 
+  if (href) {
+    return (
+      <a
+        href={href}
+        target={target}
+        rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+        className={className}
+        style={merged}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        {children}
+      </a>
+    )
+  }
+
+  return (
+    <button
+      className={className}
+      style={merged}
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {children}
+    </button>
+  )
+}
+
+// ─── Hero ────────────────────────────────────────────────────────────────────
 export default function Hero(block: HeroBlock & { videoUrl?: string }) {
   const {
     headingText,
@@ -24,7 +77,7 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
   const [videoReady, setVideoReady] = useState(false)
 
   const [phase, setPhase] = useState<Phase>(() =>
-    sessionStorage.getItem('introPlayed') === '1' ? 'done' : 'intro'
+    sessionStorage.getItem('intro-seen') ? 'done' : 'intro'
   )
 
   const headingColor = textColorMap[headingTextColor]
@@ -40,7 +93,7 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
   useEffect(() => {
     if (phase !== 'content') return
     const t = setTimeout(() => {
-      sessionStorage.setItem('introPlayed', '1')
+      sessionStorage.setItem('intro-seen', 'true')
       setPhase('done')
     }, 1200)
     return () => clearTimeout(t)
@@ -54,10 +107,19 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
   }, [phase])
 
   useEffect(() => {
+    const navbar = document.getElementById('navbar')
+    if (!navbar) return
+
     if (phase === 'done') {
-      window.dispatchEvent(new CustomEvent('navbar:show', { detail: { delay: 0 } }))
-    } else if (phase === 'content') {
-      window.dispatchEvent(new CustomEvent('navbar:show', { detail: { delay: 800 } }))
+      navbar.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-full')
+      return
+    }
+
+    if (phase === 'content') {
+      const t = setTimeout(() => {
+        navbar.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-full')
+      }, 800)
+      return () => clearTimeout(t)
     }
   }, [phase])
 
@@ -65,11 +127,11 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
     document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' })
   }
 
+  const btnClass =
+    'rounded-xl px-3 py-2 text-xs font-medium md:px-8 md:text-sm transition-all duration-200 cursor-pointer'
+
   return (
-    <section
-      data-component="intro-hero"
-      className="relative min-h-svh w-full overflow-hidden bg-black pb-24 md:min-h-screen"
-    >
+    <section className="relative min-h-svh w-full overflow-hidden bg-black pb-24 md:min-h-screen">
       {!videoReady && mediaType === 'video' && <div className="absolute inset-0 bg-black" />}
 
       {mediaType === 'video' ? (
@@ -91,7 +153,6 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
           src={block.image?.url}
           alt={block.image?.alt ?? headingText}
           className="absolute inset-0 h-full w-full object-cover object-center"
-          fetchPriority="high"
         />
       )}
 
@@ -150,23 +211,26 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
               >
                 {buttons.map((btn, i) =>
                   btn.buttonType === 'scroll' ? (
-                    <button
+                    <HeroButton
                       key={i}
-                      className={`${btnBase} ${buttonClassMap[btn.variant]}`}
+                      className={btnClass}
+                      style={buttonStyleMap[btn.variant]}
+                      hoverStyle={buttonHoverStyleMap[btn.variant]}
                       onClick={() => handleScroll(btn.scrollTarget ?? '')}
                     >
                       {btn.text}
-                    </button>
+                    </HeroButton>
                   ) : (
-                    <a
+                    <HeroButton
                       key={i}
+                      className={btnClass}
+                      style={buttonStyleMap[btn.variant]}
+                      hoverStyle={buttonHoverStyleMap[btn.variant]}
                       href={btn.url}
                       target={btn.openInNewTab ? '_blank' : undefined}
-                      rel={btn.openInNewTab ? 'noopener noreferrer' : undefined}
-                      className={`${btnBase} ${buttonClassMap[btn.variant]}`}
                     >
                       {btn.text}
-                    </a>
+                    </HeroButton>
                   )
                 )}
               </motion.div>

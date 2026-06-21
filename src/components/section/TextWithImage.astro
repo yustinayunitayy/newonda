@@ -1,7 +1,7 @@
 ---
-import RichTextRenderer from './RichTextRenderer.astro'
+import { RichTextRenderer } from '../react/RichTextRenderer'
 import type { TextWithImageBlock } from '../../lib/data/blocks/text-with-image'
-import { buttonClassMap } from '../../lib/colour'
+import { buttonStyleMap } from '../../lib/colour'
 
 type Props = TextWithImageBlock
 
@@ -19,15 +19,13 @@ const {
 
 const isTextLeft = layout === 'text-left'
 const resolvedId = enableSectionId && sectionId ? sectionId : undefined
-
-const btnBase = 'rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer'
 ---
 
 <section class="px-10 py-16 md:px-24 md:py-24">
   <div
     id={resolvedId}
     class:list={[
-      'flex scroll-mt-40 flex-col items-center gap-10 md:gap-32',
+      'flex flex-col items-center gap-10 md:gap-32',
       isTextLeft ? 'md:flex-row' : 'md:flex-row-reverse',
     ]}
   >
@@ -43,7 +41,7 @@ const btnBase = 'rounded-xl text-sm font-semibold transition-all duration-200 cu
         {heading}
       </h2>
 
-      {body && <RichTextRenderer content={body} />}
+      {body && <RichTextRenderer content={body} client:load />}
 
       {
         buttonEnabled && buttons && buttons.length > 0 && (
@@ -52,7 +50,10 @@ const btnBase = 'rounded-xl text-sm font-semibold transition-all duration-200 cu
               btn.buttonType === 'scroll' ? (
                 <button
                   data-scroll-target={btn.scrollTarget}
-                  class={`${btnBase} ${buttonClassMap[btn.variant]}`}
+                  class="cursor-pointer rounded-xl text-sm font-semibold transition-all duration-200"
+                  style={Object.entries(buttonStyleMap[btn.variant] ?? {})
+                    .map(([k, v]) => `${k.replace(/([A-Z])/g, '-$1').toLowerCase()}:${v}`)
+                    .join(';')}
                 >
                   {btn.text}
                 </button>
@@ -61,7 +62,10 @@ const btnBase = 'rounded-xl text-sm font-semibold transition-all duration-200 cu
                   href={btn.url}
                   target={btn.openInNewTab ? '_blank' : '_self'}
                   rel={btn.openInNewTab ? 'noopener noreferrer' : undefined}
-                  class={`${btnBase} ${buttonClassMap[btn.variant]}`}
+                  class="rounded-xl text-sm font-semibold transition-all duration-200"
+                  style={Object.entries(buttonStyleMap[btn.variant] ?? {})
+                    .map(([k, v]) => `${k.replace(/([A-Z])/g, '-$1').toLowerCase()}:${v}`)
+                    .join(';')}
                 >
                   {btn.text}
                 </a>

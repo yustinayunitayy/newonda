@@ -5,17 +5,14 @@ import Hero from '../components/react/IntroHero'
 import StatsBar from '../components/section/StatsBar.astro'
 import TextWithImage from '../components/section/TextWithImage.astro'
 import BrandTabs from '../components/react/BrandTab'
-import ProductGrid from '../components/section/ProductGrid.astro'
 import { getPage } from '../lib/data/pages'
-import type { HeroBlock, StatsBarBlock } from '../lib/data/blocks'
-import type { TextWithImageBlock } from '../lib/data/blocks/text-with-image'
-import type { BrandTabsBlock } from '../lib/data/blocks/brand-tab'
-import type { ProductGridBlock } from '../lib/data/blocks/product-grid'
 
 const page = await getPage('home')
 const blocks = page?.blocks ?? []
 
-const FIXED_BLOCKS = ['hero', 'statsBar', 'text-with-image', 'brand-tabs']
+import type { HeroBlock, StatsBarBlock } from '../lib/data/blocks'
+import type { TextWithImageBlock } from '../lib/data/blocks/text-with-image'
+import type { BrandTabsBlock } from '../lib/data/blocks/brand-tab'
 
 const heroBlock = blocks.find((b: any) => b.blockType === 'hero') as HeroBlock | undefined
 const statsBlock = blocks.find((b: any) => b.blockType === 'statsBar') as StatsBarBlock | undefined
@@ -25,7 +22,9 @@ const twiBlock = blocks.find((b: any) => b.blockType === 'text-with-image') as
 const brandTabsBlock = blocks.find((b: any) => b.blockType === 'brand-tabs') as
   | BrandTabsBlock
   | undefined
-const restBlocks = blocks.filter((b: any) => !FIXED_BLOCKS.includes(b.blockType))
+const restBlocks = blocks.filter(
+  (b: any) => !['hero', 'statsBar', 'text-with-image', 'brand-tabs'].includes(b.blockType)
+)
 ---
 
 <Layout>
@@ -34,16 +33,16 @@ const restBlocks = blocks.filter((b: any) => !FIXED_BLOCKS.includes(b.blockType)
     {heroBlock && <Hero client:only="react" {...heroBlock} videoUrl={heroBlock.video?.url} />}
     {statsBlock && <StatsBar items={statsBlock.items} />}
 
+    <!-- Text with Image + Brand Tabs dengan background image -->
     <div class="bg-[url('/bg.png')] bg-cover bg-center">
       {twiBlock && <TextWithImage {...twiBlock} />}
       {brandTabsBlock && <BrandTabs client:load {...brandTabsBlock} />}
     </div>
 
+    <!-- Sisa blocks -->
     {
       restBlocks.map((block: any) => {
         switch (block.blockType) {
-          case 'product-grid':
-            return <ProductGrid {...(block as ProductGridBlock)} />
           default:
             return null
         }
