@@ -1,0 +1,52 @@
+---
+import { Image } from 'astro:assets'
+import LogoBlue from '../../assets/Logo.png'
+
+interface Props {
+  isHome?: boolean
+}
+
+const { isHome = false } = Astro.props
+---
+
+<div
+  id="global-loader"
+  data-is-home={isHome ? '1' : '0'}
+  class="fixed inset-0 z-9999 grid place-items-center bg-white"
+>
+  <div class="flex flex-col items-center gap-5">
+    <Image src={LogoBlue} alt="ONDA" class="h-10 w-auto" loading="eager" />
+    <span class="loading loading-spinner loading-lg text-onda-blue"></span>
+  </div>
+</div>
+
+<script is:inline>
+  ;(function () {
+    var loader = document.getElementById('global-loader')
+    if (!loader) return
+
+    var isHome = loader.dataset.isHome === '1'
+    var introSeen = sessionStorage.getItem('intro-seen') === 'true'
+
+    var html = document.documentElement
+    html.style.overflow = 'hidden' 
+
+    var done = false
+    function hide() {
+      if (done) return
+      done = true
+      html.style.overflow = ''
+      loader.remove() 
+    }
+
+    // Home + intro belum diputar → tunggu Hero benar-benar mount
+    if (isHome && !introSeen) {
+      window.addEventListener('hero:mounted', hide, { once: true })
+      setTimeout(hide, 4000) // fallback kalau sinyal tidak datang
+      return
+    }
+
+    if (document.readyState === 'complete') hide()
+    else window.addEventListener('load', hide, { once: true })
+  })()
+</script>

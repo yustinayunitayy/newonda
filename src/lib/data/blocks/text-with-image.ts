@@ -1,15 +1,4 @@
-import type { ButtonVariant } from './hero'
-
-export type ButtonType = 'link' | 'scroll'
-
-export interface ButtonField {
-  text: string
-  buttonType: ButtonType
-  url?: string
-  scrollTarget?: string
-  openInNewTab?: boolean
-  variant: ButtonVariant
-}
+import type { ButtonField } from '../button'
 
 export interface TextWithImageBlock {
   blockType: 'text-with-image'
@@ -18,7 +7,7 @@ export interface TextWithImageBlock {
   layout: 'text-left' | 'text-right'
   miniLabel?: string
   heading: string
-  body?: any // Lexical rich text
+  body?: any
   buttonEnabled?: boolean
   buttons?: ButtonField[]
   image?: {

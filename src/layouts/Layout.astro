@@ -3,7 +3,7 @@ import '../styles/global.css'
 import '../styles/base.css'
 import SEO from '../components/seo/SEO.astro'
 import JsonLd from '../components/seo/JsonLd.astro'
-import GlobalLoader from '../components/react/GlobalLoader'
+import GlobalLoader from '../components/global/GlobalLoader.astro'
 import { resolveSeo } from '../lib/data/seo-fetch'
 import GTMHeader from '../components/seo/GTMHeader.astro'
 import GTMBody from '../components/seo/GTMBody.astro'
@@ -45,7 +45,7 @@ const seo = await resolveSeo({ title, description, ogImage })
   </head>
   <body>
     <GTMBody />
-    <GlobalLoader client:only="react" isHome={isHome} />
+    <GlobalLoader isHome={isHome} />
     <slot />
   </body>
 </html>

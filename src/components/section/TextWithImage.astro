@@ -19,6 +19,9 @@ const {
 
 const isTextLeft = layout === 'text-left'
 const resolvedId = enableSectionId && sectionId ? sectionId : undefined
+
+const btnClass =
+  'cursor-pointer rounded-xl text-sm font-semibold transition-all duration-200'
 ---
 
 <section class="px-10 py-16 md:px-24 md:py-24">
@@ -31,13 +34,9 @@ const resolvedId = enableSectionId && sectionId ? sectionId : undefined
   >
     <!-- Text side -->
     <div class="flex flex-1 flex-col gap-4">
-      {
-        miniLabel && (
-          <p class="text-onda-blue text-xs font-semibold tracking-widest uppercase">{miniLabel}</p>
-        )
-      }
+      {miniLabel && <p class="text-mini-label">{miniLabel}</p>}
 
-      <h2 class="text-onda-blue text-xl leading-tight font-bold md:text-4xl">
+      <h2 class="text-h2 text-onda-blue">
         {heading}
       </h2>
 
@@ -46,15 +45,10 @@ const resolvedId = enableSectionId && sectionId ? sectionId : undefined
       {
         buttonEnabled && buttons && buttons.length > 0 && (
           <div class="flex flex-wrap gap-3">
-            {buttons.map((btn) =>
-              btn.buttonType === 'scroll' ? (
-                <button
-                  data-scroll-target={btn.scrollTarget}
-                  class="cursor-pointer rounded-xl text-sm font-semibold transition-all duration-200"
-                  style={Object.entries(buttonStyleMap[btn.variant] ?? {})
-                    .map(([k, v]) => `${k.replace(/([A-Z])/g, '-$1').toLowerCase()}:${v}`)
-                    .join(';')}
-                >
+            {buttons.map((btn) => {
+              const style = buttonStyleMap[btn.variant] ?? {}
+              return btn.buttonType === 'scroll' ? (
+                <button data-scroll-target={btn.scrollTarget} class={btnClass} style={style}>
                   {btn.text}
                 </button>
               ) : (
@@ -62,15 +56,13 @@ const resolvedId = enableSectionId && sectionId ? sectionId : undefined
                   href={btn.url}
                   target={btn.openInNewTab ? '_blank' : '_self'}
                   rel={btn.openInNewTab ? 'noopener noreferrer' : undefined}
-                  class="rounded-xl text-sm font-semibold transition-all duration-200"
-                  style={Object.entries(buttonStyleMap[btn.variant] ?? {})
-                    .map(([k, v]) => `${k.replace(/([A-Z])/g, '-$1').toLowerCase()}:${v}`)
-                    .join(';')}
+                  class={btnClass}
+                  style={style}
                 >
                   {btn.text}
                 </a>
               )
-            )}
+            })}
           </div>
         )
       }

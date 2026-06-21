@@ -1,0 +1,54 @@
+---
+import type { ProductGridBlock } from '../../lib/data/blocks/product-grid'
+
+type Props = ProductGridBlock
+
+const { miniLabel, heading, subheading, items } = Astro.props
+---
+
+<section class="px-6 py-12 md:px-24 md:py-20">
+  {
+    (miniLabel || heading || subheading) && (
+      <div class="mb-8 flex flex-col gap-3 md:mb-12">
+        {miniLabel && <p class="text-mini-label">{miniLabel}</p>}
+        {heading && <h2 class="text-h2 text-onda-blue">{heading}</h2>}
+        {subheading && <p class="text-lead max-w-2xl text-dark-blue-shade">{subheading}</p>}
+      </div>
+    )
+  }
+
+  <!-- Grid: 2 kolom di mobile, 4 kolom di desktop -->
+  <div class="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+    {
+      items.map((item) => (
+        <article class="group relative aspect-3/4 overflow-hidden rounded-2xl">
+          {item.image?.url && (
+            <img
+              src={`${item.image.url}?quality=85&width=600`}
+              alt={item.image.alt ?? item.label ?? ''}
+              class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+            />
+          )}
+
+          <div class="absolute inset-0 bg-linear-to-t from-black/75 via-black/15 to-transparent" />
+
+          <div class="absolute inset-x-0 bottom-0 p-4 md:p-5">
+            {item.label && (
+              <h3 class="font-bold tracking-wide text-white uppercase text-h3">
+                {item.label}
+              </h3>
+            )}
+            {item.description && (
+              <p
+                class="mt-1 text-body text-white/85 transition-all duration-300  md:translate-y-2 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100"
+              >
+                {item.description}
+              </p>
+            )}
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</section>

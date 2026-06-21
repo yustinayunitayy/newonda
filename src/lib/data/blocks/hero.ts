@@ -1,26 +1,9 @@
+import type { ButtonField, ButtonType } from '../button'
+
 export interface MediaFile {
   url: string
   alt?: string
   streamUid?: string
-}
-
-export type ButtonVariant =
-  | 'blue'
-  | 'blue-outline'
-  | 'blue-text'
-  | 'white'
-  | 'white-outline'
-  | 'yellow'
-  | 'yellow-outline'
-  | 'transparent'
-
-export interface HeroButton {
-  text: string
-  buttonType: 'link' | 'scroll'
-  url?: string
-  scrollTarget?: string
-  openInNewTab?: boolean
-  variant: ButtonVariant
 }
 
 export interface HeroBlock {
@@ -34,5 +17,5 @@ export interface HeroBlock {
   subheadingTextColor?: 'white' | 'black' | 'blue' | 'yellow'
   textAlign?: 'center-left' | 'center-center' | 'center-right' | 'bottom-center'
   buttonEnabled: boolean
-  buttons?: HeroButton[]
+  buttons?: ButtonField[]
 }

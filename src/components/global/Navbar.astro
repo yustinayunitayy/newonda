@@ -6,7 +6,7 @@ import { getNavigation } from '../../lib/data/navbar'
 import { Icon } from 'astro-icon/components'
 
 interface Props {
-  variant?: 'transparent' | 'white'
+  variant?: 'transparent' | 'white' | 'black'
   scrollBehavior?: 'static' | 'scroll-to-white'
 }
 
@@ -21,12 +21,19 @@ const NavStyle = {
   },
   white: {
     nav: 'bg-white',
-    text: 'text-onda-blue hover:text-dark-blue-shade',
+    text: 'text-onda-blue hover:text-dark-blue-shade hover:font-bold',
   },
+  black:{
+    nav: 'bg-black',
+    text: 'text-white hover:font-bold',
+  }
 }
 
 const s = NavStyle[variant]
 const currentPath = Astro.url.pathname
+
+const extAttrs = (link?: string) =>
+  link?.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {}
 ---
 
 <header
@@ -67,8 +74,7 @@ const currentPath = Astro.url.pathname
                   s.text,
                   { 'font-semibold underline': isActive },
                 ]}
-                target={item.link?.startsWith('http') ? '_blank' : undefined}
-                rel={item.link?.startsWith('http') ? 'noopener noreferrer' : undefined}
+                {...extAttrs(item.link)}
               >
                 {item.label}
               </a>
@@ -82,7 +88,6 @@ const currentPath = Astro.url.pathname
     <button
       id="hamburger"
       class:list={['p-2 lg:hidden', variant === 'transparent' ? 'text-white' : 'text-onda-blue']}
-      id="hamburger-btn"
       aria-label="Toggle menu"
       aria-expanded="false"
     >
@@ -115,8 +120,7 @@ const currentPath = Astro.url.pathname
             <a
               href={item.link}
               class="text-onda-blue hover:bg-onda-blue block rounded-lg px-4 py-2 text-sm font-medium transition-all hover:text-white"
-              target={item.link?.startsWith('http') ? '_blank' : undefined}
-              rel={item.link?.startsWith('http') ? 'noopener noreferrer' : undefined}
+              {...extAttrs(item.link)}
             >
               {item.label}
             </a>
@@ -128,86 +132,85 @@ const currentPath = Astro.url.pathname
 </div>
 
 <script>
-  const navbar = document.getElementById('navbar')!
-  const logoWhite = document.getElementById('logo-white')!
-  const logoBlue = document.getElementById('logo-blue')!
-  const hamburger = document.getElementById('hamburger')!
-  const drawer = document.getElementById('drawer')!
-  const overlay = document.getElementById('drawer-overlay')!
-  const panel = document.getElementById('drawer-panel')!
-  const iconMenu = document.getElementById('icon-menu')!
-  const iconClose = document.getElementById('icon-close')!
+  const $ = (id: string) => document.getElementById(id)!
+  const navbar = $('navbar')
+  const logoWhite = $('logo-white')
+  const logoBlue = $('logo-blue')
+  const hamburger = $('hamburger')
+  const drawer = $('drawer')
+  const overlay = $('drawer-overlay')
+  const panel = $('drawer-panel')
+  const iconMenu = $('icon-menu')
+  const iconClose = $('icon-close')
 
-  const initialVariant = navbar.dataset.variant as 'transparent' | 'white'
-  const scrollBehavior = navbar.dataset.scrollBehavior as 'static' | 'scroll-to-white'
+  const VARIANTS = {
+    transparent: {
+      nav: ['bg-transparent'],
+      text: ['text-white', 'hover:font-bold'],
+      hamburger: 'text-white',
+      whiteLogo: true,
+    },
+    white: {
+      nav: ['bg-white', 'shadow-sm'],
+      text: ['text-onda-blue', 'hover:text-dark-blue-shade'],
+      hamburger: 'text-onda-blue',
+      whiteLogo: false,
+    },
+    black: {
+      nav: ['bg-black', 'shadow-sm'],
+      text: ['text-white', 'hover:font-bold'],
+      hamburger: 'text-white',
+      whiteLogo: true,
+    },
+  }
 
-  // ─── Scroll handler ──────────────────────────────────────────────────────────
-  function applyScrollVariant() {
-    if (scrollBehavior !== 'scroll-to-white') return
+  type VariantName = keyof typeof VARIANTS
 
-    const scrolled = window.scrollY > 20
+  const initialVariant = navbar.dataset.variant as VariantName
+  const scrollBehavior = navbar.dataset.scrollBehavior
 
-    if (scrolled) {
-      // Switch ke white
-      navbar.classList.remove('bg-transparent')
-      navbar.classList.add('bg-white', 'shadow-sm')
-      logoWhite.classList.add('hidden')
-      logoBlue.classList.remove('hidden')
-      hamburger.classList.remove('text-white')
-      hamburger.classList.add('text-onda-blue')
-      document.querySelectorAll('.nav-link').forEach((el) => {
-        el.classList.remove('text-white', 'hover:font-bold')
-        el.classList.add('text-onda-blue', 'hover:text-dark-blue-shade')
-      })
-    } else {
-      // Balik ke initial variant
-      if (initialVariant === 'transparent') {
-        navbar.classList.add('bg-transparent')
-        navbar.classList.remove('bg-white', 'shadow-sm')
-        logoWhite.classList.remove('hidden')
-        logoBlue.classList.add('hidden')
-        hamburger.classList.add('text-white')
-        hamburger.classList.remove('text-onda-blue')
-        document.querySelectorAll('.nav-link').forEach((el) => {
-          el.classList.add('text-white', 'hover:font-bold')
-          el.classList.remove('text-onda-blue', 'hover:text-dark-blue-shade')
-        })
-      }
-    }
+  function applyVariant(name: VariantName) {
+    const v = VARIANTS[name]
+    const other = name === 'white' ? VARIANTS.transparent : VARIANTS.white
+
+    navbar.classList.remove(...other.nav)
+    navbar.classList.add(...v.nav)
+
+    logoWhite.classList.toggle('hidden', !v.whiteLogo)
+    logoBlue.classList.toggle('hidden', v.whiteLogo)
+
+    hamburger.classList.remove(other.hamburger)
+    hamburger.classList.add(v.hamburger)
+
+    document.querySelectorAll('.nav-link').forEach((el) => {
+      el.classList.remove(...other.text)
+      el.classList.add(...v.text)
+    })
   }
 
   if (scrollBehavior === 'scroll-to-white') {
-    window.addEventListener('scroll', applyScrollVariant, { passive: true })
-    applyScrollVariant()
+    const onScroll = () => applyVariant(window.scrollY > 20 ? 'white' : initialVariant)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
   }
 
-  // ─── Drawer ──────────────────────────────────────────────────────────────────
-  let isOpen = false
-
-  function openDrawer() {
-    isOpen = true
-    drawer.classList.remove('pointer-events-none')
-    overlay.classList.replace('opacity-0', 'opacity-100')
-    panel.classList.replace('-translate-x-full', 'translate-x-0')
-    iconMenu.classList.add('hidden')
-    iconClose.classList.remove('hidden')
-    hamburger.setAttribute('aria-expanded', 'true')
+  function setDrawer(open: boolean) {
+    drawer.classList.toggle('pointer-events-none', !open)
+    overlay.classList.toggle('opacity-100', open)
+    overlay.classList.toggle('opacity-0', !open)
+    panel.classList.toggle('translate-x-0', open)
+    panel.classList.toggle('-translate-x-full', !open)
+    iconMenu.classList.toggle('hidden', open)
+    iconClose.classList.toggle('hidden', !open)
+    hamburger.setAttribute('aria-expanded', String(open))
   }
 
-  function closeDrawer() {
-    isOpen = false
-    drawer.classList.add('pointer-events-none')
-    overlay.classList.replace('opacity-100', 'opacity-0')
-    panel.classList.replace('translate-x-0', '-translate-x-full')
-    iconMenu.classList.remove('hidden')
-    iconClose.classList.add('hidden')
-    hamburger.setAttribute('aria-expanded', 'false')
-  }
+  const isOpen = () => !drawer.classList.contains('pointer-events-none')
 
-  hamburger.addEventListener('click', () => (isOpen ? closeDrawer() : openDrawer()))
-  overlay.addEventListener('click', closeDrawer)
-  document.getElementById('drawer-logo')?.addEventListener('click', closeDrawer)
+  hamburger.addEventListener('click', () => setDrawer(!isOpen()))
+  overlay.addEventListener('click', () => setDrawer(false))
+  $('drawer-logo')?.addEventListener('click', () => setDrawer(false))
   window.addEventListener('resize', () => {
-    if (window.innerWidth >= 1024 && isOpen) closeDrawer()
+    if (window.innerWidth >= 1024 && isOpen()) setDrawer(false)
   })
 </script>

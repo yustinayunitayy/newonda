@@ -1,16 +1,26 @@
-import type { ButtonVariant } from './data/blocks'
-
-export const textColorMap = {
+import type { CSSProperties } from 'react'
+import type { ButtonVariant } from './data/button'
+const C = {
   white: '#ffffff',
   black: '#000000',
   blue: 'var(--color-onda-blue)',
   yellow: 'var(--color-onda-yellow)',
 } as const
 
-export const textPositionMap: Record<
-  string,
-  { justifyContent: string; alignItems: string; textAlign: string; maxWidth: string; gap: string }
-> = {
+const lift = { transform: 'translateY(-1px)' } as const
+export const textColorMap = C
+
+type Position = 'center-left' | 'center-center' | 'center-right' | 'bottom-center'
+
+type TextPosition = {
+  justifyContent: string
+  alignItems: string
+  textAlign: string
+  maxWidth: string
+  gap: string
+}
+
+export const textPositionMap: Record<Position, TextPosition> = {
   'center-left': {
     justifyContent: 'center',
     alignItems: 'flex-start',
@@ -41,84 +51,57 @@ export const textPositionMap: Record<
   },
 }
 
-export const buttonStyleMap: Record<ButtonVariant, React.CSSProperties> = {
+type ButtonStyle = { base: CSSProperties; hover: CSSProperties }
+
+export const buttonVariants: Record<ButtonVariant, ButtonStyle> = {
   blue: {
-    background: 'var(--color-onda-blue)',
-    color: '#ffffff',
-    border: 'none',
+    base: { background: C.blue, color: C.white, border: 'none' },
+    hover: { ...lift, filter: 'brightness(1.15)', boxShadow: '0 4px 16px rgba(0,0,0,0.25)' },
   },
   'blue-outline': {
-    background: 'transparent',
-    color: 'var(--color-onda-blue)',
-    border: '2px solid var(--color-onda-blue)',
+    base: { background: 'transparent', color: C.blue, border: `2px solid ${C.blue}` },
+    hover: { ...lift, background: C.blue, color: C.white },
   },
   'blue-text': {
-    background: 'transparent',
-    color: 'var(--color-onda-blue)',
-    border: 'none',
+    base: { background: 'transparent', color: C.blue, border: 'none' },
+    hover: { textDecoration: 'underline', opacity: 0.8 },
   },
   white: {
-    background: '#ffffff',
-    color: 'var(--color-onda-blue)',
-    border: 'none',
+    base: { background: C.white, color: C.blue, border: 'none' },
+    hover: { ...lift, boxShadow: '0 4px 16px rgba(0,0,0,0.2)' },
   },
   'white-outline': {
-    background: 'rgba(255,255,255,0.15)',
-    color: '#ffffff',
-    border: '1px solid rgba(255,255,255,0.5)',
+    base: {
+      background: 'rgba(255,255,255,0.15)',
+      color: C.white,
+      border: '1px solid rgba(255,255,255,0.5)',
+    },
+    hover: { ...lift, background: 'rgba(255,255,255,0.28)' },
   },
   yellow: {
-    background: 'var(--color-onda-yellow)',
-    color: 'var(--color-onda-blue)',
-    border: 'none',
+    base: { background: C.yellow, color: C.blue, border: 'none' },
+    hover: { ...lift, boxShadow: '0 4px 16px rgba(254,221,0,0.3)' },
   },
   'yellow-outline': {
-    background: 'rgba(254,221,0,0.1)',
-    color: 'var(--color-onda-yellow)',
-    fontWeight: '700',
-    border: '1px solid var(--color-onda-yellow)',
+    base: {
+      background: 'rgba(254,221,0,0.1)',
+      color: C.yellow,
+      fontWeight: '700',
+      border: `1px solid ${C.yellow}`,
+    },
+    hover: { ...lift, background: C.yellow, color: C.blue },
   },
   transparent: {
-    background: 'transparent',
-    color: '#ffffff',
-    border: 'none',
+    base: { background: 'transparent', color: C.white, border: 'none' },
+    hover: { ...lift, background: 'rgba(255,255,255,0.12)' },
   },
 }
 
-export const buttonHoverStyleMap: Record<ButtonVariant, React.CSSProperties> = {
-  blue: {
-    filter: 'brightness(1.15)',
-    transform: 'translateY(-1px)',
-    boxShadow: '0 4px 16px rgba(0,0,0,0.25)',
-  },
-  'blue-outline': {
-    background: 'var(--color-onda-blue)',
-    color: '#ffffff',
-    transform: 'translateY(-1px)',
-  },
-  'blue-text': {
-    textDecoration: 'underline',
-    opacity: 0.8,
-  },
-  white: {
-    transform: 'translateY(-1px)',
-    boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
-  },
-  'white-outline': {
-    background: 'rgba(255,255,255,0.28)',
-    transform: 'translateY(-1px)',
-  },
-  yellow: {
-    transform: 'translateY(-1px)',
-    boxShadow: '0 4px 16px rgba(254,221,0,0.3)',
-  },
-  'yellow-outline': {
-    background: 'var(--color-onda-yellow)',
-    color: 'var(--color-onda-blue)',
-    transform: 'translateY(-1px)',
-  },
-  transparent: {
-    background: 'rgba(255,255,255,0.12)',
-    transform: 'translateY(-1px)',
-  },
-}
+// ─── Back-compat helpers (optional — hapus kalau sudah pakai buttonVariants) ──
+export const buttonStyleMap = Object.fromEntries(
+  Object.entries(buttonVariants).map(([k, v]) => [k, v.base])
+) as Record<ButtonVariant, CSSProperties>
+
+export const buttonHoverStyleMap = Object.fromEntries(
+  Object.entries(buttonVariants).map(([k, v]) => [k, v.hover])
+) as Record<ButtonVariant, CSSProperties>

@@ -1,66 +1,16 @@
 import { motion, AnimatePresence } from 'motion/react'
 import { useEffect, useState } from 'react'
 import type { HeroBlock } from '../../lib/data/blocks'
-import {
-  textColorMap,
-  textPositionMap,
-  buttonStyleMap,
-  buttonHoverStyleMap,
-} from '../../lib/colour'
+import { textColorMap, textPositionMap } from '../../lib/colour'
+import HoverButton from './HoverButton'
 
 type Phase = 'intro' | 'content' | 'done'
 
-// ─── Hover-aware button ───────────────────────────────────────────────────────
-function HeroButton({
-  style,
-  hoverStyle,
-  onClick,
-  href,
-  target,
-  children,
-  className,
-}: {
-  style: React.CSSProperties
-  hoverStyle: React.CSSProperties
-  onClick?: () => void
-  href?: string
-  target?: string
-  children: React.ReactNode
-  className: string
-}) {
-  const [hovered, setHovered] = useState(false)
-  const merged = { ...style, ...(hovered ? hoverStyle : {}) }
+// Timing (ms)
+const INTRO_MS = 5000
+const CONTENT_MS = 1200
+const NAVBAR_DELAY_MS = 800
 
-  if (href) {
-    return (
-      <a
-        href={href}
-        target={target}
-        rel={target === '_blank' ? 'noopener noreferrer' : undefined}
-        className={className}
-        style={merged}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
-        {children}
-      </a>
-    )
-  }
-
-  return (
-    <button
-      className={className}
-      style={merged}
-      onClick={onClick}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      {children}
-    </button>
-  )
-}
-
-// ─── Hero ────────────────────────────────────────────────────────────────────
 export default function Hero(block: HeroBlock & { videoUrl?: string }) {
   const {
     headingText,
@@ -76,8 +26,15 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
 
   const [videoReady, setVideoReady] = useState(false)
 
+  useEffect(() => {
+    const raf = requestAnimationFrame(() =>
+      requestAnimationFrame(() => window.dispatchEvent(new Event('hero:mounted')))
+    )
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
   const [phase, setPhase] = useState<Phase>(() =>
-    sessionStorage.getItem('intro-seen') ? 'done' : 'intro'
+    typeof window !== 'undefined' && sessionStorage.getItem('intro-seen') ? 'done' : 'intro'
   )
 
   const headingColor = textColorMap[headingTextColor]
@@ -86,7 +43,7 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
 
   useEffect(() => {
     if (phase !== 'intro') return
-    const t = setTimeout(() => setPhase('content'), 5000)
+    const t = setTimeout(() => setPhase('content'), INTRO_MS)
     return () => clearTimeout(t)
   }, [phase])
 
@@ -95,7 +52,7 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
     const t = setTimeout(() => {
       sessionStorage.setItem('intro-seen', 'true')
       setPhase('done')
-    }, 1200)
+    }, CONTENT_MS)
     return () => clearTimeout(t)
   }, [phase])
 
@@ -118,7 +75,7 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
     if (phase === 'content') {
       const t = setTimeout(() => {
         navbar.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-full')
-      }, 800)
+      }, NAVBAR_DELAY_MS)
       return () => clearTimeout(t)
     }
   }, [phase])
@@ -209,30 +166,21 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
                 className="mt-2 flex flex-wrap items-center gap-3"
                 style={{ justifyContent: position.alignItems }}
               >
-                {buttons.map((btn, i) =>
-                  btn.buttonType === 'scroll' ? (
-                    <HeroButton
+                {buttons.map((btn, i) => {
+                  const isScroll = btn.buttonType === 'scroll'
+                  return (
+                    <HoverButton
                       key={i}
                       className={btnClass}
-                      style={buttonStyleMap[btn.variant]}
-                      hoverStyle={buttonHoverStyleMap[btn.variant]}
-                      onClick={() => handleScroll(btn.scrollTarget ?? '')}
+                      variant={btn.variant}
+                      {...(isScroll
+                        ? { onClick: () => handleScroll(btn.scrollTarget ?? '') }
+                        : { href: btn.url, target: btn.openInNewTab ? '_blank' : undefined })}
                     >
                       {btn.text}
-                    </HeroButton>
-                  ) : (
-                    <HeroButton
-                      key={i}
-                      className={btnClass}
-                      style={buttonStyleMap[btn.variant]}
-                      hoverStyle={buttonHoverStyleMap[btn.variant]}
-                      href={btn.url}
-                      target={btn.openInNewTab ? '_blank' : undefined}
-                    >
-                      {btn.text}
-                    </HeroButton>
+                    </HoverButton>
                   )
-                )}
+                })}
               </motion.div>
             )}
           </motion.div>

@@ -60,7 +60,7 @@ export function RichTextRenderer({ content, className = '' }: RichTextRendererPr
 
       case 'paragraph':
         return (
-          <p key={key} className="mb-4 text-lg leading-relaxed text-gray-600">
+          <p key={key} className="text-dark-blue-shade mb-4 text-lg leading-relaxed">
             {node.children?.map(renderNode)}
           </p>
         )

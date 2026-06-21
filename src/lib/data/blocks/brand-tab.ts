@@ -1,4 +1,4 @@
-import type { ButtonField } from './text-with-image'
+import type { ButtonField } from '../button'
 
 export interface BrandTab {
   tabLabel: string
