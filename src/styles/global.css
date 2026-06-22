@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 @plugin 'daisyui' {
-  themes: light --default
+  themes: light --default;
 }
 
 @theme {
@@ -20,13 +20,13 @@
 
 @layer components {
   .text-h2 {
-    @apply  text-xl font-bold md:text-4xl;
+    @apply text-xl font-bold md:text-4xl;
   }
   .text-h3 {
-    @apply  text-xl font-bold md:text-2xl;
+    @apply text-xl font-bold md:text-2xl;
   }
   .text-mini-label {
-    @apply  text-xs font-semibold tracking-widest uppercase;
+    @apply text-xs font-semibold tracking-widest uppercase;
   }
   .text-body {
     @apply text-sm md:text-base;
