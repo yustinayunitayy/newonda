@@ -1,7 +1,7 @@
 ---
 import { RichTextRenderer } from '../react/RichTextRenderer'
 import type { TextWithImageBlock } from '../../lib/data/blocks/text-with-image'
-import { buttonStyleMap } from '../../lib/colour'
+import { buttonVariants } from '../../lib/colour'
 
 type Props = TextWithImageBlock
 
@@ -20,11 +20,10 @@ const {
 const isTextLeft = layout === 'text-left'
 const resolvedId = enableSectionId && sectionId ? sectionId : undefined
 
-const btnClass =
-  'cursor-pointer rounded-xl text-sm font-semibold transition-all duration-200'
+const btnClass = 'cursor-pointer rounded-xl text-sm font-semibold transition-all duration-200'
 ---
 
-<section class="px-10 py-16 md:px-24 md:py-24">
+<section class="section">
   <div
     id={resolvedId}
     class:list={[
@@ -33,22 +32,31 @@ const btnClass =
     ]}
   >
     <!-- Text side -->
-    <div class="flex flex-1 flex-col gap-4">
+    <div class="flex flex-1 flex-col gap-4" data-reveal-group>
       {miniLabel && <p class="text-mini-label">{miniLabel}</p>}
 
       <h2 class="text-h2 text-onda-blue">
         {heading}
       </h2>
-
-      {body && <RichTextRenderer content={body} client:load />}
-
+      {
+        body && (
+          <div>
+            <RichTextRenderer content={body} client:load />
+          </div>
+        )
+      }
       {
         buttonEnabled && buttons && buttons.length > 0 && (
           <div class="flex flex-wrap gap-3">
             {buttons.map((btn) => {
-              const style = buttonStyleMap[btn.variant] ?? {}
+              const variant = buttonVariants[btn.variant] ?? {}
+              const commonProps = {
+                class: btnClass,
+                style: variant.base,
+                'data-hover': JSON.stringify(variant.hover ?? {}),
+              }
               return btn.buttonType === 'scroll' ? (
-                <button data-scroll-target={btn.scrollTarget} class={btnClass} style={style}>
+                <button data-scroll-target={btn.scrollTarget} {...commonProps}>
                   {btn.text}
                 </button>
               ) : (
@@ -56,8 +64,7 @@ const btnClass =
                   href={btn.url}
                   target={btn.openInNewTab ? '_blank' : '_self'}
                   rel={btn.openInNewTab ? 'noopener noreferrer' : undefined}
-                  class={btnClass}
-                  style={style}
+                  {...commonProps}
                 >
                   {btn.text}
                 </a>
@@ -71,7 +78,7 @@ const btnClass =
     <!-- Image side -->
     {
       image && (
-        <div class="w-full flex-1">
+        <div class="w-full flex-1" data-reveal-group>
           <img
             src={image.url}
             alt={image.alt ?? heading}
@@ -87,10 +94,19 @@ const btnClass =
 </section>
 
 <script>
-  document.querySelectorAll<HTMLButtonElement>('[data-scroll-target]').forEach((btn) => {
+  // Scroll buttons
+  document.querySelectorAll<HTMLElement>('[data-scroll-target]').forEach((btn) => {
     btn.addEventListener('click', () => {
       const target = btn.dataset.scrollTarget
       if (target) document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' })
     })
+  })
+
+  // Hover (inline style gabisa :hover, jadi pakai JS)
+  document.querySelectorAll<HTMLElement>('[data-hover]').forEach((el) => {
+    const base = el.getAttribute('style') || ''
+    const hover = JSON.parse(el.dataset.hover || '{}')
+    el.addEventListener('mouseenter', () => Object.assign(el.style, hover))
+    el.addEventListener('mouseleave', () => el.setAttribute('style', base))
   })
 </script>

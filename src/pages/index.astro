@@ -9,6 +9,8 @@ import { getPage } from '../lib/data/pages'
 import ProductGrid from '../components/section/ProductGrid.astro'
 import Banner from '../components/section/Banner.astro'
 import FAQ from '../components/section/Faq.astro'
+import Newsletter from '../components/section/Newsletter.astro'
+import type { NewsletterBlock } from '../lib/data/blocks/newsletter'
 import type { FaqBlock } from '../lib/data/blocks/faq'
 import type { BannerBlock } from '../lib/data/blocks/banner'
 import type { ProductGridBlock } from '../lib/data/blocks/product-grid'
@@ -42,23 +44,29 @@ const restBlocks = blocks.filter(
       )
     }
     {statsBlock && <StatsBar items={statsBlock.items} />}
-    <div class="bg-[url('/bg.png')] bg-cover bg-center">
-      {twiBlock && <TextWithImage {...twiBlock} />}
-      {brandTabsBlock && <BrandTabs client:load {...brandTabsBlock} />}
+
+    <div class="flex flex-col gap-20 pt-20 md:gap-28 md:pt-28">
+      <div class="flex flex-col gap-20 bg-[url('/bg.png')] bg-cover bg-center md:gap-28">
+        {twiBlock && <TextWithImage {...twiBlock} />}
+        {brandTabsBlock && <BrandTabs client:load {...brandTabsBlock} />}
+      </div>
+
+      {
+        restBlocks.map((block: any) => {
+          switch (block.blockType) {
+            case 'product-grid':
+              return <ProductGrid {...(block as ProductGridBlock)} />
+            case 'banner':
+              return <Banner {...(block as BannerBlock)} />
+            case 'faq-accordion':
+              return <FAQ {...(block as FaqBlock)} />
+            case 'newsletter':
+              return <Newsletter {...(block as NewsletterBlock)} />
+            default:
+              return null
+          }
+        })
+      }
     </div>
-    {
-      restBlocks.map((block: any) => {
-        switch (block.blockType) {
-          case 'product-grid':
-            return <ProductGrid {...(block as ProductGridBlock)} />
-          case 'banner':
-            return <Banner {...(block as BannerBlock)} />
-          case 'faq-accordion':
-            return <FAQ {...(block as FaqBlock)} />
-          default:
-            return null
-        }
-      })
-    }
   </div>
 </Layout>

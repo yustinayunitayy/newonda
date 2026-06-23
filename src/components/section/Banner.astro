@@ -15,12 +15,14 @@ const {
   buttons,
 } = Astro.props
 
-// Posisi konten ikut textPositionMap (sama seperti Hero)
 const position = textPositionMap[textAlign] ?? textPositionMap['center-center']
 
-// Warna overlay
 const overlayBg =
-  overlayColor === 'blue' ? 'var(--color-dark-blue-shade)' : overlayColor === 'black' ? '#000000' : null
+  overlayColor === 'blue'
+    ? 'var(--color-dark-blue-shade)'
+    : overlayColor === 'black'
+      ? '#000000'
+      : null
 
 const clampedOpacity = Math.min(Math.max(overlayOpacity, 0), 100) / 100
 
@@ -28,8 +30,7 @@ const btnClass =
   'cursor-pointer rounded-xl px-6 py-2 text-sm font-semibold transition-all duration-200'
 ---
 
-<section class="relative w-full overflow-hidden">
-  <!-- Background image -->
+<section class="relative w-full overflow-hidden" data-reveal="right">
   {
     backgroundImage?.url && (
       <img
@@ -41,27 +42,31 @@ const btnClass =
     )
   }
 
-  <!-- Overlay -->
   {
     overlayBg && (
       <div class="absolute inset-0" style={`background:${overlayBg}; opacity:${clampedOpacity}`} />
     )
   }
 
-  <!-- Konten -->
   <div
     class="relative z-10 flex w-full max-w-7xl flex-col px-6 py-16 md:px-24 md:py-24"
     style={`align-items:${position.alignItems}; gap:${position.gap}`}
   >
     {miniLabel && <p class="text-mini-label">{miniLabel}</p>}
 
-    <h2 class="text-h2 text-white" style={`text-align:${position.textAlign}; max-width:${position.maxWidth}`}>
+    <h2
+      class="text-h2 text-white"
+      style={`text-align:${position.textAlign}; max-width:${position.maxWidth}`}
+    >
       {heading}
     </h2>
 
     {
       subheading && (
-        <p class="text-body text-white" style={`text-align:${position.textAlign}; max-width:${position.maxWidth}`}>
+        <p
+          class="text-body text-white"
+          style={`text-align:${position.textAlign}; max-width:${position.maxWidth}`}
+        >
           {subheading}
         </p>
       )

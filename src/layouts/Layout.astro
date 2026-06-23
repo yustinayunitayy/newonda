@@ -7,6 +7,9 @@ import GlobalLoader from '../components/global/GlobalLoader.astro'
 import { resolveSeo } from '../lib/data/seo-fetch'
 import GTMHeader from '../components/seo/GTMHeader.astro'
 import GTMBody from '../components/seo/GTMBody.astro'
+import Footer from '../components/global/Footer.astro'
+import { fetchSiteSettings } from '../lib/data/site-settings'
+const settings = await fetchSiteSettings()
 
 interface Props {
   title?: string
@@ -31,11 +34,6 @@ const seo = await resolveSeo({ title, description, ogImage })
     <link rel="icon" href="/favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-    <script>
-      declare const eruda: any
-      eruda.init()
-    </script>
     <link
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
       rel="stylesheet"
@@ -43,9 +41,49 @@ const seo = await resolveSeo({ title, description, ogImage })
     <SEO {...seo} {noIndex} />
     <JsonLd />
   </head>
+
   <body>
     <GTMBody />
     <GlobalLoader isHome={isHome} />
     <slot />
+    {settings && <Footer settings={settings} />}
+
+    <script>
+      function show(el: HTMLElement, delay: number) {
+        el.style.transitionDelay = delay + 'ms'
+        el.classList.add('is-visible')
+      }
+      function hide(el: HTMLElement) {
+        el.classList.remove('is-visible')
+      }
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            const el = e.target as HTMLElement
+            const isGroup = el.hasAttribute('data-reveal-group')
+
+            if (e.isIntersecting) {
+              if (isGroup) {
+                Array.from(el.children).forEach((child, i) => show(child as HTMLElement, i * 100))
+              } else {
+                show(el, Number(el.dataset.revealDelay ?? 0))
+              }
+            } else {
+              if (isGroup) {
+                Array.from(el.children).forEach((child) => hide(child as HTMLElement))
+              } else {
+                hide(el)
+              }
+            }
+          })
+        },
+        { threshold: 0.15 }
+      )
+
+      document
+        .querySelectorAll<HTMLElement>('[data-reveal], [data-reveal-group]')
+        .forEach((el) => io.observe(el))
+    </script>
   </body>
 </html>

@@ -8,9 +8,9 @@ const { items } = Astro.props
 
 <div
   id="stats-bar"
-  class="invisible relative z-10 -mt-12 translate-y-8 px-6 opacity-0 transition-[opacity,transform] duration-700 ease-out"
+  class="invisible relative z-10 -mt-12 w-full translate-y-8 overflow-x-clip px-6 opacity-0 transition-[opacity,transform] duration-700 ease-out"
 >
-  <div class="overflow-hidden rounded-2xl bg-white py-5 shadow-xl md:py-7">
+  <div class="w-full overflow-hidden rounded-2xl bg-white py-5 shadow-xl md:py-7">
     <div class="marquee-track">
       {
         items.map((item, i) => (

@@ -130,7 +130,7 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="text-base leading-tight font-bold md:text-3xl"
+              className="text-h2 leading-tight font-bold"
               style={{
                 color: headingColor,
                 textAlign: position.textAlign as React.CSSProperties['textAlign'],
@@ -146,7 +146,7 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-                className="text-sm md:text-lg"
+                className="text-body"
                 style={{
                   color: subheadingColor,
                   textAlign: position.textAlign as React.CSSProperties['textAlign'],

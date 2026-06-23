@@ -10,11 +10,19 @@ export default function BrandTabs({ heading, subheading, tabs }: BrandTabsBlock)
   const btnClass =
     'rounded-xl px-5 py-2.5 text-xs font-semibold md:text-sm transition-all duration-200 cursor-pointer active:scale-[0.98]'
 
+  // dipakai berulang buat reveal pas scroll
+  const reveal = {
+    initial: { opacity: 0, y: 16 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: false, amount: 0.2 },
+    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const },
+  }
+
   return (
-    <section className="w-full px-6 py-10 md:px-24 md:py-16">
+    <section className="section w-full">
       {/* Heading */}
       {(heading || subheading) && (
-        <div className="mb-10 flex flex-col items-center gap-3 text-center">
+        <motion.div {...reveal} className="mb-10 flex flex-col items-center gap-3 text-center">
           {heading && (
             <h2 className="text-h2 text-onda-blue text-justify md:text-center">{heading}</h2>
           )}
@@ -23,11 +31,12 @@ export default function BrandTabs({ heading, subheading, tabs }: BrandTabsBlock)
               {subheading}
             </p>
           )}
-        </div>
+        </motion.div>
       )}
 
       {/* Tab bar — segmented control */}
-      <div
+      <motion.div
+        {...reveal}
         className="grid overflow-hidden rounded-2xl border border-gray-200 bg-white"
         style={{ gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))` }}
       >
@@ -45,10 +54,13 @@ export default function BrandTabs({ heading, subheading, tabs }: BrandTabsBlock)
             {tab.tabLabel}
           </button>
         ))}
-      </div>
+      </motion.div>
 
       {/* Content card */}
-      <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg">
+      <motion.div
+        {...reveal}
+        className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg"
+      >
         <AnimatePresence mode="wait">
           <motion.div
             key={activeIndex}
@@ -104,7 +116,7 @@ export default function BrandTabs({ heading, subheading, tabs }: BrandTabsBlock)
             </div>
           </motion.div>
         </AnimatePresence>
-      </div>
+      </motion.div>
     </section>
   )
 }
