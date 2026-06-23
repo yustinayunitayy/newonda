@@ -30,7 +30,7 @@ const btnClass =
   'cursor-pointer rounded-xl px-6 py-2 text-sm font-semibold transition-all duration-200'
 ---
 
-<section class="relative w-full overflow-hidden" data-reveal="right">
+<section class="relative w-full overflow-hidden overflow-x-clip">
   {
     backgroundImage?.url && (
       <img
@@ -50,6 +50,7 @@ const btnClass =
 
   <div
     class="relative z-10 flex w-full max-w-7xl flex-col px-6 py-16 md:px-24 md:py-24"
+    data-reveal="right"
     style={`align-items:${position.alignItems}; gap:${position.gap}`}
   >
     {miniLabel && <p class="text-mini-label">{miniLabel}</p>}
