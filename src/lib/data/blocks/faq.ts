@@ -1,11 +1,4 @@
-import type { ButtonVariant } from '../button'
-
-export interface FaqButton {
-  text: string
-  variant: ButtonVariant
-  url?: string
-  openInNewTab?: boolean
-}
+import type { ButtonField } from '../button'
 
 export interface FaqItem {
   question: string
@@ -14,10 +7,10 @@ export interface FaqItem {
 
 export interface FaqBlock {
   blockType: 'faq-accordion'
-  miniLabel?: string
-  heading?: string
-  description?: string
+  miniLabel: string
+  heading: string
+  description: string
   buttonEnabled?: boolean
-  buttons?: FaqButton[]
+  buttons?: ButtonField[]
   items: FaqItem[]
 }

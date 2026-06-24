@@ -1,12 +1,16 @@
 import type { ButtonField } from '../button'
+import type { TextColor, textPosition } from '../../colour'
 
 export interface BannerBlock {
   blockType: 'banner'
   miniLabel?: string
+  labelTextColor?: TextColor
   heading: string
-  subheading?: string
-  textAlign?: 'center-left' | 'center-center' | 'center-right' | 'bottom-center'
-  backgroundImage?: {
+  headingTextColor: TextColor
+  subheading: string
+  subheadingTextColor: TextColor
+  textAlign: textPosition
+  backgroundImage: {
     url: string
     alt?: string
     width?: number

@@ -1,6 +1,6 @@
 ---
 import type { BannerBlock } from '../../lib/data/blocks/banner'
-import { buttonStyleMap, textPositionMap } from '../../lib/colour'
+import { buttonStyleMap, textPositionMap, textColorMap } from '../../lib/colour'
 
 type Props = BannerBlock
 
@@ -8,6 +8,9 @@ const {
   miniLabel,
   heading,
   subheading,
+  labelTextColor = 'white',
+  headingTextColor = 'white',
+  subheadingTextColor = 'white',
   textAlign = 'center-center',
   backgroundImage,
   overlayColor = 'black',
@@ -53,11 +56,17 @@ const btnClass =
     data-reveal="right"
     style={`align-items:${position.alignItems}; gap:${position.gap}`}
   >
-    {miniLabel && <p class="text-mini-label">{miniLabel}</p>}
+    {
+      miniLabel && (
+        <p class="text-mini-label" style={`color:${textColorMap[labelTextColor]}`}>
+          {miniLabel}
+        </p>
+      )
+    }
 
     <h2
-      class="text-h2 text-white"
-      style={`text-align:${position.textAlign}; max-width:${position.maxWidth}`}
+      class="text-h2"
+      style={`text-align:${position.textAlign}; max-width:${position.maxWidth}; color:${textColorMap[headingTextColor]}`}
     >
       {heading}
     </h2>
@@ -65,8 +74,8 @@ const btnClass =
     {
       subheading && (
         <p
-          class="text-body text-white"
-          style={`text-align:${position.textAlign}; max-width:${position.maxWidth}`}
+          class="text-body"
+          style={`text-align:${position.textAlign}; max-width:${position.maxWidth}; color:${textColorMap[subheadingTextColor]}`}
         >
           {subheading}
         </p>

@@ -5,11 +5,14 @@ const C = {
   black: '#000000',
   blue: 'var(--color-onda-blue)',
   yellow: 'var(--color-onda-yellow)',
+  lightBlue: 'var(--color-light-blue-shade)',
+  lightYellow: 'var(--color-light-yellow-shade)',
+  darkBlue: 'var(--color-dark-blue-shade)',
 } as const
-
-const lift = { transform: 'translateY(-1px)' } as const
+export type TextColor = keyof typeof C
 export const textColorMap = C
 
+const lift = { transform: 'translateY(-1px)' } as const
 type Position = 'center-left' | 'center-center' | 'center-right' | 'bottom-center'
 
 type TextPosition = {
@@ -50,7 +53,7 @@ export const textPositionMap: Record<Position, TextPosition> = {
     gap: '0.5rem',
   },
 }
-
+export type textPosition = keyof typeof textPositionMap
 type ButtonStyle = { base: CSSProperties; hover: CSSProperties }
 
 export const buttonVariants: Record<ButtonVariant, ButtonStyle> = {

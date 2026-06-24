@@ -1,3 +1,5 @@
+import type { TextColor } from '../../colour'
+
 export interface ProductGridItem {
   image?: {
     url: string
@@ -12,7 +14,10 @@ export interface ProductGridItem {
 export interface ProductGridBlock {
   blockType: 'product-grid'
   miniLabel?: string
-  heading?: string
-  subheading?: string
+  labelTextColor?: TextColor
+  heading: string
+  headingTextColor?: TextColor
+  subheading: string
+  subheadingTextColor?: TextColor
   items: ProductGridItem[]
 }

@@ -1,4 +1,5 @@
 import type { ButtonField } from '../button'
+import type { TextColor } from '../../colour'
 
 export interface TextWithImageBlock {
   blockType: 'text-with-image'
@@ -6,11 +7,14 @@ export interface TextWithImageBlock {
   sectionId?: string
   layout: 'text-left' | 'text-right'
   miniLabel?: string
+  labelTextColor?: TextColor
   heading: string
-  body?: any
+  headingTextColor?: TextColor
+  body: string
+  bodyTextColor?: TextColor
   buttonEnabled?: boolean
   buttons?: ButtonField[]
-  image?: {
+  image: {
     url: string
     alt?: string
     width?: number

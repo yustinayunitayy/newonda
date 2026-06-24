@@ -1,5 +1,5 @@
 export interface NewsletterBlock {
   blockType: 'newsletter'
-  heading?: string
-  subheading?: string
+  heading: string
+  subheading: string
 }
