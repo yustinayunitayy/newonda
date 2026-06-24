@@ -1,16 +1,22 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import type { BrandTabsBlock } from '../../lib/data/blocks/brand-tab'
+import { textPositionMap } from '../../lib/colour'
 import HoverButton from './HoverButton'
 
-export default function BrandTabs({ heading, subheading, tabs }: BrandTabsBlock) {
+export default function BrandTabs({
+  heading,
+  subheading,
+  textAlign = 'center-center',
+  tabs,
+}: BrandTabsBlock) {
   const [activeIndex, setActiveIndex] = useState(0)
   const active = tabs[activeIndex]
+  const position = textPositionMap[textAlign] ?? textPositionMap['center-center']
 
   const btnClass =
     'rounded-xl px-5 py-2.5 text-xs font-semibold md:text-sm transition-all duration-200 cursor-pointer active:scale-[0.98]'
 
-  // dipakai berulang buat reveal pas scroll
   const reveal = {
     initial: { opacity: 0, y: 16 },
     whileInView: { opacity: 1, y: 0 },
@@ -18,16 +24,30 @@ export default function BrandTabs({ heading, subheading, tabs }: BrandTabsBlock)
     transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const },
   }
 
+  const textAlignStyle = position.textAlign as React.CSSProperties['textAlign']
+
   return (
     <section className="section w-full">
       {/* Heading */}
       {(heading || subheading) && (
-        <motion.div {...reveal} className="mb-10 flex flex-col items-center gap-3 text-center">
+        <motion.div
+          {...reveal}
+          className="mb-10 flex flex-col gap-3"
+          style={{ alignItems: position.alignItems }}
+        >
           {heading && (
-            <h2 className="text-h2 text-onda-blue text-justify md:text-center">{heading}</h2>
+            <h2
+              className="text-h2 text-onda-blue"
+              style={{ textAlign: textAlignStyle, maxWidth: position.maxWidth }}
+            >
+              {heading}
+            </h2>
           )}
           {subheading && (
-            <p className="text-lead text-dark-blue-shade text-justify md:text-center">
+            <p
+              className="text-lead text-dark-blue-shade"
+              style={{ textAlign: textAlignStyle, maxWidth: position.maxWidth }}
+            >
               {subheading}
             </p>
           )}
@@ -70,7 +90,6 @@ export default function BrandTabs({ heading, subheading, tabs }: BrandTabsBlock)
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-col md:flex-row"
           >
-            {/* Image */}
             {active.image && (
               <div className="w-full shrink-0 md:w-[50%]">
                 <img
@@ -82,7 +101,6 @@ export default function BrandTabs({ heading, subheading, tabs }: BrandTabsBlock)
               </div>
             )}
 
-            {/* Text */}
             <div className="flex flex-1 flex-col justify-center gap-4 p-8 md:p-12">
               {active.brandName && <h3 className="text-h3 text-onda-blue">{active.brandName}</h3>}
               {active.description && (

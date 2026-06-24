@@ -1,5 +1,4 @@
 ---
-import { RichTextRenderer } from '../react/RichTextRenderer'
 import type { TextWithImageBlock } from '../../lib/data/blocks/text-with-image'
 import { buttonVariants } from '../../lib/colour'
 
@@ -40,9 +39,7 @@ const btnClass = 'cursor-pointer rounded-xl text-sm font-semibold transition-all
       </h2>
       {
         body && (
-          <div>
-            <RichTextRenderer content={body} client:load />
-          </div>
+          <p class="text-body text-dark-blue-shade leading-relaxed whitespace-pre-line">{body}</p>
         )
       }
       {

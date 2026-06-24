@@ -37,7 +37,7 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
     typeof window !== 'undefined' && sessionStorage.getItem('intro-seen') ? 'done' : 'intro'
   )
 
-  const headingColor = textColorMap[headingTextColor]
+  const headingColor = headingTextColor ? textColorMap[headingTextColor] : '#ffffff'
   const subheadingColor = subheadingTextColor ? textColorMap[subheadingTextColor] : '#ffffff'
   const position = textPositionMap[textAlign] ?? textPositionMap['bottom-center']
 
