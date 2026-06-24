@@ -5,10 +5,13 @@ export function initMarquee(trackSelector: string) {
   const items = track.querySelectorAll<HTMLElement>('[data-marquee-item]')
   const itemCount = items.length
 
-  const isMobile = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent)
+  const w = window.innerWidth
+  const isMobile = w < 768
+  const isTablet = w >= 768 && w < 1024
 
-  const shouldMarquee = isMobile ? itemCount > 2 : itemCount > 5
-  console.log({ itemCount, isMobile, shouldMarquee })
+  const columns = isMobile ? 2 : isTablet ? 3 : 5
+
+  const shouldMarquee = itemCount > columns
 
   if (!shouldMarquee) {
     track.classList.remove('marquee-active')
@@ -19,7 +22,6 @@ export function initMarquee(trackSelector: string) {
   track.dataset.initialized = 'true'
 
   const containerWidth = track.parentElement!.getBoundingClientRect().width
-  const columns = isMobile ? 2 : 5
   const itemWidth = containerWidth / columns
 
   track.style.setProperty('--marquee-item-width', `${itemWidth}px`)

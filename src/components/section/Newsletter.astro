@@ -7,7 +7,7 @@ const { heading = 'Daftar Newsletter ONDA', subheading } = Astro.props
 
 <section class="w-full overflow-x-clip">
   <div
-    class="from-light-blue-shade to-light-yellow-shade flex flex-col items-start gap-6 bg-gradient-to-r px-10 py-16 md:flex-row md:items-center md:justify-between md:px-24 md:py-16"
+    class="from-light-blue-shade to-light-yellow-shade flex flex-col items-start gap-6 bg-gradient-to-r px-8 py-12 md:px-12 lg:flex-row lg:items-center lg:justify-between lg:px-24 lg:py-16"
   >
     <div class="max-w-md" data-reveal="right">
       <h2 class="text-onda-blue text-h2 font-extrabold italic">{heading}</h2>
@@ -28,7 +28,7 @@ const { heading = 'Daftar Newsletter ONDA', subheading } = Astro.props
         name="email"
         required
         placeholder="Masukkan Email Anda"
-        class="text-dark-blue-shade w-full rounded-lg border-0 bg-white px-4 py-2.5 text-sm shadow-sm outline-none sm:w-64"
+        class="text-dark-blue-shade w-full rounded-lg border-0 bg-white px-4 py-2.5 text-sm shadow-sm outline-none sm:flex-1 lg:w-64"
       />
       <button
         type="submit"

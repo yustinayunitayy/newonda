@@ -43,7 +43,7 @@ const restBlocks = blocks.filter(
         </div>
       )
     }
-    {statsBlock && <StatsBar items={statsBlock.items} />}
+    {statsBlock && <StatsBar {...statsBlock} />}
 
     <div class="flex flex-col gap-20 pt-20 md:gap-28 md:pt-28">
       <div class="flex flex-col gap-20 bg-[url('/bg.png')] bg-cover bg-center md:gap-28">
