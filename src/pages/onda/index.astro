@@ -11,10 +11,6 @@ import { getPage } from '../../lib/data/pages'
 
 const page = await getPage('onda')
 const blocks = page?.blocks ?? []
-console.log(
-  'videos block:',
-  JSON.stringify((blocks.find((b: any) => b.blockType === 'brand-video-grid') as any)?.videos)
-)
 ---
 
 <Layout>

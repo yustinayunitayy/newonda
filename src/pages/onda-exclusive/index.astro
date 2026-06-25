@@ -15,10 +15,6 @@ import type { BannerBlock } from '../../lib/data/blocks/banner'
 
 const page = await getPage('onda-exclusive')
 const blocks = page?.blocks ?? []
-console.log(
-  'videos block:',
-  JSON.stringify((blocks.find((b: any) => b.blockType === 'brand-video-grid') as any)?.videos)
-)
 ---
 
 <Layout footerVariant="black">
