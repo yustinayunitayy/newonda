@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro'
 import Navbar from '../components/global/Navbar.astro'
-import Hero from '../components/react/IntroHero'
+import IntroHero from '../components/react/IntroHero'
 import StatsBar from '../components/section/StatsBar.astro'
 import TextWithImage from '../components/section/TextWithImage.astro'
 import BrandTabs from '../components/react/BrandTab'
@@ -34,12 +34,12 @@ const restBlocks = blocks.filter(
 ---
 
 <Layout>
-  <Navbar variant="transparent" scrollBehavior="scroll-to-white" />
+  <Navbar variant="transparent" scrollBehavior="scroll-to-white" hideUntilReady />
   <div class="relative">
     {
       heroBlock && (
         <div class="min-h-svh bg-black">
-          <Hero client:only="react" {...heroBlock} videoUrl={heroBlock.video?.url} />
+          <IntroHero client:only="react" {...heroBlock} videoUrl={heroBlock.video?.url} />
         </div>
       )
     }

@@ -11,7 +11,7 @@ const INTRO_MS = 5000
 const CONTENT_MS = 1200
 const NAVBAR_DELAY_MS = 800
 
-export default function Hero(block: HeroBlock & { videoUrl?: string }) {
+export default function IntroHero(block: HeroBlock & { videoUrl?: string }) {
   const {
     headingText,
     headingTextColor,

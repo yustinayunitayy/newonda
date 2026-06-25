@@ -1,15 +1,19 @@
 ---
+import { getPage } from '../../lib/data/pages'
 import Layout from '../../layouts/Layout.astro'
 import Navbar from '../../components/global/Navbar.astro'
-import HeroCarouselSection from '../../components/react/HeroCarousel'
-import type { HeroCarouselBlock } from '../../lib/data/blocks/hero-carousel'
+import Hero from '../../components/react/Hero'
+import type { HeroBlock } from '../../lib/data/blocks'
 import TextWithImage from '../../components/section/TextWithImage.astro'
 import type { TextWithImageBlock } from '../../lib/data/blocks'
 import BrandVideoGrid from '../../components/react/BrandVideo'
 import { STREAM_BASE, toBrandVideoItems } from '../../lib/data/brand-video'
-import { getPage } from '../../lib/data/pages'
+import ProductGrid from '../../components/section/ProductGrid.astro'
+import type { ProductGridBlock } from '../../lib/data/blocks/product-grid'
+import Banner from '../../components/section/Banner.astro'
+import type { BannerBlock } from '../../lib/data/blocks/banner'
 
-const page = await getPage('onda')
+const page = await getPage('onda-exclusive')
 const blocks = page?.blocks ?? []
 console.log(
   'videos block:',
@@ -17,17 +21,19 @@ console.log(
 )
 ---
 
-<Layout>
-  <Navbar variant="white" />
-  <div class="relative">
-    <div class="flex flex-col gap-20 pb-20 md:gap-28 md:pb-28">
+<Layout footerVariant="black">
+  <Navbar variant="transparent" scrollBehavior="scroll-to-black" />
+  <div class="relative bg-black">
+    <div class="flex flex-col gap-20 md:gap-28">
       {
         blocks.map((block: any) => {
           switch (block.blockType) {
-            case 'hero-carousel':
-              return <HeroCarouselSection client:visible {...(block as HeroCarouselBlock)} />
+            case 'hero':
+              return <Hero client:visible {...(block as HeroBlock)} />
             case 'text-with-image':
               return <TextWithImage {...(block as TextWithImageBlock)} />
+            case 'product-grid':
+              return <ProductGrid {...(block as ProductGridBlock)} />
             case 'brand-video-grid':
               return (
                 <BrandVideoGrid
@@ -38,6 +44,8 @@ console.log(
                   streamBase={STREAM_BASE}
                 />
               )
+            case 'banner':
+              return <Banner {...(block as BannerBlock)} />
             default:
               return null
           }

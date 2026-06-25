@@ -10,8 +10,7 @@ const C = {
   darkBlue: 'var(--color-dark-blue-shade)',
 } as const
 export type TextColor = keyof typeof C
-export const textColorMap = C
-
+export const textColorMap: Record<string, string> = C
 const lift = { transform: 'translateY(-1px)' } as const
 type Position = 'center-left' | 'center-center' | 'center-right' | 'bottom-center'
 
@@ -70,7 +69,7 @@ export const buttonVariants: Record<ButtonVariant, ButtonStyle> = {
     hover: { textDecoration: 'underline', opacity: 0.8 },
   },
   white: {
-    base: { background: C.white, color: C.blue, border: 'none' },
+    base: { background: C.white, color: C.blue, border: `2px solid ${C.blue}` },
     hover: { ...lift, boxShadow: '0 4px 16px rgba(0,0,0,0.2)' },
   },
   'white-outline': {
@@ -82,7 +81,7 @@ export const buttonVariants: Record<ButtonVariant, ButtonStyle> = {
     hover: { ...lift, background: 'rgba(255,255,255,0.28)' },
   },
   yellow: {
-    base: { background: C.yellow, color: C.blue, border: 'none' },
+    base: { background: C.yellow, color: C.darkBlue, border: 'none' },
     hover: { ...lift, boxShadow: '0 4px 16px rgba(254,221,0,0.3)' },
   },
   'yellow-outline': {

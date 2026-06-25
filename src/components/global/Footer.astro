@@ -1,31 +1,29 @@
 ---
-// src/components/global/Footer.astro
-// Narik dari collection `site-settings` (pakai fetchSiteSettings).
-
-import type { SiteSettings } from '../../lib/data/site-settings' // sesuaikan path
+import type { SiteSettings } from '../../lib/data/site-settings'
 
 interface Props {
   settings: SiteSettings
+  variant?: 'blue' | 'black'
 }
 
-const { settings } = Astro.props
+const { settings, variant = 'blue' } = Astro.props
+const bg = variant === 'black' ? 'bg-black' : 'bg-onda-blue'
 const { logo, headOffice, contact, socialMedia = [], onlineShop = [], copyright } = settings
 const waNumber = contact?.csPhone?.replace(/\D/g, '')
 ---
 
-<footer class="bg-onda-blue text-white">
+<footer class:list={[bg, 'text-white']}>
   <div class="mx-auto max-w-7xl px-6 py-10 md:px-12 md:py-12">
-    <div class="flex flex-col gap-10 md:flex-row md:items-start md:justify-between md:gap-8">
+    <div class="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-8 xl:grid-cols-4">
       {
         logo?.url && (
           <img
             src={logo.url}
             alt={logo.alt ?? 'ONDA'}
-            class="h-9 w-auto self-start md:h-11 md:self-center"
+            class="h-9 w-auto self-start md:col-span-2 lg:col-span-1 lg:h-11 lg:self-center"
           />
         )
       }
-
       {
         headOffice?.address && (
           <div class="max-w-xs">
@@ -36,7 +34,6 @@ const waNumber = contact?.csPhone?.replace(/\D/g, '')
           </div>
         )
       }
-
       {
         (contact?.phone || contact?.csPhone || contact?.email) && (
           <div>
@@ -66,7 +63,6 @@ const waNumber = contact?.csPhone?.replace(/\D/g, '')
           </div>
         )
       }
-
       <div class="flex flex-col gap-6">
         {
           socialMedia.length > 0 && (
@@ -79,9 +75,9 @@ const waNumber = contact?.csPhone?.replace(/\D/g, '')
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={s.platform}
-                    class="flex h-9 w-9 items-center justify-center rounded-full border border-white/60 transition-colors hover:bg-white/15"
+                    class="flex h-10 w-10 items-center justify-center rounded-full border border-white/60 transition-colors hover:bg-white/15"
                   >
-                    <iconify-icon icon={s.icon} width="18" />
+                    <iconify-icon icon={s.icon} width="22" />
                   </a>
                 ))}
               </div>

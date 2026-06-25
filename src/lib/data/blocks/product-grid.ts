@@ -17,7 +17,7 @@ export interface ProductGridBlock {
   labelTextColor?: TextColor
   heading: string
   headingTextColor?: TextColor
-  subheading: string
+  subheading?: string
   subheadingTextColor?: TextColor
   items: ProductGridItem[]
 }

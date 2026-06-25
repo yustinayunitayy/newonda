@@ -16,9 +16,10 @@ interface Props {
   description?: string
   ogImage?: string
   noIndex?: boolean
+  footerVariant?: 'blue' | 'black'
 }
 
-const { title, description, ogImage, noIndex = false } = Astro.props
+const { title, description, ogImage, noIndex = false, footerVariant = 'blue' } = Astro.props
 const isHome = Astro.url.pathname === '/'
 
 const seo = await resolveSeo({ title, description, ogImage })
@@ -42,11 +43,13 @@ const seo = await resolveSeo({ title, description, ogImage })
     <JsonLd />
   </head>
 
-  <body>
+  <body class="flex min-h-svh flex-col">
     <GTMBody />
     <GlobalLoader isHome={isHome} />
-    <slot />
-    {settings && <Footer settings={settings} />}
+    <main class="flex-1">
+      <slot />
+    </main>
+    {settings && <Footer settings={settings} variant={footerVariant} />}
 
     <script>
       function show(el: HTMLElement, delay: number) {

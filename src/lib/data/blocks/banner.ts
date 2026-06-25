@@ -7,8 +7,8 @@ export interface BannerBlock {
   labelTextColor?: TextColor
   heading: string
   headingTextColor: TextColor
-  subheading: string
-  subheadingTextColor: TextColor
+  subheading?: string
+  subheadingTextColor?: TextColor
   textAlign: textPosition
   backgroundImage: {
     url: string

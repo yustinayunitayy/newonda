@@ -1,29 +1,65 @@
 ---
 import type { ProductGridBlock } from '../../lib/data/blocks/product-grid'
+import { textColorMap } from '../../lib/colour'
 
 type Props = ProductGridBlock
 
-const { miniLabel, heading, subheading, items } = Astro.props
+const {
+  miniLabel,
+  labelTextColor,
+  heading,
+  headingTextColor = 'blue',
+  subheading,
+  subheadingTextColor = 'darkBlue',
+  items,
+} = Astro.props
+
+const count = Math.min(items.length, 4)
+
+// kolom ngikut jumlah item -> kartu melar ngisi lebar (class literal biar kebaca Tailwind)
+const colsMap: Record<number, string> = {
+  1: 'grid-cols-1',
+  2: 'grid-cols-2',
+  3: 'grid-cols-2 lg:grid-cols-3',
+  4: 'grid-cols-2 lg:grid-cols-4',
+}
+const colClass = colsMap[count] ?? 'grid-cols-2 lg:grid-cols-4'
 ---
 
 <section class="section">
   {
     (miniLabel || heading || subheading) && (
       <div class="mb-8 flex flex-col gap-3 md:mb-12" data-reveal-group>
-        {miniLabel && <p class="text-mini-label">{miniLabel}</p>}
-        {heading && <h2 class="text-h2 text-onda-blue">{heading}</h2>}
-        {subheading && <p class="text-lead text-dark-blue-shade max-w-2xl">{subheading}</p>}
+        {miniLabel && (
+          <p
+            class="text-mini-label"
+            style={labelTextColor ? `color:${textColorMap[labelTextColor]}` : undefined}
+          >
+            {miniLabel}
+          </p>
+        )}
+        {heading && (
+          <h2 class="text-h2" style={`color:${textColorMap[headingTextColor]}`}>
+            {heading}
+          </h2>
+        )}
+        {subheading && (
+          <p class="text-lead max-w-2xl" style={`color:${textColorMap[subheadingTextColor]}`}>
+            {subheading}
+          </p>
+        )}
       </div>
     )
   }
 
-  <div class="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-6" data-reveal-group>
+  <!-- kartu MELAR ngisi lebar, tapi TINGGI dikunci biar nggak kegedean -->
+  <div class:list={['grid gap-4 lg:gap-6', colClass]} data-reveal-group>
     {
       items.map((item) => (
-        <article class="group relative aspect-3/4 overflow-hidden rounded-2xl">
+        <article class="group relative h-72 overflow-hidden rounded-2xl md:h-96">
           {item.image?.url && (
             <img
-              src={`${item.image.url}?quality=85&width=600`}
+              src={`${item.image.url}?quality=85&width=800`}
               alt={item.image.alt ?? item.label ?? ''}
               class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               loading="lazy"
