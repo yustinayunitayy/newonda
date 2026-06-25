@@ -8,7 +8,7 @@ import { Icon } from 'astro-icon/components'
 interface Props {
   variant?: 'transparent' | 'white' | 'black'
   scrollBehavior?: 'static' | 'scroll-to-white' | 'scroll-to-black'
-  hideUntilReady?: boolean // true cuma di halaman dengan intro (home)
+  hideUntilReady?: boolean
 }
 
 const { variant = 'white', scrollBehavior = 'static', hideUntilReady = false } = Astro.props
@@ -61,7 +61,10 @@ const extAttrs = (link?: string) =>
         id="logo-white"
         src={LogoWhite}
         alt="ONDA Logo"
-        class:list={['h-8 w-auto', variant === 'transparent' ? 'block' : 'hidden']}
+        class:list={[
+          'h-8 w-auto',
+          variant === 'transparent' || variant === 'black' ? 'block' : 'hidden',
+        ]}
       />
       <Image
         id="logo-blue"
