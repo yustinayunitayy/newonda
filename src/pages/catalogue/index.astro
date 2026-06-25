@@ -1,0 +1,14 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import Navbar from '../../components/global/Navbar.astro'
+import CatalogueViewer from '../../components/react/CatalogueViewer'
+import { getCatalogs } from '../../lib/data/catalog'
+const catalogs = await getCatalogs()
+---
+
+<Layout>
+  <Navbar variant="white" />
+  <main>
+    <CatalogueViewer client:only="react" catalogs={catalogs} />
+  </main>
+</Layout>
