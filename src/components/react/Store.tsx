@@ -36,7 +36,6 @@ export default function StoreLocator({
         {heading && <h1 className="text-h2 text-onda-yellow mt-2 font-extrabold">{heading}</h1>}
         {subheading && <p className="text-body mt-2 text-white">{subheading}</p>}
 
-        {/* Search */}
         <div className="relative mt-6">
           <span className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-white/50">
             <svg viewBox="0 0 24 24" className="h-5 w-5 fill-none stroke-current" strokeWidth={2}>
@@ -53,7 +52,6 @@ export default function StoreLocator({
           />
         </div>
 
-        {/* List */}
         <div className="mt-6 flex flex-col gap-3">
           {filtered.length === 0 ? (
             <p className="py-8 text-center text-sm text-white/50">
