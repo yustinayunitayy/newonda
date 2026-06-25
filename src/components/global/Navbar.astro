@@ -104,7 +104,10 @@ const extAttrs = (link?: string) =>
     <!-- Mobile hamburger -->
     <button
       id="hamburger"
-      class:list={['p-2 lg:hidden', variant === 'transparent' ? 'text-white' : 'text-onda-blue']}
+      class:list={[
+        'p-2 lg:hidden',
+        variant === 'transparent' || variant === 'black' ? 'text-white' : 'text-onda-blue',
+      ]}
       aria-label="Toggle menu"
       aria-expanded="false"
     >
