@@ -28,7 +28,6 @@ export default function BrandTabs({
 
   return (
     <section className="section w-full">
-      {/* Heading */}
       {(heading || subheading) && (
         <motion.div
           {...reveal}
@@ -54,7 +53,6 @@ export default function BrandTabs({
         </motion.div>
       )}
 
-      {/* Tab bar — segmented control */}
       <motion.div
         {...reveal}
         className="grid overflow-hidden rounded-2xl border border-gray-200 bg-white"

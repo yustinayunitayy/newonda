@@ -1,0 +1,60 @@
+---
+import Layout from '../../../layouts/Layout.astro'
+import Navbar from '../../../components/global/Navbar.astro'
+import { RichTextRenderer } from '../../../components/react/RichTextRenderer'
+import { getNewsBySlug, formatNewsDate } from '../../../lib/data/onda-news'
+
+export const prerender = false // SSR: fetch by slug saat request
+
+const { slug } = Astro.params
+const news = slug ? await getNewsBySlug(slug) : null
+
+if (!news) {
+  return Astro.redirect('/404')
+}
+---
+
+<Layout title={`${news.title} — ONDA`} description={news.preview ?? news.subtitle}>
+  <Navbar variant="white" />
+  <main class="pt-16">
+    <article class="section py-12 md:py-16">
+      <a href="/news" class="text-onda-blue text-sm font-bold">‹ back to news</a>
+
+      {
+        news.coverUrl && (
+          <img
+            src={news.coverUrl}
+            alt={news.title}
+            class="mt-4 aspect-[16/7] w-full rounded-2xl object-cover"
+          />
+        )
+      }
+
+      <h1 class="text-h2 text-onda-blue mt-6 font-extrabold">{news.title}</h1>
+      {news.subtitle && <p class="text-dark-blue-shade mt-1 text-lg">{news.subtitle}</p>}
+
+      <p class="text-dark-blue-shade/70 mt-3 flex items-center gap-2 text-sm">
+        <iconify-icon icon="mdi:calendar-blank-outline" width="16"></iconify-icon>
+        {formatNewsDate(news.date)}
+      </p>
+
+      {
+        news.categories.length > 0 && (
+          <div class="mt-2 flex flex-wrap gap-2">
+            {news.categories.map((c) => (
+              <span class="bg-light-blue-shade text-onda-blue rounded-full px-2.5 py-0.5 text-xs font-semibold">
+                {c.name}
+              </span>
+            ))}
+          </div>
+        )
+      }
+
+      <div class="mt-6 max-w-3xl">
+        <RichTextRenderer content={news.description} className="text-dark-blue-shade" />
+      </div>
+    </article>
+  </main>
+</Layout>
+
+<script is:inline src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>

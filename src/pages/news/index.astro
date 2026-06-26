@@ -1,0 +1,18 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import Navbar from '../../components/global/Navbar.astro'
+import News from '../../components/react/News'
+import { getNewsList, getNewsCategories } from '../../lib/data/onda-news'
+
+const [news, categories] = await Promise.all([getNewsList(), getNewsCategories()])
+---
+
+<Layout
+  title="Dunia Onda — Berita & Artikel"
+  description="Temukan inspirasi & kabar terbaru dari dunia ONDA."
+>
+  <Navbar variant="white" />
+  <main class="pt-16">
+    <News client:load news={news} categories={categories} />
+  </main>
+</Layout>
