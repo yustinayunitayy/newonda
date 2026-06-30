@@ -7,10 +7,7 @@ import { getNewsList, getNewsCategories } from '../../lib/data/onda-news'
 const [news, categories] = await Promise.all([getNewsList(), getNewsCategories()])
 ---
 
-<Layout
-  title="Dunia Onda — Berita & Artikel"
-  description="Temukan inspirasi & kabar terbaru dari dunia ONDA."
->
+<Layout>
   <Navbar variant="white" />
   <main class="pt-16">
     <News client:load news={news} categories={categories} />

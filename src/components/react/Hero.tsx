@@ -6,8 +6,7 @@ import HoverButton from './HoverButton'
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
-// Hero tanpa intro: media + konten langsung tampil, animasi masuk sekali.
-export default function HeroSimple(block: HeroBlock & { videoUrl?: string }) {
+export default function Hero(block: HeroBlock & { videoUrl?: string }) {
   const {
     headingText,
     headingTextColor,
@@ -34,7 +33,7 @@ export default function HeroSimple(block: HeroBlock & { videoUrl?: string }) {
     'rounded-xl px-3 py-2 text-xs font-medium md:px-8 md:text-sm transition-all duration-200 cursor-pointer'
 
   return (
-    <section className="relative min-h-svh w-full overflow-hidden bg-black pb-24 md:min-h-screen">
+    <section className="relative min-h-[70dvh] w-full overflow-hidden bg-black md:min-h-dvh">
       {!videoReady && mediaType === 'video' && <div className="absolute inset-0 bg-black" />}
 
       {mediaType === 'video' ? (
@@ -61,8 +60,9 @@ export default function HeroSimple(block: HeroBlock & { videoUrl?: string }) {
 
       <div className="absolute inset-0 bg-black/30" />
 
+      {/* added pb-20 md:pb-24 so text isn't flush to the bottom edge (matches IntroHero) */}
       <div
-        className="section absolute inset-0 flex flex-col"
+        className="section absolute inset-0 flex flex-col pb-20 md:pb-24"
         style={{
           justifyContent: position.justifyContent,
           alignItems: position.alignItems,

@@ -1,36 +1,43 @@
-import { getOne } from "../payload";
+import { getOne } from '../payload'
+import type { TextColor } from '../colour'
+
+export interface ContactBlock {
+  heading: string
+  headingTextColor?: TextColor
+  body?: any
+}
 
 export interface SiteSettings {
-  title: string;
+  title: string
   logo?: {
-    url: string;
-    alt?: string;
-  };
+    url: string
+    alt?: string
+  }
   headOffice: {
-    address: string;
+    address: string
     coordinates: {
-      lat: number;
-      lng: number;
-    };
-  };
+      lat: number
+      lng: number
+    }
+  }
   contact: {
-    phone?: string;
-    csPhone?: string;
-    email?: string;
-  };
+    phone?: string
+    csPhone?: string
+    email?: string
+  }
   socialMedia: {
-    platform: string;
-    icon: string;
-    link: string;
-  }[];
+    platform: string
+    icon: string
+    link: string
+  }[]
   onlineShop: {
-    platform: string;
-    icon: string;
-    link: string;
-  }[];
-  copyright?: string;
+    platform: string
+    icon: string
+    link: string
+  }[]
+  copyright?: string
 }
 
 export async function fetchSiteSettings(): Promise<SiteSettings | null> {
-  return getOne("site-settings", { title: { equals: "Site Settings" } }, 1);
+  return getOne('site-settings', { title: { equals: 'Site Settings' } }, 1)
 }

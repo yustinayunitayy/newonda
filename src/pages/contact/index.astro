@@ -1,0 +1,31 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import Navbar from '../../components/global/Navbar.astro'
+import HeroSimple from '../../components/react/Hero'
+import Form from '../../components/section/Form.astro'
+import { getPage } from '../../lib/data/pages'
+import { fetchSiteSettings } from '../../lib/data/site-settings'
+import type { HeroBlock } from '../../lib/data/blocks'
+import type { ContactBlock } from '../../lib/data/site-settings'
+
+const [page, settings] = await Promise.all([getPage('contact'), fetchSiteSettings()])
+const blocks = page?.blocks ?? []
+---
+
+<Layout>
+  <Navbar variant="transparent" scrollBehavior="scroll-to-white" />
+  <main>
+    {
+      blocks.map((block: any) => {
+        switch (block.blockType) {
+          case 'hero':
+            return <HeroSimple client:load {...(block as HeroBlock)} videoUrl={block.video?.url} />
+          case 'form-wording':
+            return settings && <Form {...(block as ContactBlock)} settings={settings} />
+          default:
+            return null
+        }
+      })
+    }
+  </main>
+</Layout>

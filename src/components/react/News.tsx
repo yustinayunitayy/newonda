@@ -1,3 +1,4 @@
+'use client'
 import { useMemo, useState } from 'react'
 import type { NewsCategory, NewsItem } from '../../lib/data/onda-news'
 import { formatNewsDate } from '../../lib/data/onda-news'
@@ -9,7 +10,7 @@ type Props = {
 
 function Badge({ name }: { name: string }) {
   return (
-    <span className="bg-light-blue-shade text-onda-blue inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold">
+    <span className="bg-light-blue-shade text-onda-blue text-mini-label inline-block rounded-full px-2.5 py-0.5 font-semibold">
       {name}
     </span>
   )
@@ -35,8 +36,7 @@ export default function News({ news, categories }: Props) {
   const [latest, ...older] = filtered
 
   return (
-    <section className="section py-16 md:py-24">
-      {/* Header */}
+    <section className="section py-12">
       <h1 className="text-h2 text-onda-blue font-extrabold">Dunia Onda</h1>
       <p className="text-body text-dark-blue-shade mt-1">
         Temukan Inspirasi &amp; Kabar Terbaru dari Dunia Onda
@@ -59,7 +59,6 @@ export default function News({ news, categories }: Props) {
         />
       </div>
 
-      {/* Category chips */}
       <div className="mt-4 flex flex-wrap gap-2">
         {[{ name: 'Semua Artikel', slug: 'all' }, ...categories].map((c) => (
           <button
@@ -77,20 +76,29 @@ export default function News({ news, categories }: Props) {
       </div>
 
       {filtered.length === 0 && (
-        <p className="mt-12 text-center text-sm text-gray-500">
+        <p className="text-dark-blue-shade/60 mt-12 text-center text-sm">
           Artikel tidak ditemukan{query ? ` untuk "${query}"` : ''}.
         </p>
       )}
 
-      {/* Latest (featured) */}
       {latest && (
         <>
-          <h2 className="text-h3 text-onda-blue mt-12 font-bold">Latest News</h2>
+          <h2 className="text-h2 text-onda-blue mt-12 text-center font-bold md:text-left">
+            Latest News
+          </h2>
           <a
             href={`/news/${latest.slug}`}
-            className="mt-4 grid items-center gap-6 rounded-2xl bg-white p-5 shadow-md transition-shadow hover:shadow-lg md:grid-cols-2 md:p-6"
+            className="mt-4 grid items-center gap-6 rounded-2xl border border-gray-100 bg-white p-5 shadow-md transition-shadow hover:shadow-xl md:grid-cols-2 md:p-6"
           >
-            <div>
+            {latest.coverUrl && (
+              <img
+                src={latest.coverUrl}
+                alt={latest.title}
+                className="order-1 h-56 w-full rounded-xl object-cover md:order-2 md:h-72 lg:h-80"
+                loading="lazy"
+              />
+            )}
+            <div className="order-2 md:order-1">
               <h3 className="text-onda-blue text-xl font-bold">{latest.title}</h3>
               {latest.subtitle && (
                 <p className="text-dark-blue-shade mt-1 font-semibold">{latest.subtitle}</p>
@@ -110,22 +118,15 @@ export default function News({ news, categories }: Props) {
                 Baca Selengkapnya →
               </span>
             </div>
-            {latest.coverUrl && (
-              <img
-                src={latest.coverUrl}
-                alt={latest.title}
-                className="aspect-[4/3] w-full rounded-xl object-cover"
-                loading="lazy"
-              />
-            )}
           </a>
         </>
       )}
 
-      {/* Older grid */}
       {older.length > 0 && (
         <>
-          <h2 className="text-h3 text-onda-blue mt-12 font-bold">Older News</h2>
+          <h2 className="text-h2 text-onda-blue mt-12 text-center font-bold md:text-left">
+            Older News
+          </h2>
           <div className="mt-4 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {older.map((n) => (
               <a
@@ -137,7 +138,7 @@ export default function News({ news, categories }: Props) {
                   <img
                     src={n.coverUrl}
                     alt={n.title}
-                    className="aspect-[4/3] w-full object-cover"
+                    className="h-48 w-full object-cover sm:h-52 md:h-56"
                     loading="lazy"
                   />
                 )}
@@ -153,7 +154,7 @@ export default function News({ news, categories }: Props) {
                       <Badge key={c.slug} name={c.name} />
                     ))}
                   </div>
-                  <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
+                  <div className="border-light-blue-shade mt-3 flex items-center justify-between border-t pt-3">
                     <span className="text-dark-blue-shade/70 text-xs">
                       {formatNewsDate(n.date)}
                     </span>
