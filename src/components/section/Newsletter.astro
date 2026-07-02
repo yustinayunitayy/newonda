@@ -71,7 +71,7 @@ const { heading = 'Daftar Newsletter ONDA', subheading } = Astro.props
         if (data.already) {
           await Swal.fire({
             icon: 'info',
-            title: 'Kamu udah subscribe kok 😊',
+            title: 'Kamu udah subscribe kok',
             text: 'Email ini sudah terdaftar di newsletter kami.',
             confirmButtonText: 'Oke',
             confirmButtonColor: '#0050b3',
@@ -79,7 +79,7 @@ const { heading = 'Daftar Newsletter ONDA', subheading } = Astro.props
         } else {
           await Swal.fire({
             icon: 'success',
-            title: 'Berhasil! 🎉',
+            title: 'Berhasil!',
             text: 'Cek inbox kamu untuk email selamat datang.',
             confirmButtonText: 'Oke',
             confirmButtonColor: '#0050b3',

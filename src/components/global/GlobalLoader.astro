@@ -29,20 +29,19 @@ const { isHome = false } = Astro.props
     var introSeen = sessionStorage.getItem('intro-seen') === 'true'
 
     var html = document.documentElement
-    html.style.overflow = 'hidden' 
+    html.style.overflow = 'hidden'
 
     var done = false
     function hide() {
       if (done) return
       done = true
       html.style.overflow = ''
-      loader.remove() 
+      loader.remove()
     }
 
-    // Home + intro belum diputar → tunggu Hero benar-benar mount
     if (isHome && !introSeen) {
       window.addEventListener('hero:mounted', hide, { once: true })
-      setTimeout(hide, 4000) // fallback kalau sinyal tidak datang
+      setTimeout(hide, 4000)
       return
     }
 

@@ -7,7 +7,6 @@ const EASE = [0.16, 1, 0.3, 1] as const
 type Video = {
   videoId: string
   title?: string
-  /** thumbnail dari CMS (doc.stream.thumbnailUrl). Kalau kosong, dibuat dari videoId */
   thumbnail?: string
 }
 
@@ -15,7 +14,6 @@ type Props = {
   heading?: string
   headingColor?: TextColor
   videos: Video[]
-  /** subdomain CF Stream, mis. "https://customer-xxxx.cloudflarestream.com" */
   streamBase: string
 }
 
@@ -65,7 +63,6 @@ export default function BrandVideoGrid({
             />
             <div className="absolute inset-0 bg-black/20 transition-colors group-hover:bg-black/30" />
 
-            {/* Tombol play */}
             <span className="absolute inset-0 flex items-center justify-center">
               <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/90 shadow-lg transition-transform duration-300 group-hover:scale-110">
                 <svg viewBox="0 0 24 24" className="fill-onda-blue h-6 w-6">
@@ -83,7 +80,6 @@ export default function BrandVideoGrid({
         ))}
       </div>
 
-      {/* Modal zoom-in */}
       <AnimatePresence>
         {activeId && (
           <motion.div
@@ -101,7 +97,6 @@ export default function BrandVideoGrid({
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Tombol close */}
               <button
                 onClick={() => setActiveId(null)}
                 aria-label="Tutup"
@@ -110,7 +105,6 @@ export default function BrandVideoGrid({
                 ✕
               </button>
 
-              {/* Player CF Stream (klik play di sini) */}
               <div className="aspect-video w-full">
                 <iframe
                   src={iframe(activeId)}

@@ -134,7 +134,6 @@ export default function HeroCarouselSection({
             })}
           </div>
 
-          {/* Dots */}
           {n > 1 && (
             <div className="flex items-center gap-2">
               {images.map((_, i) => (

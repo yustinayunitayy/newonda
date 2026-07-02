@@ -60,7 +60,6 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
 
       <div className="absolute inset-0 bg-black/30" />
 
-      {/* added pb-20 md:pb-24 so text isn't flush to the bottom edge (matches IntroHero) */}
       <div
         className="section absolute inset-0 flex flex-col pb-20 md:pb-24"
         style={{

@@ -1,17 +1,14 @@
 import { useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
-// @ts-ignore - react-pageflip nggak punya types bawaan
 import HTMLFlipBook from 'react-pageflip'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import 'react-pdf/dist/Page/TextLayer.css'
 
-// worker pdfjs dari CDN (versi ngikut react-pdf)
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
 
 export default function PdfFlipbook({ url }: { url: string }) {
   const [numPages, setNumPages] = useState(0)
 
-  // ukuran halaman flipbook (portrait A-ish)
   const WIDTH = 420
   const HEIGHT = 594
 

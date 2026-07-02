@@ -15,8 +15,6 @@ const {
 } = Astro.props
 
 const count = Math.min(items.length, 4)
-
-// kolom ngikut jumlah item -> kartu melar ngisi lebar (class literal biar kebaca Tailwind)
 const colsMap: Record<number, string> = {
   1: 'grid-cols-1',
   2: 'grid-cols-2',
@@ -51,8 +49,6 @@ const colClass = colsMap[count] ?? 'grid-cols-2 lg:grid-cols-4'
       </div>
     )
   }
-
-  <!-- kartu MELAR ngisi lebar, tapi TINGGI dikunci biar nggak kegedean -->
   <div class:list={['grid gap-4 lg:gap-6', colClass]} data-reveal-group>
     {
       items.map((item) => {

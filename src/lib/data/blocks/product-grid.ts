@@ -9,6 +9,7 @@ export interface ProductGridItem {
   }
   label?: string
   description?: string
+  link?: string
 }
 
 export interface ProductGridBlock {
