@@ -55,31 +55,40 @@ const colClass = colsMap[count] ?? 'grid-cols-2 lg:grid-cols-4'
   <!-- kartu MELAR ngisi lebar, tapi TINGGI dikunci biar nggak kegedean -->
   <div class:list={['grid gap-4 lg:gap-6', colClass]} data-reveal-group>
     {
-      items.map((item) => (
-        <article class="group relative h-72 overflow-hidden rounded-2xl md:h-96">
-          {item.image?.url && (
-            <img
-              src={`${item.image.url}?quality=85&width=800`}
-              alt={item.image.alt ?? item.label ?? ''}
-              class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              loading="lazy"
-            />
-          )}
-
-          <div class="absolute inset-0 bg-linear-to-t from-black/75 via-black/15 to-transparent" />
-
-          <div class="absolute inset-x-0 bottom-0 p-4 md:p-5">
-            {item.label && (
-              <h3 class="text-h3 font-bold tracking-wide text-white uppercase">{item.label}</h3>
+      items.map((item) => {
+        const Tag = item.link ? 'a' : 'div'
+        const external = item.link?.startsWith('http')
+        return (
+          <Tag
+            href={item.link || undefined}
+            target={external ? '_blank' : undefined}
+            rel={external ? 'noopener noreferrer' : undefined}
+            class="group relative block h-72 overflow-hidden rounded-2xl md:h-96"
+          >
+            {item.image?.url && (
+              <img
+                src={`${item.image.url}?quality=85&width=800`}
+                alt={item.image.alt ?? item.label ?? ''}
+                class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
             )}
-            {item.description && (
-              <p class="text-body mt-1 text-white/85 transition-all duration-300 lg:translate-y-2 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100">
-                {item.description}
-              </p>
-            )}
-          </div>
-        </article>
-      ))
+
+            <div class="absolute inset-0 bg-linear-to-t from-black/75 via-black/15 to-transparent" />
+
+            <div class="absolute inset-x-0 bottom-0 p-4 md:p-5">
+              {item.label && (
+                <h3 class="text-h3 font-bold tracking-wide text-white uppercase">{item.label}</h3>
+              )}
+              {item.description && (
+                <p class="text-body mt-1 text-white/85 transition-all duration-300 lg:translate-y-2 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100">
+                  {item.description}
+                </p>
+              )}
+            </div>
+          </Tag>
+        )
+      })
     }
   </div>
 </section>

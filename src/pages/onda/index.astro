@@ -5,6 +5,8 @@ import HeroCarouselSection from '../../components/react/HeroCarousel'
 import type { HeroCarouselBlock } from '../../lib/data/blocks/hero-carousel'
 import TextWithImage from '../../components/section/TextWithImage.astro'
 import type { TextWithImageBlock } from '../../lib/data/blocks'
+import ProductGrid from '../../components/section/ProductGrid.astro'
+import type { ProductGridBlock } from '../../lib/data/blocks'
 import BrandVideoGrid from '../../components/react/BrandVideo'
 import { STREAM_BASE, toBrandVideoItems } from '../../lib/data/brand-video'
 import { getPage } from '../../lib/data/pages'
@@ -24,6 +26,8 @@ const blocks = page?.blocks ?? []
               return <HeroCarouselSection client:visible {...(block as HeroCarouselBlock)} />
             case 'text-with-image':
               return <TextWithImage {...(block as TextWithImageBlock)} />
+            case 'product-grid':
+              return <ProductGrid {...(block as ProductGridBlock)} />
             case 'brand-video-grid':
               return (
                 <BrandVideoGrid
