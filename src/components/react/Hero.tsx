@@ -61,7 +61,7 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
       <div className="absolute inset-0 bg-black/30" />
 
       <div
-        className="section absolute inset-0 flex flex-col pb-20 md:pb-24"
+        className="section absolute inset-0 flex flex-col py-20 md:py-24"
         style={{
           justifyContent: position.justifyContent,
           alignItems: position.alignItems,
