@@ -1,0 +1,129 @@
+---
+import type { CertificationsBlock } from '../../lib/data/blocks/about'
+import { textColorMap } from '../../lib/colour'
+
+type Props = CertificationsBlock
+
+const {
+  heading,
+  headingTextColor = 'blue',
+  subheading,
+  subheadingTextColor = 'darkBlue',
+  awardsHeading = 'Penghargaan',
+  awards = [],
+  certsHeading = 'Tersertifikasi Resmi & Berstandar Nasional',
+  certs = [],
+  warrantyBadge,
+} = Astro.props
+---
+
+<section class="section to-light-blue-shade/40 bg-linear-to-b">
+  <!-- Header -->
+  {
+    (heading || subheading) && (
+      <div class="mx-auto mb-12 max-w-2xl text-center">
+        {heading && (
+          <h2
+            class="text-h2 font-extrabold"
+            style={`color:${textColorMap[headingTextColor]}`}
+            data-reveal
+          >
+            {heading}
+          </h2>
+        )}
+        {subheading && (
+          <p
+            class="text-body mt-3 leading-relaxed"
+            style={`color:${textColorMap[subheadingTextColor]}`}
+            data-reveal
+          >
+            {subheading}
+          </p>
+        )}
+      </div>
+    )
+  }
+
+  <!-- Penghargaan -->
+  {
+    awards.length > 0 && (
+      <div data-reveal-group>
+        <p class="text-onda-blue mb-6 text-center text-xs font-bold tracking-[0.2em] uppercase">
+          – {awardsHeading} –
+        </p>
+        <div class="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+          {awards.map((a) => (
+            <div class="flex flex-col items-center rounded-2xl bg-white p-6 text-center shadow-[0_10px_30px_rgba(0,93,166,0.08)]">
+              <div class="bg-light-blue-shade mb-3 flex h-20 w-20 items-center justify-center overflow-hidden rounded-full">
+                {a.image?.url ? (
+                  <img src={a.image.url} alt={a.label ?? ''} class="h-full w-full object-contain" />
+                ) : (
+                  <span class="text-onda-blue/40 text-2xl">★</span>
+                )}
+              </div>
+              {a.year && <p class="text-dark-blue-shade text-sm font-bold">{a.year}</p>}
+              {a.label && <p class="text-dark-blue-shade/70 text-xs">{a.label}</p>}
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  <!-- Sertifikasi -->
+  {
+    certs.length > 0 && (
+      <div class="mt-14" data-reveal-group>
+        <p class="text-onda-blue mb-6 text-center text-xs font-bold tracking-[0.2em] uppercase">
+          – {certsHeading} –
+        </p>
+        <div class="grid gap-4 md:grid-cols-2 md:gap-6">
+          {certs.map((c) => (
+            <div class="flex items-start gap-4 rounded-2xl bg-white p-5 shadow-[0_10px_30px_rgba(0,93,166,0.08)]">
+              <div class="bg-light-blue-shade flex h-12 w-12 flex-none items-center justify-center overflow-hidden rounded-xl">
+                {c.icon?.url ? (
+                  <img src={c.icon.url} alt={c.title} class="h-8 w-8 object-contain" />
+                ) : (
+                  <iconify-icon icon="mdi:certificate-outline" class="text-onda-blue" width="24" />
+                )}
+              </div>
+              <div>
+                <h3 class="text-dark-blue-shade font-bold">{c.title}</h3>
+                {c.description && (
+                  <p class="text-dark-blue-shade/70 mt-1 text-sm leading-relaxed">
+                    {c.description}
+                  </p>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  <!-- Badge Garansi -->
+  {
+    warrantyBadge?.enabled && (
+      <div
+        class="bg-dark-blue-shade mt-10 flex flex-col items-start gap-4 rounded-2xl p-6 text-white sm:flex-row sm:items-center sm:gap-8 md:p-8"
+        data-reveal
+      >
+        <div class="flex-none text-center">
+          <div class="text-4xl leading-none font-extrabold md:text-5xl">
+            {warrantyBadge.years ?? 10}
+          </div>
+          <div class="text-sm font-bold tracking-widest">TAHUN</div>
+        </div>
+        <div>
+          {warrantyBadge.text && <p class="font-bold">{warrantyBadge.text}</p>}
+          {warrantyBadge.description && (
+            <p class="mt-1 text-sm leading-relaxed text-white/85">{warrantyBadge.description}</p>
+          )}
+        </div>
+      </div>
+    )
+  }
+</section>
+
+<script is:inline src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
