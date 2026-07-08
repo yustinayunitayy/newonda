@@ -2,7 +2,6 @@
 import Layout from '../../layouts/Layout.astro'
 import Navbar from '../../components/global/Navbar.astro'
 import HeroSimple from '../../components/react/Hero'
-import Form from '../../components/section/Form.astro'
 import { getPage } from '../../lib/data/pages'
 import { fetchSiteSettings } from '../../lib/data/site-settings'
 import type { HeroBlock } from '../../lib/data/blocks'
@@ -13,7 +12,7 @@ import type { TimelineBlock } from '../../lib/data/blocks/about'
 import Certification from '../../components/section/Certification.astro'
 import type { CertificationsBlock } from '../../lib/data/blocks/about'
 
-const [page] = await Promise.all([getPage('about'), fetchSiteSettings()])
+const [page] = await Promise.all([getPage('about')])
 const blocks = page?.blocks ?? []
 ---
 

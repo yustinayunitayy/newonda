@@ -23,6 +23,6 @@ export interface CertificationsBlock {
   awardsHeading?: string
   awards?: { image?: { url: string; alt?: string }; label?: string; year?: string }[]
   certsHeading?: string
-  certs?: { icon?: { url: string; alt?: string }; title: string; description?: string }[]
-  warrantyBadge?: { enabled?: boolean; years?: number; text?: string; description?: string }
+  certs?: { image?: { url: string; alt?: string }; title: string; description?: string }[]
+  warrantyBadge?: { years?: number; heading?: string; caption?: string }
 }

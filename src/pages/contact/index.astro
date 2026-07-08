@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro'
 import Navbar from '../../components/global/Navbar.astro'
 import HeroSimple from '../../components/react/Hero'
-import Form from '../../components/section/Form.astro'
+import ContactForm from '../../components/section/ContactForm.astro'
 import { getPage } from '../../lib/data/pages'
 import { fetchSiteSettings } from '../../lib/data/site-settings'
 import type { HeroBlock } from '../../lib/data/blocks'
@@ -21,7 +21,7 @@ const blocks = page?.blocks ?? []
           case 'hero':
             return <HeroSimple client:load {...(block as HeroBlock)} videoUrl={block.video?.url} />
           case 'form-wording':
-            return settings && <Form {...(block as ContactBlock)} settings={settings} />
+            return settings && <ContactForm {...(block as ContactBlock)} settings={settings} />
           default:
             return null
         }
