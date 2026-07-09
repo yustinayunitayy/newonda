@@ -1,4 +1,5 @@
 import React from 'react'
+import { img as cdnimg } from '../../lib/image'
 
 interface RichTextRendererProps {
   content: any
@@ -120,9 +121,10 @@ export function RichTextRenderer({ content, className = '' }: RichTextRendererPr
         return (
           <div key={key} className="my-6">
             <img
-              src={img.url}
+              src={cdnimg(img.url, 1200)}
               alt={img.alt || img.filename || ''}
               className="h-auto w-full rounded-lg"
+              loading="lazy" // ➕
             />
             {img.caption && (
               <p className="mt-2 text-center text-sm text-gray-400 italic">{img.caption}</p>

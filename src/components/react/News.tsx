@@ -2,6 +2,7 @@
 import { useMemo, useState } from 'react'
 import type { NewsCategory, NewsItem } from '../../lib/data/onda-news'
 import { formatNewsDate } from '../../lib/data/onda-news'
+import { img } from '../../lib/image'
 
 type Props = {
   news: NewsItem[]
@@ -92,7 +93,7 @@ export default function News({ news, categories }: Props) {
           >
             {latest.coverUrl && (
               <img
-                src={latest.coverUrl}
+                src={img(latest.coverUrl, 1200)}
                 alt={latest.title}
                 className="order-1 h-56 w-full rounded-xl object-cover md:order-2 md:h-72 lg:h-80"
                 loading="lazy"
@@ -136,7 +137,7 @@ export default function News({ news, categories }: Props) {
               >
                 {n.coverUrl && (
                   <img
-                    src={n.coverUrl}
+                    src={img(n.coverUrl, 1200)}
                     alt={n.title}
                     className="h-48 w-full object-cover sm:h-52 md:h-56"
                     loading="lazy"

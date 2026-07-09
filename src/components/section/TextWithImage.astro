@@ -1,6 +1,7 @@
 ---
 import type { TextWithImageBlock } from '../../lib/data/blocks/text-with-image'
 import { buttonVariants, textColorMap } from '../../lib/colour'
+import { img } from '../../lib/image'
 
 type Props = TextWithImageBlock
 
@@ -95,7 +96,7 @@ const btnClass = 'cursor-pointer rounded-xl text-sm font-semibold transition-all
       image && (
         <div class="w-full flex-1" data-reveal-group>
           <img
-            src={image.url}
+            src={img(image.url, 1200)}
             alt={image.alt ?? heading}
             width={image.width}
             height={image.height}

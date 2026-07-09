@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { motion, type Variants } from 'motion/react'
-
-const EASE = [0.16, 1, 0.3, 1] as const
 import type { HeroCarouselBlock } from '../../lib/data/blocks/hero-carousel'
 import { textColorMap } from '../../lib/colour'
 import HoverButton from './HoverButton'
+import { img as cdnimg } from '../../lib/image'
 
+const EASE = [0.16, 1, 0.3, 1] as const
 const CYCLE_MS = 3000
 
 const container: Variants = {
@@ -124,7 +124,7 @@ export default function HeroCarouselSection({
                   transition={{ duration: 0.6, ease: EASE }}
                 >
                   <img
-                    src={img.image.url}
+                    src={cdnimg(img.image.url, 1200)}
                     alt={img.image.alt ?? heading}
                     className="max-h-full max-w-full object-contain drop-shadow-xl"
                     loading="lazy"

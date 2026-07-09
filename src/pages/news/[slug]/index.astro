@@ -3,6 +3,7 @@ import Layout from '../../../layouts/Layout.astro'
 import Navbar from '../../../components/global/Navbar.astro'
 import { RichTextRenderer } from '../../../components/react/RichTextRenderer'
 import { getNewsBySlug, formatNewsDate } from '../../../lib/data/onda-news'
+import { img } from '../../../lib/image'
 
 export const prerender = false
 
@@ -36,9 +37,10 @@ if (!news) {
           news.coverUrl && (
             <div class="mb-8 overflow-hidden rounded-lg">
               <img
-                src={news.coverUrl}
+                src={img(news.coverUrl, 1200)}
                 alt={news.title}
                 class="h-64 w-full object-cover md:h-80 lg:h-96"
+                loading="eager"
               />
             </div>
           )

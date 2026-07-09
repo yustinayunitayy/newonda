@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { img } from '../../lib/image'
 
 type Award = {
   image?: { url?: string; alt?: string }
@@ -11,7 +12,12 @@ function Card({ a }: { a: Award }) {
     <div className="shadow-onda-blue/30 flex h-full flex-col items-center rounded-2xl bg-white p-6 text-center shadow-sm">
       <div className="bg-light-blue-shade mb-3 flex h-20 w-20 items-center justify-center overflow-hidden rounded-full">
         {a.image?.url ? (
-          <img src={a.image.url} alt={a.label ?? ''} className="h-full w-full object-contain" />
+          <img
+            src={img(a.image.url, 400)}
+            alt={a.label ?? ''}
+            className="h-full w-full object-contain"
+            loading="lazy"
+          />
         ) : (
           <span className="text-onda-blue/40 text-2xl">★</span>
         )}

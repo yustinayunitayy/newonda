@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import type { BrandTabsBlock } from '../../lib/data/blocks/brand-tab'
 import { textPositionMap } from '../../lib/colour'
 import HoverButton from './HoverButton'
+import { img } from '../../lib/image'
 
 export default function BrandTabs({
   heading,
@@ -91,7 +92,7 @@ export default function BrandTabs({
             {active.image && (
               <div className="w-full shrink-0 md:w-[50%]">
                 <img
-                  src={`${active.image.url}?quality=85&width=800`}
+                  src={img(active.image.url, 800)}
                   alt={active.image.alt ?? active.brandName ?? active.tabLabel}
                   className="h-56 w-full object-cover object-center md:h-105"
                   loading="lazy"

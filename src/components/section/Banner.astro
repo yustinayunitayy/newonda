@@ -1,6 +1,7 @@
 ---
 import type { BannerBlock } from '../../lib/data/blocks/banner'
 import { buttonStyleMap, textPositionMap, textColorMap } from '../../lib/colour'
+import { img } from '../../lib/image'
 
 type Props = BannerBlock
 
@@ -37,7 +38,7 @@ const btnClass =
   {
     backgroundImage?.url && (
       <img
-        src={backgroundImage.url}
+        src={img(backgroundImage.url, 1600)}
         alt={backgroundImage.alt ?? heading}
         class="absolute inset-0 h-full w-full object-cover object-center"
         loading="lazy"

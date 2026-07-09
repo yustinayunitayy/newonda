@@ -3,6 +3,7 @@ import { useState } from 'react'
 import type { HeroBlock } from '../../lib/data/blocks'
 import { textColorMap, textPositionMap } from '../../lib/colour'
 import HoverButton from './HoverButton'
+import { img } from '../../lib/image'
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
@@ -52,9 +53,11 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
         </video>
       ) : (
         <img
-          src={block.image?.url}
+          src={img(block.image?.url, 1600)}
           alt={block.image?.alt ?? headingText}
           className="absolute inset-0 h-full w-full object-cover object-center"
+          loading="eager"
+          fetchPriority="high"
         />
       )}
 

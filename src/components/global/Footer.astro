@@ -1,5 +1,6 @@
 ---
 import type { SiteSettings } from '../../lib/data/site-settings'
+import { img } from '../../lib/image'
 
 interface Props {
   settings: SiteSettings
@@ -18,7 +19,7 @@ const waNumber = contact?.csPhone?.replace(/\D/g, '')
       {
         logo?.url && (
           <img
-            src={logo.url}
+            src={img(logo.url, 300)}
             alt={logo.alt ?? 'ONDA'}
             class="h-9 w-auto self-start md:col-span-2 lg:col-span-1 lg:h-11 lg:self-center"
           />

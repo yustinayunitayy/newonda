@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import type { HeroBlock } from '../../lib/data/blocks'
 import { textColorMap, textPositionMap } from '../../lib/colour'
 import HoverButton from './HoverButton'
+import { img } from '../../lib/image'
 
 type Phase = 'intro' | 'content' | 'done'
 
@@ -107,9 +108,11 @@ export default function IntroHero(block: HeroBlock & { videoUrl?: string }) {
         </video>
       ) : (
         <img
-          src={block.image?.url}
+          src={img(block.image?.url, 1600)}
           alt={block.image?.alt ?? headingText}
           className="absolute inset-0 h-full w-full object-cover object-center"
+          loading="eager"
+          fetchPriority="high"
         />
       )}
 

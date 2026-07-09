@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import type { CatalogItem } from '../../lib/data/catalog'
 import PdfFlipbook from './PdfFlipbook'
+import { img } from '../../lib/image'
 
 type Props = {
   miniLabel?: string
@@ -57,7 +58,7 @@ export default function CatalogueViewer({
             >
               {c.coverUrl && (
                 <img
-                  src={c.coverUrl}
+                  src={img(c.coverUrl, 800)}
                   alt={c.title}
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   loading="lazy"
