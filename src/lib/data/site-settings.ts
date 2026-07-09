@@ -2,9 +2,12 @@ import { getOne } from '../payload'
 import type { TextColor } from '../colour'
 
 export interface ContactBlock {
+  miniLabel: string
+  labelTextColor: TextColor
   heading: string
-  headingTextColor?: TextColor
-  body?: any
+  headingTextColor: TextColor
+  body: string
+  bodyTextColor: TextColor
 }
 
 export interface SiteSettings {
