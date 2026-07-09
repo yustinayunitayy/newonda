@@ -1,15 +1,18 @@
 ---
 import type { SiteSettings, ContactBlock } from '../../lib/data/site-settings'
 import { textColorMap } from '../../lib/colour'
-import { RichTextRenderer } from '../react/RichTextRenderer'
 import HoverButton from '../react/HoverButton'
 
 type Props = ContactBlock & { settings: SiteSettings }
 
-const { heading, headingTextColor = 'blue', body, settings } = Astro.props
+const { miniLabel, labelTextColor, heading, headingTextColor, body, bodyTextColor, settings } =
+  Astro.props
 const { contact, headOffice } = settings
 
-const headingColor = textColorMap[headingTextColor] ?? textColorMap.blue
+const headingColor = textColorMap[headingTextColor]
+const labelColor = textColorMap[labelTextColor]
+const bodyColor = textColorMap[bodyTextColor]
+
 const waNumber = contact?.csPhone?.replace(/\D/g, '') ?? ''
 const mapSrc = headOffice?.coordinates
   ? `https://maps.google.com/maps?q=${headOffice.coordinates.lat},${headOffice.coordinates.lng}&z=16&output=embed`
@@ -43,9 +46,22 @@ const contactRows = [
 <section class="section section-full">
   <div class="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
     <div data-reveal="right">
+      {
+        miniLabel && (
+          <p class="mb-4 text-sm font-bold tracking-[0.2em]" style={`color:${labelColor}`}>
+            {miniLabel}
+          </p>
+        )
+      }
       <h2 class="text-h2 font-extrabold" style={`color:${headingColor}`}>{heading}</h2>
 
-      {body && <RichTextRenderer content={body} className="text-body mt-4" />}
+      {
+        body && (
+          <p class="text-body mt-4" style={`color:${bodyColor}`}>
+            {body}
+          </p>
+        )
+      }
 
       <ul class="mt-8 flex flex-col gap-4">
         {
