@@ -1,17 +1,8 @@
 ---
-import { getPage } from '../../lib/data/pages'
 import Layout from '../../layouts/Layout.astro'
 import Navbar from '../../components/global/Navbar.astro'
-import Hero from '../../components/react/Hero'
-import type { HeroBlock } from '../../lib/data/blocks'
-import TextWithImage from '../../components/section/TextWithImage.astro'
-import type { TextWithImageBlock } from '../../lib/data/blocks'
-import BrandVideoGrid from '../../components/react/BrandVideo'
-import { STREAM_BASE, toBrandVideoItems } from '../../lib/data/brand-video'
-import ProductGrid from '../../components/section/ProductGrid.astro'
-import type { ProductGridBlock } from '../../lib/data/blocks/product-grid'
-import Banner from '../../components/section/Banner.astro'
-import type { BannerBlock } from '../../lib/data/blocks/banner'
+import BlockRenderer from '../../components/section/BlockRenderer.astro'
+import { getPage } from '../../lib/data/pages'
 
 const page = await getPage('onda-exclusive')
 const blocks = page?.blocks ?? []
@@ -21,32 +12,7 @@ const blocks = page?.blocks ?? []
   <Navbar variant="transparent" scrollBehavior="scroll-to-black" />
   <div class="relative bg-black">
     <div class="flex flex-col gap-20 md:gap-28">
-      {
-        blocks.map((block: any) => {
-          switch (block.blockType) {
-            case 'hero':
-              return <Hero client:visible {...(block as HeroBlock)} />
-            case 'text-with-image':
-              return <TextWithImage {...(block as TextWithImageBlock)} />
-            case 'product-grid':
-              return <ProductGrid {...(block as ProductGridBlock)} />
-            case 'brand-video-grid':
-              return (
-                <BrandVideoGrid
-                  client:visible
-                  heading={block.heading}
-                  headingColor={block.headingColor}
-                  videos={toBrandVideoItems(block.videos)}
-                  streamBase={STREAM_BASE}
-                />
-              )
-            case 'banner':
-              return <Banner {...(block as BannerBlock)} />
-            default:
-              return null
-          }
-        })
-      }
+      <BlockRenderer blocks={blocks} />
     </div>
   </div>
 </Layout>

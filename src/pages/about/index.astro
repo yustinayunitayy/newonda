@@ -1,19 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro'
 import Navbar from '../../components/global/Navbar.astro'
-import HeroSimple from '../../components/react/Hero'
+import BlockRenderer from '../../components/section/BlockRenderer.astro'
 import { getPage } from '../../lib/data/pages'
 import { fetchSiteSettings } from '../../lib/data/site-settings'
-import type { HeroBlock } from '../../lib/data/blocks'
-import TextWithImage from '../../components/section/TextWithImage.astro'
-import type { TextWithImageBlock } from '../../lib/data/blocks'
-import Timeline from '../../components/section/Timeline.astro'
-import type { TimelineBlock } from '../../lib/data/blocks/about'
-import Certification from '../../components/section/Certification.astro'
-import type { CertificationsBlock } from '../../lib/data/blocks/about'
-import PartnershipForm from '../../components/section/PartnershipForm.astro'
-import InfoCards from '../../components/section/InfoCards.astro'
-import type { InfoCardsBlock } from '../../lib/data/blocks/info-cards'
 
 const [page, settings] = await Promise.all([getPage('about'), fetchSiteSettings()])
 const blocks = page?.blocks ?? []
@@ -23,28 +13,7 @@ const blocks = page?.blocks ?? []
   <Navbar variant="transparent" scrollBehavior="scroll-to-white" />
   <div class="relative">
     <div class="flex flex-col gap-20 md:gap-28">
-      {
-        blocks.map((block: any) => {
-          switch (block.blockType) {
-            case 'hero':
-              return (
-                <HeroSimple client:load {...(block as HeroBlock)} videoUrl={block.video?.url} />
-              )
-            case 'text-with-image':
-              return <TextWithImage {...(block as TextWithImageBlock)} />
-            case 'info-cards':
-              return <InfoCards {...(block as InfoCardsBlock)} />
-            case 'timeline':
-              return <Timeline {...(block as TimelineBlock)} />
-            case 'certifications':
-              return <Certification {...(block as CertificationsBlock)} />
-            case 'form-wording':
-              return <PartnershipForm {...block} settings={settings} />
-            default:
-              return null
-          }
-        })
-      }
+      <BlockRenderer blocks={blocks} settings={settings ?? undefined} formVariant="partnership" />
     </div>
   </div>
 </Layout>
