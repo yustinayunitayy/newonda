@@ -1,9 +1,9 @@
 ---
-import type { SiteSettings, ContactBlock } from '../../lib/data/site-settings'
+import type { SiteSettings, FormBlock } from '../../lib/data/site-settings'
 import { textColorMap } from '../../lib/colour'
 import HoverButton from '../react/HoverButton'
 
-type Props = ContactBlock & { settings: SiteSettings }
+type Props = FormBlock & { settings: SiteSettings }
 
 const { miniLabel, labelTextColor, heading, headingTextColor, body, bodyTextColor, settings } =
   Astro.props

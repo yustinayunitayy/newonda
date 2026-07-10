@@ -69,7 +69,7 @@ export const buttonVariants: Record<ButtonVariant, ButtonStyle> = {
     hover: { textDecoration: 'underline', opacity: 0.8 },
   },
   white: {
-    base: { background: C.white, color: C.blue, border: `2px solid ${C.blue}` },
+    base: { background: C.white, color: C.blue },
     hover: { ...lift, boxShadow: '0 4px 16px rgba(0,0,0,0.2)' },
   },
   'white-outline': {

@@ -21,7 +21,7 @@ import type { BrandTabsBlock } from '../lib/data/blocks/brand-tab'
 const page = await getPage('home')
 const blocks = page?.blocks ?? []
 const heroBlock = blocks.find((b: any) => b.blockType === 'hero') as HeroBlock | undefined
-const statsBlock = blocks.find((b: any) => b.blockType === 'statsBar') as StatsBarBlock | undefined
+const statsBlock = blocks.find((b: any) => b.blockType === 'stats-bar') as StatsBarBlock | undefined
 const twiBlock = blocks.find((b: any) => b.blockType === 'text-with-image') as
   | TextWithImageBlock
   | undefined
@@ -29,7 +29,7 @@ const brandTabsBlock = blocks.find((b: any) => b.blockType === 'brand-tabs') as
   | BrandTabsBlock
   | undefined
 const restBlocks = blocks.filter(
-  (b: any) => !['hero', 'statsBar', 'text-with-image', 'brand-tabs'].includes(b.blockType)
+  (b: any) => !['hero', 'stats-bar', 'text-with-image', 'brand-tabs'].includes(b.blockType)
 )
 ---
 

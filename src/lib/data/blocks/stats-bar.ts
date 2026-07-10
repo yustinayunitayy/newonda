@@ -4,6 +4,6 @@ export interface StatItem {
 }
 
 export interface StatsBarBlock {
-  blockType: 'statsBar'
+  blockType: 'stats-bar'
   items: StatItem[]
 }

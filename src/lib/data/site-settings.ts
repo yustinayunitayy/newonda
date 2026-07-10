@@ -1,7 +1,7 @@
 import { getOne } from '../payload'
 import type { TextColor } from '../colour'
 
-export interface ContactBlock {
+export interface FormBlock {
   miniLabel: string
   labelTextColor: TextColor
   heading: string
