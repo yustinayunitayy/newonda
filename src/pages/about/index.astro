@@ -12,8 +12,6 @@ const blocks = page?.blocks ?? []
 <Layout>
   <Navbar variant="transparent" scrollBehavior="scroll-to-white" />
   <div class="relative">
-    <div class="flex flex-col gap-20 md:gap-28">
-      <BlockRenderer blocks={blocks} settings={settings ?? undefined} formVariant="partnership" />
-    </div>
+    <BlockRenderer blocks={blocks} settings={settings ?? undefined} formVariant="partnership" />
   </div>
 </Layout>

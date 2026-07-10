@@ -11,8 +11,6 @@ const blocks = page?.blocks ?? []
 <Layout footerVariant="black">
   <Navbar variant="transparent" scrollBehavior="scroll-to-black" />
   <div class="relative bg-black">
-    <div class="flex flex-col gap-20 md:gap-28">
-      <BlockRenderer blocks={blocks} />
-    </div>
+    <BlockRenderer blocks={blocks} />
   </div>
 </Layout>

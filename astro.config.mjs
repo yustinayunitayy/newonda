@@ -10,8 +10,11 @@ import vercel from '@astrojs/vercel'
 const env = loadEnv('', process.cwd(), '')
 
 export default defineConfig({
-  output: 'server',
-  adapter: vercel(),
+  adapter: vercel({
+    isr: {
+      expiration: 60, // cache 60 detik, update CMS muncul maks 1 menit
+    },
+  }),
   site: env.SITE_URL,
   i18n: {
     defaultLocale: 'id',
