@@ -40,7 +40,7 @@ const seo = await resolveSeo({ title, description, ogImage })
       rel="stylesheet"
     />
     <SEO {...seo} {noIndex} />
-    <JsonLd />
+    <JsonLd title={seo.title} description={seo.description} />
   </head>
 
   <body class="flex min-h-svh flex-col">
