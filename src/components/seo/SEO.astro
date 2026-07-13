@@ -8,23 +8,14 @@ interface Props {
   noIndex?: boolean
 }
 
-const {
-  title,
-  description,
-  ogImage,
-  siteName,
-  titleTemplate,
-  noIndex = false,
-} = Astro.props
+const { title, description, ogImage, siteName, titleTemplate, noIndex = false } = Astro.props
 
-const fullTitle = title ? titleTemplate.replace('%s', title) : siteName
-const canonicalUrl = Astro.site 
-  ? new URL(Astro.url.pathname, Astro.site).href 
-  : Astro.url.pathname
-const ogImageUrl = ogImage.startsWith('http') 
-  ? ogImage 
-  : Astro.site 
-    ? new URL(ogImage, Astro.site).href 
+const fullTitle = title || siteName
+const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : Astro.url.pathname
+const ogImageUrl = ogImage.startsWith('http')
+  ? ogImage
+  : Astro.site
+    ? new URL(ogImage, Astro.site).href
     : ogImage
 ---
 

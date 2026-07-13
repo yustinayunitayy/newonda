@@ -8,9 +8,13 @@ export interface Page {
   id: number
   title: string
   slug: string
+  meta?: {
+    title?: string
+    description?: string
+    image?: { url: string }
+  }
   blocks: PageBlock[]
 }
-
 export async function getPage(slug: string) {
   const data = await fetchFromCMS<{ docs: Page[] }>({
     collection: 'pages',

@@ -8,7 +8,11 @@ const page = await getPage('onda')
 const blocks = page?.blocks ?? []
 ---
 
-<Layout>
+<Layout
+  title={page?.meta?.title}
+  description={page?.meta?.description}
+  ogImage={page?.meta?.image?.url}
+>
   <Navbar variant="white" />
   <div class="relative pb-20 md:pb-28">
     <BlockRenderer blocks={blocks} />

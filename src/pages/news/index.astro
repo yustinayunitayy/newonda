@@ -7,7 +7,11 @@ import { getNewsList, getNewsCategories } from '../../lib/data/onda-news'
 const [news, categories] = await Promise.all([getNewsList(), getNewsCategories()])
 ---
 
-<Layout>
+<Layout
+  title="Dunia ONDA - Segala Informasi mengenai Onda Sanitary & Plumbing"
+  description="Ikuti kabar terbaru, tips perawatan, dan inspirasi hunian dari ONDA seputar dunia sanitary & plumbing. Baca berita dan artikel pilihannya di sini.
+"
+>
   <Navbar variant="white" />
   <main class="pt-16">
     <News client:load news={news} categories={categories} />

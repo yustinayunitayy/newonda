@@ -9,7 +9,11 @@ const [page, settings] = await Promise.all([getPage('about'), fetchSiteSettings(
 const blocks = page?.blocks ?? []
 ---
 
-<Layout>
+<Layout
+  title={page?.meta?.title}
+  description={page?.meta?.description}
+  ogImage={page?.meta?.image?.url}
+>
   <Navbar variant="transparent" scrollBehavior="scroll-to-white" />
   <div class="relative">
     <BlockRenderer blocks={blocks} settings={settings ?? undefined} formVariant="partnership" />

@@ -33,7 +33,11 @@ const restBlocks = blocks.filter(
 )
 ---
 
-<Layout>
+<Layout
+  title={page?.meta?.title}
+  description={page?.meta?.description}
+  ogImage={page?.meta?.image?.url}
+>
   <Navbar variant="transparent" scrollBehavior="scroll-to-white" hideUntilReady />
   <div class="relative">
     {
