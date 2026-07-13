@@ -1,0 +1,17 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import Navbar from '../../components/global/Navbar.astro'
+import CatalogueViewer from '../../components/react/CatalogueViewer'
+import { getCatalogs } from '../../lib/data/catalog'
+const catalogs = await getCatalogs()
+---
+
+<Layout
+  title="Katalog Produk — ONDA Sanitary & Plumbing"
+  description="Temukan seluruh katalog ONDA Group — dari ONDA, Onda Valve, hingga koleksi Onda Exclusive. Lihat dan unduh di sini"
+>
+  <Navbar variant="white" />
+  <main>
+    <CatalogueViewer client:only="react" catalogs={catalogs} />
+  </main>
+</Layout>

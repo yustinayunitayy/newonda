@@ -1,0 +1,252 @@
+---
+import type { SiteSettings, FormBlock } from '../../lib/data/site-settings'
+import { textColorMap } from '../../lib/colour'
+import HoverButton from '../react/HoverButton'
+
+type Props = FormBlock & { settings: SiteSettings }
+
+const { miniLabel, labelTextColor, heading, headingTextColor, body, bodyTextColor, settings } =
+  Astro.props
+const { contact, headOffice } = settings
+
+const headingColor = textColorMap[headingTextColor]
+const labelColor = textColorMap[labelTextColor]
+const bodyColor = textColorMap[bodyTextColor]
+
+const waNumber = contact?.csPhone?.replace(/\D/g, '') ?? ''
+const mapSrc = 'https://maps.google.com/maps?q=PT.+Onda+Mega+Integra&z=17&output=embed'
+
+const inputClass =
+  'border-onda-blue/30 text-dark-blue-shade focus:border-onda-blue focus:ring-onda-blue/20 w-full rounded-lg border bg-white px-4 py-3 text-sm outline-none transition-colors focus:ring-2'
+const selectChevron =
+  "background-image:url(\"data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%230050b3' stroke-width='2'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3e%3c/svg%3e\")"
+
+const contactRows = [
+  contact?.phone && {
+    icon: 'mdi:phone',
+    label: contact.phone,
+    href: `tel:${contact.phone.replace(/\s/g, '')}`,
+  },
+  contact?.csPhone && {
+    icon: 'mdi:whatsapp',
+    label: contact.csPhone,
+    href: `https://wa.me/${waNumber}`,
+    external: true,
+  },
+  contact?.email && {
+    icon: 'mdi:email-outline',
+    label: contact.email,
+    href: `mailto:${contact.email}`,
+  },
+].filter(Boolean) as { icon: string; label: string; href: string; external?: boolean }[]
+---
+
+<section class="section section-full">
+  <div class="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+    <div data-reveal="right">
+      {
+        miniLabel && (
+          <p class="mb-4 text-sm font-bold tracking-[0.2em]" style={`color:${labelColor}`}>
+            {miniLabel}
+          </p>
+        )
+      }
+      <h2 class="text-h2 font-extrabold" style={`color:${headingColor}`}>{heading}</h2>
+
+      {
+        body && (
+          <p class="text-body mt-4" style={`color:${bodyColor}`}>
+            {body}
+          </p>
+        )
+      }
+
+      <ul class="mt-8 flex flex-col gap-4">
+        {
+          contactRows.map((row) => (
+            <li class="text-dark-blue-shade flex items-center gap-3 text-sm">
+              <span class="bg-onda-blue/10 text-onda-blue flex h-9 w-9 flex-none items-center justify-center rounded-full">
+                <iconify-icon icon={row.icon} width="18" />
+              </span>
+              <a
+                href={row.href}
+                {...(row.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                class="hover:text-onda-blue transition-colors"
+              >
+                {row.label}
+              </a>
+            </li>
+          ))
+        }
+        {
+          headOffice?.address && (
+            <li class="text-dark-blue-shade flex items-start gap-3 text-sm">
+              <span class="bg-onda-blue/10 text-onda-blue flex h-9 w-9 flex-none items-center justify-center rounded-full">
+                <iconify-icon icon="mdi:map-marker-outline" width="18" />
+              </span>
+              <span class="leading-relaxed whitespace-pre-line">{headOffice.address}</span>
+            </li>
+          )
+        }
+      </ul>
+    </div>
+
+    <form
+      id="contact-form"
+      data-wa={waNumber}
+      class="border-onda-blue/15 flex flex-col gap-4 rounded-2xl border bg-white p-6 shadow-sm md:p-8"
+      data-reveal="left"
+      data-reveal-delay="150"
+    >
+      <input
+        type="text"
+        name="name"
+        required
+        minlength="2"
+        data-label="Nama Lengkap"
+        placeholder="Nama Lengkap"
+        title="Masukkan nama lengkap Anda"
+        class={inputClass}
+      />
+      <input
+        type="email"
+        name="email"
+        required
+        data-label="Email Aktif"
+        placeholder="Email Aktif (cth: nama@email.com)"
+        title="Masukkan alamat email yang valid"
+        class={inputClass}
+      />
+      <input
+        type="tel"
+        name="phone"
+        required
+        inputmode="numeric"
+        pattern="[0-9]{8,15}"
+        maxlength="15"
+        data-label="No. HP / Telp Aktif"
+        placeholder="No. HP / Telp Aktif (cth: 08123456789)"
+        title="Nomor telepon hanya boleh angka, 8–15 digit"
+        class={inputClass}
+      />
+      <select
+        name="subject"
+        required
+        data-label="Jenis Pesan"
+        class={`${inputClass} appearance-none bg-[length:1.25rem] bg-[right_0.75rem_center] bg-no-repeat`}
+        style={selectChevron}
+      >
+        <option value="" disabled selected>Jenis Pesan</option>
+        {
+          [
+            'Pertanyaan Produk',
+            'Permintaan Penawaran',
+            'Komplain & Garansi',
+            'Saran & Masukan',
+            'Lainnya',
+          ].map((opt) => <option value={opt}>{opt}</option>)
+        }
+      </select>
+      <textarea
+        name="message"
+        required
+        data-label="Pesan"
+        rows="4"
+        minlength="5"
+        placeholder="Pesan"
+        title="Tuliskan pesan Anda"
+        class={`${inputClass} resize-none`}></textarea>
+
+      <HoverButton
+        client:load
+        variant="blue"
+        className="mt-2 w-full cursor-pointer rounded-lg px-6 py-3 text-sm font-semibold transition-all duration-200"
+      >
+        Kirim
+      </HoverButton>
+    </form>
+  </div>
+
+  {
+    mapSrc && (
+      <div class="mt-12 overflow-hidden rounded-2xl shadow-sm" data-reveal="up">
+        <iframe
+          src={mapSrc}
+          title="Lokasi Kantor Pusat ONDA"
+          class="h-[360px] w-full border-0 md:h-[440px]"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        />
+      </div>
+    )
+  }
+</section>
+<style>
+  #contact-form select:invalid {
+    color: color-mix(in oklab, var(--color-dark-blue-shade) 50%, transparent);
+  }
+</style>
+<script>
+  import Swal from 'sweetalert2'
+
+  const form = document.getElementById('contact-form') as HTMLFormElement | null
+  const phone = form?.querySelector<HTMLInputElement>('input[name="phone"]')
+  phone?.addEventListener('input', () => {
+    phone.value = phone.value.replace(/\D/g, '')
+  })
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault()
+    if (!form.checkValidity()) {
+      form.reportValidity()
+      return
+    }
+
+    const wa = form.dataset.wa
+    if (!wa) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Nomor WhatsApp belum diset',
+        text: 'Hubungi admin untuk melengkapi kontak.',
+        confirmButtonColor: '#0050b3',
+      })
+      return
+    }
+
+    const data = new FormData(form)
+    const get = (name: string) => (data.get(name) || '').toString().trim()
+    const subject = get('subject')
+
+    const OPENING: Record<string, string> = {
+      'Pertanyaan Produk': '*MAU TANYA PRODUK*\nHalo ONDA, saya mau menanyakan soal produk berikut',
+      'Permintaan Penawaran':
+        '*MINTA PENAWARAN HARGA*\nHalo ONDA, saya mau minta penawaran (quotation)',
+      'Komplain & Garansi':
+        '*KOMPLAIN & GARANSI*\nHalo ONDA, saya mau menyampaikan komplain / klaim garansi',
+      'Saran & Masukan': '*SARAN & MASUKAN*\nHalo ONDA, saya punya saran/masukan untuk Anda',
+      Lainnya: '*💬 PESAN LAINNYA*\nHalo ONDA, saya mau menghubungi tim Anda',
+    }
+    const opening = OPENING[subject] ?? OPENING['Lainnya']
+
+    const lines = [
+      get('name') && `*Nama:* ${get('name')}`,
+      get('email') && `*Email:* ${get('email')}`,
+      get('phone') && `*No. HP:* ${get('phone')}`,
+      get('message') && `*Pesan:* ${get('message')}`,
+    ].filter(Boolean)
+
+    const text = `${opening}\n\n${lines.join('\n')}`
+    window.open(`https://wa.me/${wa}?text=${encodeURIComponent(text)}`, '_blank')
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Mengarahkan ke WhatsApp...',
+      html: 'Pesanmu sudah otomatis disiapkan.<br/>Tinggal tekan tombol <b>Kirim</b> di WhatsApp ya 🙏',
+      confirmButtonText: 'Oke, mengerti',
+      confirmButtonColor: '#0050b3',
+    })
+
+    form.reset()
+  })
+</script>

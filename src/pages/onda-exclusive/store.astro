@@ -1,0 +1,19 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import Navbar from '../../components/global/Navbar.astro'
+import StoreLocator from '../../components/react/Store'
+import { getStores } from '../../lib/data/oe-store'
+
+const stores = await getStores()
+---
+
+<Layout
+  title="Lokasi Toko ONDA Exclusive Terdekat Anda"
+  footerVariant="black"
+  description="Cari distributor resmi Onda Exclusive terdekat di kota Anda, lengkap dengan lokasi, dan alamat yang bisa langsung anda kunjungi."
+>
+  <Navbar variant="black" />
+  <main class="pt-16">
+    <StoreLocator client:load stores={stores} />
+  </main>
+</Layout>

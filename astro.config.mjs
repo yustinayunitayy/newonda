@@ -1,19 +1,25 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig } from 'astro/config'
+import { loadEnv } from 'vite'
+import tailwindcss from '@tailwindcss/vite'
+import react from '@astrojs/react'
+import sitemap from '@astrojs/sitemap'
+import icon from 'astro-icon'
+import vercel from '@astrojs/vercel'
 
-import tailwindcss from '@tailwindcss/vite';
+const env = loadEnv('', process.cwd(), '')
 
-// https://astro.build/config
 export default defineConfig({
-  i18n: {
-    defaultLocale: 'id',
-    locales: ['id', 'en'],
-    routing: {
-      prefixDefaultLocale: false,
+  adapter: vercel({
+    isr: {
+      expiration: 60,
     },
-  },
+  }),
+  site: env.SITE_URL,
 
   vite: {
     plugins: [tailwindcss()],
   },
+
+  integrations: [react(), sitemap(), icon()],
 })

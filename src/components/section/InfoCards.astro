@@ -1,0 +1,116 @@
+---
+import type { TextColor } from '../../lib/colour'
+import { textColorMap } from '../../lib/colour'
+import { RichTextRenderer } from '../react/RichTextRenderer'
+
+interface InfoCard {
+  background?: 'white' | 'light' | 'transparent'
+  icon: string
+  title: string
+  content?: any
+}
+
+interface Props {
+  miniLabel?: string
+  labelTextColor?: TextColor
+  heading?: string
+  headingTextColor?: TextColor
+  subheading?: string
+  subheadingTextColor?: TextColor
+  style?: 'icon-top' | 'icon-left'
+  columns?: '2' | '3' | '4'
+  cards: InfoCard[]
+}
+
+const {
+  miniLabel,
+  labelTextColor = 'blue',
+  heading,
+  headingTextColor = 'blue',
+  subheading,
+  subheadingTextColor = 'darkBlue',
+  style = 'icon-top',
+  columns = '3',
+  cards = [],
+} = Astro.props
+
+const labelColor = textColorMap[labelTextColor] ?? textColorMap.blue
+const headingColor = textColorMap[headingTextColor] ?? textColorMap.blue
+const subheadingColor = textColorMap[subheadingTextColor] ?? textColorMap.darkBlue
+
+const isTop = style === 'icon-top'
+
+const colMap: Record<string, string> = {
+  '2': 'md:grid-cols-2',
+  '3': 'md:grid-cols-3',
+  '4': 'md:grid-cols-4',
+}
+const gridCols = colMap[columns] ?? colMap['3']
+
+const bgMap: Record<string, string> = {
+  white: 'bg-white border border-light-blue-shade/60 shadow-[0_10px_30px_rgba(0,93,166,0.08)]',
+  light: 'bg-light-blue-shade/40',
+  transparent: 'bg-transparent',
+}
+---
+
+<section class="section">
+  <!-- Header -->
+  {
+    (miniLabel || heading || subheading) && (
+      <div class={`mb-10 max-w-2xl ${isTop ? 'mx-auto text-center' : 'text-left'}`}>
+        {miniLabel && (
+          <p class="text-mini-label mb-3" style={`color:${labelColor}`} data-reveal>
+            {miniLabel}
+          </p>
+        )}
+        {heading && (
+          <h2 class="text-h2 font-extrabold" style={`color:${headingColor}`} data-reveal>
+            {heading}
+          </h2>
+        )}
+        {subheading && (
+          <p class="text-body mt-3 leading-relaxed" style={`color:${subheadingColor}`} data-reveal>
+            {subheading}
+          </p>
+        )}
+      </div>
+    )
+  }
+
+  <!-- Cards -->
+  <div class={`grid grid-cols-1 gap-6 ${gridCols}`} data-reveal-group>
+    {
+      cards.map((c) => {
+        const bg = bgMap[c.background ?? 'light'] ?? bgMap.light
+        return isTop ? (
+          <div class={`flex flex-col items-center rounded-2xl p-6 text-center md:p-8 ${bg}`}>
+            <iconify-icon icon={c.icon} width="48" class="text-onda-blue mb-4" />
+            <h2 class="text-h3 text-onda-blue mb-2 font-bold tracking-wide">{c.title}</h2>
+            {c.content && (
+              <div class="text-body text-center text-slate-500">
+                <RichTextRenderer content={c.content} className="leading-relaxed" />
+              </div>
+            )}
+          </div>
+        ) : (
+          <div class={`flex items-start gap-4 rounded-2xl p-6 md:p-7 ${bg}`}>
+            <span class="text-onda-blue flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-white shadow-sm">
+              <iconify-icon icon={c.icon} width="22" />
+            </span>
+            <div>
+              <h3 class="text-onda-blue font-bold">{c.title}</h3>
+              {c.content && (
+                <div class="text-body mt-1 text-slate-500">
+                  <RichTextRenderer content={c.content} className="leading-relaxed" />
+                </div>
+              )}
+            </div>
+          </div>
+        )
+      })
+    }
+  </div>
+</section>
+
+<script is:inline src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
