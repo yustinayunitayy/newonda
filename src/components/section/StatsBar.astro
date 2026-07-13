@@ -1,0 +1,44 @@
+---
+import type { StatsBarBlock } from '../../lib/data/blocks/stats-bar'
+type Props = StatsBarBlock
+const { items } = Astro.props
+---
+
+<div
+  id="stats-bar"
+  class="invisible relative z-10 -mt-12 w-full translate-y-8 overflow-x-clip px-6 opacity-0 transition-[opacity,transform] duration-700 ease-out"
+>
+  <div class="w-full overflow-hidden rounded-2xl bg-white py-5 shadow-xl md:py-7">
+    <div class="marquee-track">
+      {
+        items.map((item, i) => (
+          <div data-marquee-item class="border-onda-blue/20 border-r px-5 text-center md:px-10">
+            <p class="text-onda-blue mb-1 text-lg font-bold md:text-2xl">{item.value}</p>
+            <p class="text-onda-blue text-[0.50rem] tracking-[0.12em] uppercase md:text-xs">
+              {item.label}
+            </p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<script>
+  import { initMarquee } from '../../utils/marquee'
+  initMarquee('.marquee-track')
+  const el = document.getElementById('stats-bar')
+  const alreadySeen = sessionStorage.getItem('intro-seen')
+
+  if (el) {
+    if (alreadySeen) {
+      el.classList.remove('opacity-0', 'translate-y-8', 'invisible')
+      el.classList.add('opacity-100', 'translate-y-0', 'visible')
+    } else {
+      setTimeout(() => {
+        el.classList.remove('opacity-0', 'translate-y-8', 'invisible')
+        el.classList.add('opacity-100', 'translate-y-0', 'visible')
+      }, 6800)
+    }
+  }
+</script>

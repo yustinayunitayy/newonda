@@ -1,0 +1,247 @@
+---
+import { Image } from 'astro:assets'
+import LogoWhite from '../../assets/LogoWhite.png'
+import LogoBlue from '../../assets/Logo.png'
+import { getNavigation } from '../../lib/data/navbar'
+import { Icon } from 'astro-icon/components'
+
+interface Props {
+  variant?: 'transparent' | 'white' | 'black'
+  scrollBehavior?: 'static' | 'scroll-to-white' | 'scroll-to-black'
+  hideUntilReady?: boolean
+}
+
+const { variant = 'white', scrollBehavior = 'static', hideUntilReady = false } = Astro.props
+const nav = await getNavigation('official')
+const menu = nav?.menu ?? []
+
+const NavStyle = {
+  transparent: {
+    nav: 'bg-transparent',
+    text: 'text-white hover:font-bold',
+  },
+  white: {
+    nav: 'bg-white',
+    text: 'text-onda-blue hover:text-dark-blue-shade hover:font-bold',
+  },
+  black: {
+    nav: 'bg-black',
+    text: 'text-white hover:font-bold',
+  },
+}
+
+const s = NavStyle[variant]
+const currentPath = Astro.url.pathname
+
+const activeLink = menu
+  .map((i) => i.link)
+  .filter((link): link is string => !!link)
+  .filter((link) =>
+    link === '/' ? currentPath === '/' : currentPath === link || currentPath.startsWith(link + '/')
+  )
+  .sort((a, b) => b.length - a.length)[0]
+
+const hidden = hideUntilReady ? '-translate-y-full opacity-0 pointer-events-none' : ''
+
+const extAttrs = (link?: string) =>
+  link?.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {}
+---
+
+<header
+  id="navbar"
+  data-variant={variant}
+  data-scroll-behavior={scrollBehavior}
+  data-hide-until-ready={String(hideUntilReady)}
+  class={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${hidden} ${s.nav}`}
+>
+  <nav class="section flex h-16 items-center justify-between">
+    <!-- Logo -->
+    <a href="/">
+      <Image
+        id="logo-white"
+        src={LogoWhite}
+        alt="ONDA Logo"
+        class:list={[
+          'h-8 w-auto',
+          variant === 'transparent' || variant === 'black' ? 'block' : 'hidden',
+        ]}
+      />
+      <Image
+        id="logo-blue"
+        src={LogoBlue}
+        alt="ONDA Logo"
+        class:list={['h-8 w-auto', variant === 'white' ? 'block' : 'hidden']}
+      />
+    </a>
+
+    <!-- Desktop -->
+    <ul class="hidden items-center gap-6 lg:flex">
+      {
+        menu.map((item) => {
+          const isActive = item.link === activeLink
+          return (
+            <li>
+              <a
+                href={item.link}
+                class:list={[
+                  'nav-link relative text-sm transition-all',
+                  s.text,
+                  {
+                    'font-bold after:absolute after:-bottom-1.5 after:left-0 after:h-0.5 after:w-full after:rounded-full after:content-[""]':
+                      isActive,
+                  },
+                ]}
+                {...extAttrs(item.link)}
+              >
+                {item.label}
+              </a>
+            </li>
+          )
+        })
+      }
+    </ul>
+
+    <!-- Mobile hamburger -->
+    <button
+      id="hamburger"
+      class:list={[
+        'p-2 lg:hidden',
+        variant === 'transparent' || variant === 'black' ? 'text-white' : 'text-onda-blue',
+      ]}
+      aria-label="Toggle menu"
+      aria-expanded="false"
+    >
+      <Icon name="lucide:menu" id="icon-menu" class="h-6 w-6" />
+      <Icon name="lucide:x" id="icon-close" class="hidden h-6 w-6" />
+    </button>
+  </nav>
+</header>
+
+<!-- Mobile Sidebar -->
+<div id="drawer" class="pointer-events-none fixed inset-0 z-50 overflow-hidden lg:hidden">
+  <div
+    id="drawer-overlay"
+    class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300"
+  >
+  </div>
+  <div
+    id="drawer-panel"
+    class="absolute top-0 bottom-0 left-0 w-72 -translate-x-full bg-white shadow-xl transition-transform duration-300"
+  >
+    <div class="flex h-16 items-center border-b border-gray-100 px-4">
+      <a href="/" id="drawer-logo">
+        <Image src={LogoBlue} alt="ONDA Logo" class="h-8 w-auto" loading="eager" />
+      </a>
+    </div>
+    <ul class="flex flex-col gap-1 p-4">
+      {
+        menu.map((item) => {
+          const isActive = item.link === activeLink
+          return (
+            <li>
+              <a
+                href={item.link}
+                class:list={[
+                  'block rounded-lg px-4 py-2 text-sm font-medium transition-all',
+                  isActive
+                    ? 'bg-onda-blue text-white'
+                    : 'text-onda-blue hover:bg-onda-blue hover:text-white',
+                ]}
+                {...extAttrs(item.link)}
+              >
+                {item.label}
+              </a>
+            </li>
+          )
+        })
+      }
+    </ul>
+  </div>
+</div>
+
+<script>
+  const $ = (id: string) => document.getElementById(id)!
+  const navbar = $('navbar')
+  const logoWhite = $('logo-white')
+  const logoBlue = $('logo-blue')
+  const hamburger = $('hamburger')
+  const drawer = $('drawer')
+  const overlay = $('drawer-overlay')
+  const panel = $('drawer-panel')
+  const iconMenu = $('icon-menu')
+  const iconClose = $('icon-close')
+
+  const hideUntilReady = navbar.dataset.hideUntilReady === 'true'
+  if (!hideUntilReady) {
+    navbar.classList.remove('-translate-y-full', 'opacity-0', 'pointer-events-none')
+  }
+
+  const VARIANTS = {
+    transparent: {
+      nav: ['bg-transparent'],
+      text: ['text-white', 'hover:font-bold'],
+      hamburger: 'text-white',
+      whiteLogo: true,
+    },
+    white: {
+      nav: ['bg-white', 'shadow-sm'],
+      text: ['text-onda-blue', 'hover:text-dark-blue-shade'],
+      hamburger: 'text-onda-blue',
+      whiteLogo: false,
+    },
+    black: {
+      nav: ['bg-black', 'shadow-sm'],
+      text: ['text-white', 'hover:font-bold'],
+      hamburger: 'text-white',
+      whiteLogo: true,
+    },
+  }
+
+  type VariantName = keyof typeof VARIANTS
+
+  const initialVariant = navbar.dataset.variant as VariantName
+  const scrollBehavior = navbar.dataset.scrollBehavior
+
+  function applyVariant(name: VariantName) {
+    const v = VARIANTS[name]
+
+    Object.values(VARIANTS).forEach((o) => {
+      navbar.classList.remove(...o.nav)
+      hamburger.classList.remove(o.hamburger)
+      document.querySelectorAll('.nav-link').forEach((el) => el.classList.remove(...o.text))
+    })
+
+    navbar.classList.add(...v.nav)
+    logoWhite.classList.toggle('hidden', !v.whiteLogo)
+    logoBlue.classList.toggle('hidden', v.whiteLogo)
+    hamburger.classList.add(v.hamburger)
+    document.querySelectorAll('.nav-link').forEach((el) => el.classList.add(...v.text))
+  }
+
+  if (scrollBehavior === 'scroll-to-white' || scrollBehavior === 'scroll-to-black') {
+    const target: VariantName = scrollBehavior === 'scroll-to-white' ? 'white' : 'black'
+    const onScroll = () => applyVariant(window.scrollY > 20 ? target : initialVariant)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+  }
+
+  function setDrawer(open: boolean) {
+    drawer.classList.toggle('pointer-events-none', !open)
+    overlay.classList.toggle('opacity-100', open)
+    overlay.classList.toggle('opacity-0', !open)
+    panel.classList.toggle('translate-x-0', open)
+    panel.classList.toggle('-translate-x-full', !open)
+    iconMenu.classList.toggle('hidden', open)
+    iconClose.classList.toggle('hidden', !open)
+    hamburger.setAttribute('aria-expanded', String(open))
+  }
+
+  const isOpen = () => !drawer.classList.contains('pointer-events-none')
+
+  hamburger.addEventListener('click', () => setDrawer(!isOpen()))
+  overlay.addEventListener('click', () => setDrawer(false))
+  $('drawer-logo')?.addEventListener('click', () => setDrawer(false))
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 1024 && isOpen()) setDrawer(false)
+  })
+</script>
