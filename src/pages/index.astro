@@ -1,76 +1,11 @@
 ---
-import Layout from '../layouts/Layout.astro'
-import Navbar from '../components/global/Navbar.astro'
-import IntroHero from '../components/react/IntroHero'
-import StatsBar from '../components/section/StatsBar.astro'
-import TextWithImage from '../components/section/TextWithImage.astro'
-import BrandTabs from '../components/react/BrandTab'
-import { getPage } from '../lib/data/pages'
-import ProductGrid from '../components/section/ProductGrid.astro'
-import Banner from '../components/section/Banner.astro'
-import FAQ from '../components/section/Faq.astro'
-import Newsletter from '../components/section/Newsletter.astro'
-import type { NewsletterBlock } from '../lib/data/blocks/newsletter'
-import type { FaqBlock } from '../lib/data/blocks/faq'
-import type { BannerBlock } from '../lib/data/blocks/banner'
-import type { ProductGridBlock } from '../lib/data/blocks/product-grid'
-import type { HeroBlock, StatsBarBlock } from '../lib/data/blocks'
-import type { TextWithImageBlock } from '../lib/data/blocks/text-with-image'
-import type { BrandTabsBlock } from '../lib/data/blocks/brand-tab'
+import Welcome from '../components/Welcome.astro';
+import Layout from '../layouts/Layout.astro';
 
-const page = await getPage('home')
-const blocks = page?.blocks ?? []
-const heroBlock = blocks.find((b: any) => b.blockType === 'hero') as HeroBlock | undefined
-const statsBlock = blocks.find((b: any) => b.blockType === 'stats-bar') as StatsBarBlock | undefined
-const twiBlock = blocks.find((b: any) => b.blockType === 'text-with-image') as
-  | TextWithImageBlock
-  | undefined
-const brandTabsBlock = blocks.find((b: any) => b.blockType === 'brand-tabs') as
-  | BrandTabsBlock
-  | undefined
-const restBlocks = blocks.filter(
-  (b: any) => !['hero', 'stats-bar', 'text-with-image', 'brand-tabs'].includes(b.blockType)
-)
+// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
+// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
-<Layout
-  title={page?.meta?.title}
-  description={page?.meta?.description}
-  ogImage={page?.meta?.image?.url}
->
-  <Navbar variant="transparent" scrollBehavior="scroll-to-white" hideUntilReady />
-  <div class="relative">
-    {
-      heroBlock && (
-        <div class="min-h-svh bg-black">
-          <IntroHero client:only="react" {...heroBlock} videoUrl={heroBlock.video?.url} />
-        </div>
-      )
-    }
-    {statsBlock && <StatsBar {...statsBlock} />}
-
-    <div class="flex flex-col gap-14 pt-20 md:gap-24 md:pt-28">
-      <div class="flex flex-col gap-14 bg-[url('/bg.png')] bg-cover bg-center md:gap-24">
-        {twiBlock && <TextWithImage {...twiBlock} />}
-        {brandTabsBlock && <BrandTabs client:load {...brandTabsBlock} />}
-      </div>
-
-      {
-        restBlocks.map((block: any) => {
-          switch (block.blockType) {
-            case 'product-grid':
-              return <ProductGrid {...(block as ProductGridBlock)} />
-            case 'banner':
-              return <Banner {...(block as BannerBlock)} />
-            case 'faq-accordion':
-              return <FAQ {...(block as FaqBlock)} />
-            case 'newsletter':
-              return <Newsletter {...(block as NewsletterBlock)} />
-            default:
-              return null
-          }
-        })
-      }
-    </div>
-  </div>
+<Layout>
+	<Welcome />
 </Layout>
