@@ -86,9 +86,9 @@ const bgMap: Record<string, string> = {
         return isTop ? (
           <div class={`flex flex-col items-center rounded-2xl p-6 text-center md:p-8 ${bg}`}>
             <iconify-icon icon={c.icon} width="48" class="text-onda-blue mb-4" />
-            <h3 class="text-dark-blue-shade mb-2 font-bold tracking-wide">{c.title}</h3>
+            <h2 class="text-h3 text-onda-blue mb-2 font-bold tracking-wide">{c.title}</h2>
             {c.content && (
-              <div class="text-body text-slate-500 [&_ol]:mx-auto [&_ol]:inline-block [&_ol]:text-left [&_ul]:mx-auto [&_ul]:inline-block [&_ul]:text-left">
+              <div class="text-body text-center text-slate-500">
                 <RichTextRenderer content={c.content} className="leading-relaxed" />
               </div>
             )}
@@ -99,7 +99,7 @@ const bgMap: Record<string, string> = {
               <iconify-icon icon={c.icon} width="22" />
             </span>
             <div>
-              <h3 class="text-dark-blue-shade font-bold">{c.title}</h3>
+              <h3 class="text-onda-blue font-bold">{c.title}</h3>
               {c.content && (
                 <div class="text-body mt-1 text-slate-500">
                   <RichTextRenderer content={c.content} className="leading-relaxed" />
