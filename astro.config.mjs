@@ -12,17 +12,10 @@ const env = loadEnv('', process.cwd(), '')
 export default defineConfig({
   adapter: vercel({
     isr: {
-      expiration: 60, // cache 60 detik, update CMS muncul maks 1 menit
+      expiration: 60,
     },
   }),
   site: env.SITE_URL,
-  i18n: {
-    defaultLocale: 'id',
-    locales: ['id', 'en'],
-    routing: {
-      prefixDefaultLocale: false,
-    },
-  },
 
   vite: {
     plugins: [tailwindcss()],

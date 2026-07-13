@@ -8,6 +8,7 @@ export interface CatalogItem {
 export async function getCatalogs(): Promise<CatalogItem[]> {
   const data = await fetchFromCMS<{ docs: any[] }>({
     collection: 'catalog',
+    where: { id: { not_equals: 11 } },
     limit: 100,
     depth: 1,
     sort: 'title',

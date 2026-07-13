@@ -14,9 +14,7 @@ const labelColor = textColorMap[labelTextColor]
 const bodyColor = textColorMap[bodyTextColor]
 
 const waNumber = contact?.csPhone?.replace(/\D/g, '') ?? ''
-const mapSrc = headOffice?.coordinates
-  ? `https://maps.google.com/maps?q=${headOffice.coordinates.lat},${headOffice.coordinates.lng}&z=16&output=embed`
-  : null
+const mapSrc = 'https://maps.google.com/maps?q=PT.+Onda+Mega+Integra&z=17&output=embed'
 
 const inputClass =
   'border-onda-blue/30 text-dark-blue-shade focus:border-onda-blue focus:ring-onda-blue/20 w-full rounded-lg border bg-white px-4 py-3 text-sm outline-none transition-colors focus:ring-2'

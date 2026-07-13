@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Navbar from '../components/global/Navbar.astro'
+---
+
+<Layout title="Halaman Tidak Ditemukan — ONDA Sanitary & Plumbing" noIndex footerVariant="black">
+  <Navbar variant="black" />
+  <section
+    class="section flex min-h-[100svh] flex-col items-center justify-center bg-black py-20 text-center"
+  >
+    <p class="text-onda-yellow text-[5rem] leading-none font-extrabold md:text-[9rem]">404</p>
+    <h1 class="text-h2 mt-2 font-extrabold text-white">Halaman Tidak Ditemukan</h1>
+    <p class="text-body text-onda-yellow mt-4">
+      Maaf, halaman yang kamu cari tidak ada atau sudah dipindahkan.
+    </p>
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+      <a
+        href="/"
+        class="bg-onda-yellow text-dark-blue-shade rounded-lg px-6 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5 hover:brightness-110"
+      >
+        Kembali ke Beranda
+      </a>
+    </div>
+  </section>
+</Layout>
