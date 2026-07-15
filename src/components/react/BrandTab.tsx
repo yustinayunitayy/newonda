@@ -45,7 +45,7 @@ export default function BrandTabs({
           )}
           {subheading && (
             <p
-              className="text-lead text-dark-blue-shade"
+              className="text-body text-dark-blue-shade"
               style={{ textAlign: textAlignStyle, maxWidth: position.maxWidth }}
             >
               {subheading}
