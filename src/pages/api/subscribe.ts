@@ -1,10 +1,9 @@
 import type { APIRoute } from 'astro'
-import { Resend } from 'resend'
 
 export const prerender = false
-const resend = new Resend(import.meta.env.RESEND_API_KEY)
-const AUDIENCE_ID = import.meta.env.RESEND_AUDIENCE_ID
-const WELCOME_EVENT = 'user.subscribed'
+
+const BREVO_API_KEY = import.meta.env.BREVO_API_KEY
+const BREVO_LIST_ID = Number(import.meta.env.BREVO_LIST_ID)
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -20,34 +19,28 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-    if (!valid) {
-      return json({ error: 'Email nggak valid' }, 400)
-    }
+    if (!valid) return json({ error: 'Email tidak valid' }, 400)
 
-    const existing = await resend.contacts.get({
-      email,
-      audienceId: AUDIENCE_ID,
+    const res = await fetch('https://api.brevo.com/v3/contacts', {
+      method: 'POST',
+      headers: {
+        'api-key': BREVO_API_KEY,
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        listIds: [BREVO_LIST_ID],
+        updateEnabled: true,
+      }),
     })
 
-    if (existing.data) {
-      return json({ ok: true, already: true }, 200)
-    }
-
-    const { error: createError } = await resend.contacts.create({
-      email,
-      audienceId: AUDIENCE_ID,
-      unsubscribed: false,
-    })
-
-    if (createError) {
-      console.error('Create contact error:', createError)
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}))
+      if (err?.code === 'duplicate_parameter') return json({ ok: true, already: true }, 200)
+      console.error('Brevo error:', err)
       return json({ error: 'Gagal subscribe, coba lagi' }, 500)
     }
-
-    await resend.events.send({
-      event: WELCOME_EVENT,
-      email,
-    })
 
     return json({ ok: true }, 200)
   } catch (err) {
