@@ -39,7 +39,6 @@ const { heading = 'Daftar Newsletter ONDA', subheading } = Astro.props
     </form>
   </div>
 </section>
-
 <script>
   import Swal from 'sweetalert2'
 
@@ -47,10 +46,21 @@ const { heading = 'Daftar Newsletter ONDA', subheading } = Astro.props
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault()
-    const email = (form.elements.namedItem('email') as HTMLInputElement).value
+    const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim()
     const btn = form.querySelector('button')!
-    btn.disabled = true
 
+    const confirmed = await Swal.fire({
+      icon: 'question',
+      title: 'Sudah benar?',
+      text: `Newsletter akan dikirim ke ${email}`,
+      showCancelButton: true,
+      confirmButtonText: 'Ya, daftarkan',
+      cancelButtonText: 'Perbaiki dulu',
+      reverseButtons: true,
+    })
+    if (!confirmed.isConfirmed) return
+
+    btn.disabled = true
     Swal.fire({
       title: 'Mendaftar...',
       text: 'Sebentar ya',
@@ -65,36 +75,40 @@ const { heading = 'Daftar Newsletter ONDA', subheading } = Astro.props
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       })
+      const data = await res.json().catch(() => ({}))
 
-      if (res.ok) {
-        const data = await res.json().catch(() => ({}))
-        if (data.already) {
-          await Swal.fire({
-            icon: 'info',
-            title: 'Kamu udah subscribe kok',
-            text: 'Email ini sudah terdaftar di newsletter kami.',
-            confirmButtonText: 'Oke',
-            confirmButtonColor: '#0050b3',
-          })
-        } else {
-          await Swal.fire({
-            icon: 'success',
-            title: 'Berhasil!',
-            text: 'Cek inbox kamu untuk email selamat datang.',
-            confirmButtonText: 'Oke',
-            confirmButtonColor: '#0050b3',
-          })
-        }
-        form.reset()
-      } else {
-        const { error } = await res.json().catch(() => ({}))
+      if (!res.ok) {
         await Swal.fire({
           icon: 'error',
           title: 'Gagal subscribe',
-          text: error ?? 'Coba lagi sebentar ya.',
+          text: data.error ?? 'Coba lagi sebentar ya.',
           confirmButtonText: 'Oke',
-          confirmButtonColor: '#0050b3',
         })
+        return
+      }
+
+      if (data.status === 'already') {
+        await Swal.fire({
+          icon: 'info',
+          title: 'Kamu sudah terdaftar',
+          text: 'Email ini sudah ada di newsletter kami.',
+          confirmButtonText: 'Oke',
+        })
+      } else if (data.status === 'unsubscribed') {
+        await Swal.fire({
+          icon: 'info',
+          title: 'Email ini pernah berhenti berlangganan',
+          text: 'Kalau mau berlangganan lagi, hubungi kami di cs@onda.id ya.',
+          confirmButtonText: 'Oke',
+        })
+      } else {
+        await Swal.fire({
+          icon: 'success',
+          title: 'Berhasil!',
+          text: 'Cek inbox kamu untuk email selamat datang.',
+          confirmButtonText: 'Oke',
+        })
+        form.reset()
       }
     } catch {
       await Swal.fire({
@@ -102,7 +116,6 @@ const { heading = 'Daftar Newsletter ONDA', subheading } = Astro.props
         title: 'Oops!',
         text: 'Ada masalah koneksi. Coba lagi.',
         confirmButtonText: 'Oke',
-        confirmButtonColor: '#0050b3',
       })
     } finally {
       btn.disabled = false
