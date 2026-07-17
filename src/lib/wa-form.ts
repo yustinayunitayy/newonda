@@ -5,7 +5,7 @@ type Get = (name: string) => string
 export function initWaForm(
   formId: string,
   buildMessage: (get: Get) => string,
-  successHtml = 'Pesan Anda sudah berhasil disiapkan.<br><br>Silakan tekan tombol <b>Kirim</b> di WhatsApp untuk melanjutkan.'
+  successHtml = 'Pesan Anda sudah berhasil disiapkan.<br> Silakan tekan tombol <b>Kirim</b> di WhatsApp untuk melanjutkan.'
 ) {
   const form = document.getElementById(formId) as HTMLFormElement | null
   if (!form) return
