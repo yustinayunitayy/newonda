@@ -51,8 +51,8 @@ const { heading = 'Daftar Newsletter ONDA', subheading } = Astro.props
 
     const confirmed = await Swal.fire({
       icon: 'question',
-      title: 'Sudah benar?',
-      text: `Newsletter akan dikirim ke ${email}`,
+      title: 'Konfirmasi Email',
+      text: `Pastikan alamat email yang Anda masukkan sudah benar dan masih aktif. Newsletter akan dikirim ke ${email}`,
       showCancelButton: true,
       confirmButtonText: 'Ya, daftarkan',
       cancelButtonText: 'Perbaiki dulu',
@@ -62,8 +62,8 @@ const { heading = 'Daftar Newsletter ONDA', subheading } = Astro.props
 
     btn.disabled = true
     Swal.fire({
-      title: 'Mendaftar...',
-      text: 'Sebentar ya',
+      title: 'Sedang Memproses...',
+      text: 'Mohon tunggu sebentar, kami sedang mendaftarkan email Anda.',
       allowOutsideClick: false,
       allowEscapeKey: false,
       didOpen: () => Swal.showLoading(),
@@ -80,9 +80,11 @@ const { heading = 'Daftar Newsletter ONDA', subheading } = Astro.props
       if (!res.ok) {
         await Swal.fire({
           icon: 'error',
-          title: 'Gagal subscribe',
-          text: data.error ?? 'Coba lagi sebentar ya.',
-          confirmButtonText: 'Oke',
+          title: 'Pendaftaran Gagal',
+          text:
+            data.error ??
+            'Maaf, terjadi kendala saat memproses pendaftaran. Silakan coba lagi beberapa saat nanti.',
+          confirmButtonText: 'Tutup',
         })
         return
       }
@@ -90,22 +92,22 @@ const { heading = 'Daftar Newsletter ONDA', subheading } = Astro.props
       if (data.status === 'already') {
         await Swal.fire({
           icon: 'info',
-          title: 'Kamu sudah terdaftar',
-          text: 'Email ini sudah ada di newsletter kami.',
-          confirmButtonText: 'Oke',
+          title: 'Email Sudah Terdaftar',
+          text: 'Email ini sudah terdaftar sebagai pelanggan newsletter ONDA. Nantikan informasi dan update terbaru dari kami.',
+          confirmButtonText: 'Mengerti',
         })
       } else if (data.status === 'unsubscribed') {
         await Swal.fire({
           icon: 'info',
-          title: 'Email ini pernah berhenti berlangganan',
-          text: 'Kalau mau berlangganan lagi, hubungi kami di cs@onda.id ya.',
-          confirmButtonText: 'Oke',
+          title: 'Email Pernah Berhenti Berlangganan',
+          text: 'Email ini sebelumnya telah berhenti berlangganan newsletter ONDA. Jika ingin berlangganan kembali, silakan hubungi kami melalui cs@onda.id.',
+          confirmButtonText: 'Mengerti',
         })
       } else {
         await Swal.fire({
           icon: 'success',
-          title: 'Berhasil!',
-          text: 'Cek inbox kamu untuk email selamat datang.',
+          title: 'Selamat Datang di Newsletter ONDA! 🎉',
+          text: 'Terima kasih telah berlangganan. Kami telah mengirimkan email selamat datang ke inbox Anda. Nantikan update produk terbaru, promo, dan berbagai informasi menarik dari ONDA.',
           confirmButtonText: 'Oke',
         })
         form.reset()
@@ -114,7 +116,7 @@ const { heading = 'Daftar Newsletter ONDA', subheading } = Astro.props
       await Swal.fire({
         icon: 'error',
         title: 'Oops!',
-        text: 'Ada masalah koneksi. Coba lagi.',
+        text: 'Kami tidak dapat menghubungi server saat ini. Silakan periksa koneksi internet Anda dan coba lagi.',
         confirmButtonText: 'Oke',
       })
     } finally {

@@ -5,7 +5,7 @@ type Get = (name: string) => string
 export function initWaForm(
   formId: string,
   buildMessage: (get: Get) => string,
-  successHtml = 'Pesanmu sudah otomatis disiapkan.<br/>Tinggal tekan tombol <b>Kirim</b> di WhatsApp ya 🙏',
+  successHtml = 'Pesan Anda sudah berhasil disiapkan.<br><br>Silakan tekan tombol <b>Kirim</b> di WhatsApp untuk melanjutkan.'
 ) {
   const form = document.getElementById(formId) as HTMLFormElement | null
   if (!form) return
@@ -26,8 +26,8 @@ export function initWaForm(
     if (!wa) {
       Swal.fire({
         icon: 'error',
-        title: 'Nomor WhatsApp belum diset',
-        text: 'Hubungi admin untuk melengkapi kontak.',
+        title: 'Kontak Belum Tersedia',
+        text: 'Nomor WhatsApp tujuan belum dikonfigurasi. Silakan hubungi administrator',
       })
       return
     }
@@ -39,7 +39,7 @@ export function initWaForm(
 
     Swal.fire({
       icon: 'success',
-      title: 'Mengarahkan ke WhatsApp...',
+      title: 'Siap Dikirim! 🚀',
       html: successHtml,
       confirmButtonText: 'Oke, mengerti',
     })
