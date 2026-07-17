@@ -27,10 +27,9 @@ export const POST: APIRoute = async ({ request }) => {
       accept: 'application/json',
     }
 
-    const check = await fetch(
-      `https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`,
-      { headers },
-    )
+    const check = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
+      headers,
+    })
 
     if (check.ok) {
       const contact = await check.json()
@@ -45,7 +44,7 @@ export const POST: APIRoute = async ({ request }) => {
 
       const add = await fetch(
         `https://api.brevo.com/v3/contacts/lists/${BREVO_LIST_ID}/contacts/add`,
-        { method: 'POST', headers, body: JSON.stringify({ emails: [email] }) },
+        { method: 'POST', headers, body: JSON.stringify({ emails: [email] }) }
       )
       if (!add.ok) {
         console.error('Brevo add-to-list error:', await add.text())
