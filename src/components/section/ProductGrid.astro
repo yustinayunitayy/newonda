@@ -28,7 +28,7 @@ const colClass = colsMap[count] ?? 'grid-cols-2 lg:grid-cols-4'
 <section class="section">
   {
     (miniLabel || heading || subheading) && (
-      <div class="mb-8 flex flex-col gap-3 md:mb-12" data-reveal-group>
+      <div class="mb-8 flex flex-col gap-3" data-reveal-group>
         {miniLabel && (
           <p
             class="text-mini-label"
@@ -43,7 +43,7 @@ const colClass = colsMap[count] ?? 'grid-cols-2 lg:grid-cols-4'
           </h2>
         )}
         {subheading && (
-          <p class="text-lead max-w-2xl" style={`color:${textColorMap[subheadingTextColor]}`}>
+          <p class="text-body" style={`color:${textColorMap[subheadingTextColor]}`}>
             {subheading}
           </p>
         )}

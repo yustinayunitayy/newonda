@@ -44,8 +44,8 @@ export default function HeroCarouselSection({
     'rounded-xl px-5 py-2.5 text-xs font-semibold md:text-sm transition-all duration-200 cursor-pointer'
 
   return (
-    <section className="to-light-blue-shade relative w-full overflow-x-clip bg-gradient-to-b from-white">
-      <div className="section grid min-h-svh items-center gap-8 py-20 lg:grid-cols-2 lg:gap-12">
+    <section className="via-light-blue-shade/40 bg-gradient-to-b from-white from-5% via-45% to-white to-100% ...">
+      <div className="section grid items-center gap-8 py-16 pb-0 lg:grid-cols-2 lg:gap-12">
         <motion.div
           className="order-2 flex flex-col gap-4 lg:order-1"
           variants={container}
