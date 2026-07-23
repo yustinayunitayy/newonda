@@ -48,12 +48,9 @@ export function RichTextRenderer({ content, className = '' }: RichTextRendererPr
       case 'heading': {
         const level = node.tag ? parseInt(node.tag.replace('h', '')) : 2
         const cls: Record<number, string> = {
-          1: 'font-bold text-3xl text-onda-blue mt-6 mb-4',
-          2: 'font-bold text-2xl text-onda-blue mt-6 mb-4',
-          3: 'font-semibold text-xl text-onda-blue mt-5 mb-3',
-          4: 'font-semibold text-lg text-onda-blue mt-4 mb-3',
-          5: 'font-semibold text-base text-onda-blue mt-3 mb-2',
-          6: 'font-semibold text-sm text-onda-blue mt-3 mb-2',
+          1: 'font-bold text-2xl text-onda-blue mt-6 mb-4',
+          2: 'font-bold text-xl text-onda-blue mt-6 mb-4',
+          3: 'font-semibold text-lg text-onda-blue mt-5 mb-3',
         }
         const children = node.children?.map(renderNode)
         return React.createElement(`h${level}`, { key, className: cls[level] ?? cls[2] }, children)

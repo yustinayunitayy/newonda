@@ -16,7 +16,7 @@ export default function BrandTabs({
   const position = textPositionMap[textAlign] ?? textPositionMap['center-center']
 
   const btnClass =
-    'rounded-xl px-5 py-2.5 text-xs font-semibold md:text-sm transition-all duration-200 cursor-pointer active:scale-[0.98]'
+    'rounded-xl px-5 py-2.5 text-button font-semibold transition-all duration-200 cursor-pointer active:scale-[0.98]'
 
   const reveal = {
     initial: { opacity: 0, y: 16 },
@@ -63,7 +63,7 @@ export default function BrandTabs({
           <button
             key={i}
             onClick={() => setActiveIndex(i)}
-            className="relative cursor-pointer px-2 py-4 text-xs font-semibold transition-all duration-200 md:text-sm"
+            className="text-button relative cursor-pointer px-2 py-4 font-semibold transition-all duration-200"
             style={{
               background: activeIndex === i ? 'var(--color-onda-blue)' : '#ffffff',
               color: activeIndex === i ? '#ffffff' : 'var(--color-onda-blue)',

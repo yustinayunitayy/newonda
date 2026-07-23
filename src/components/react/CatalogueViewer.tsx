@@ -65,7 +65,7 @@ export default function CatalogueViewer({
                 />
               )}
             </div>
-            <span className="text-dark-blue-shade text-center text-sm font-semibold">
+            <span className="text-dark-blue-shade text-button text-center font-semibold">
               {c.title}
             </span>
           </button>
@@ -96,15 +96,15 @@ export default function CatalogueViewer({
                         rel="noopener noreferrer"
                         className="bg-onda-yellow text-onda-blue rounded-md px-3 py-1.5 text-xs font-semibold hover:brightness-95"
                       >
-                        Buka PDF
+                        Buka PDF di Tab Baru
                       </a>
                     </>
                   )}
                   <button
                     onClick={() => setActive(null)}
-                    className="rounded-md border border-white/30 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/10"
+                    className="rounded-md border border-white/30 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-500/90"
                   >
-                    Tutup ✕
+                    ✕
                   </button>
                 </div>
               </div>

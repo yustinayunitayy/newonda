@@ -52,6 +52,7 @@ const breadcrumbLd = {
       type="application/ld+json"
       set:html={JSON.stringify([articleLd, breadcrumbLd]).replace(/</g, '\\u003c')}
     />
+
     <div class="section py-8">
       <a
         href="/news"
@@ -61,15 +62,15 @@ const breadcrumbLd = {
           icon="mdi:arrow-left"
           width="20"
           class="transition-transform group-hover:-translate-x-1"></iconify-icon>
-        <span class="font-medium">Back to News</span>
+        <span class="font-medium">Kembali ke Berita</span>
       </a>
     </div>
 
     <div class="section pt-0 pb-8">
-      <div class="mx-auto max-w-4xl">
+      <div class="mx-auto flex max-w-4xl flex-col gap-4">
         {
           news.coverUrl && (
-            <div class="mb-8 overflow-hidden rounded-lg">
+            <div class="mb-4 overflow-hidden rounded-lg">
               <img
                 src={img(news.coverUrl, 1200)}
                 alt={news.title}
@@ -80,26 +81,20 @@ const breadcrumbLd = {
           )
         }
 
-        <h1 class="text-onda-blue mb-4 text-xl font-bold md:text-2xl lg:text-3xl">
-          {news.title}
-        </h1>
+        <h1 class="text-onda-blue text-h3 font-extrabold">{news.title}</h1>
 
-        {
-          news.subtitle && (
-            <h2 class="text-onda-blue/80 mb-6 text-lg font-semibold md:text-xl">{news.subtitle}</h2>
-          )
-        }
+        {news.subtitle && <h2 class="text-onda-blue/80 text-h4 font-semibold">{news.subtitle}</h2>}
 
-        <div class="text-dark-blue-shade/70 mb-6 flex items-center gap-2">
+        <div class="text-dark-blue-shade/70 flex items-center gap-2">
           <iconify-icon icon="mdi:calendar" width="20"></iconify-icon>
-          <span class="text-sm md:text-base">{formatNewsDate(news.date)}</span>
+          <span class="text-body">{formatNewsDate(news.date)}</span>
         </div>
 
         {
           news.categories.length > 0 && (
             <div class="flex flex-wrap gap-2">
               {news.categories.map((c) => (
-                <span class="bg-light-blue-shade text-onda-blue rounded-full px-3 py-1 text-sm font-semibold">
+                <span class="bg-light-blue-shade text-onda-blue text-mini-label inline-block rounded-md px-2.5 py-0.5 font-semibold">
                   {c.name}
                 </span>
               ))}
@@ -109,13 +104,13 @@ const breadcrumbLd = {
       </div>
     </div>
 
-    {/* Body */}
     <div class="section pt-0 pb-16">
       <div class="mx-auto max-w-4xl">
         <RichTextRenderer content={news.description} className="text-dark-blue-shade" />
       </div>
     </div>
   </main>
-</Layout>
 
-<script is:inline src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+  <script is:inline src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"
+  ></script>
+</Layout>

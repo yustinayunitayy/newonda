@@ -11,7 +11,7 @@ type Props = {
 
 function Badge({ name }: { name: string }) {
   return (
-    <span className="bg-light-blue-shade text-onda-blue text-mini-label inline-block rounded-full px-2.5 py-0.5 font-semibold">
+    <span className="bg-light-blue-shade text-onda-blue text-mini-label inline-block rounded-md px-2.5 py-0.5 font-semibold">
       {name}
     </span>
   )
@@ -40,7 +40,7 @@ export default function News({ news, categories }: Props) {
     <section className="section py-12">
       <h1 className="text-h2 text-onda-blue font-extrabold">Dunia Onda</h1>
       <p className="text-body text-dark-blue-shade mt-1">
-        Temukan Inspirasi &amp; Kabar Terbaru dari Dunia Onda
+        Temukan Inspirasi & Kabar Terbaru dari Dunia Onda
       </p>
 
       {/* Search */}
@@ -89,35 +89,33 @@ export default function News({ news, categories }: Props) {
           </h2>
           <a
             href={`/news/${latest.slug}`}
-            className="mt-4 grid items-center gap-6 rounded-2xl border border-gray-100 bg-white p-5 shadow-md transition-shadow hover:shadow-xl md:grid-cols-2 md:p-6"
+            className="mt-4 grid items-center gap-0 overflow-hidden rounded-2xl bg-white shadow-md transition-shadow hover:shadow-xl md:grid-cols-2 md:gap-6 md:overflow-visible md:border md:border-gray-100 md:p-6"
           >
             {latest.coverUrl && (
               <img
                 src={img(latest.coverUrl, 1200)}
                 alt={latest.title}
-                className="order-1 h-56 w-full rounded-xl object-cover md:order-2 md:h-72 lg:h-80"
+                className="order-1 h-56 w-full object-cover md:order-2 md:h-72 md:rounded-xl lg:h-80"
                 loading="lazy"
               />
             )}
-            <div className="order-2 md:order-1">
-              <h3 className="text-onda-blue text-xl font-bold">{latest.title}</h3>
+            <div className="order-2 flex flex-col gap-2 px-4 py-6 md:order-1 md:p-0">
+              <h3 className="text-onda-blue text-h4 font-bold">{latest.title}</h3>
               {latest.subtitle && (
-                <p className="text-dark-blue-shade mt-1 font-semibold">{latest.subtitle}</p>
+                <p className="text-dark-blue-shade text-body font-semibold">{latest.subtitle}</p>
               )}
               {latest.preview && (
-                <p className="text-dark-blue-shade/80 mt-2 text-sm leading-relaxed">
+                <p className="text-dark-blue-shade/80 text-button leading-relaxed">
                   {latest.preview}
                 </p>
               )}
-              <div className="mt-3 flex flex-wrap items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 {latest.categories.map((c) => (
                   <Badge key={c.slug} name={c.name} />
                 ))}
               </div>
-              <p className="text-dark-blue-shade/70 mt-2 text-xs">{formatNewsDate(latest.date)}</p>
-              <span className="text-onda-blue mt-3 inline-block text-sm font-semibold">
-                Baca Selengkapnya →
-              </span>
+              <p className="text-dark-blue-shade/70 text-button">{formatNewsDate(latest.date)}</p>
+              <span className="text-onda-blue text-button font-semibold">Baca Selengkapnya →</span>
             </div>
           </a>
         </>
@@ -143,23 +141,26 @@ export default function News({ news, categories }: Props) {
                     loading="lazy"
                   />
                 )}
-                <div className="flex flex-1 flex-col p-4">
-                  <h3 className="text-onda-blue font-bold">{n.title}</h3>
+                <div className="flex flex-1 flex-col gap-2 px-4 py-6">
+                  <h3 className="text-onda-blue text-h4 font-bold">{n.title}</h3>
+                  {n.subtitle && (
+                    <p className="text-dark-blue-shade text-body font-semibold">{n.subtitle}</p>
+                  )}
                   {n.preview && (
-                    <p className="text-dark-blue-shade/80 mt-1 line-clamp-3 text-sm leading-relaxed">
+                    <p className="text-dark-blue-shade/80 text-button leading-relaxed">
                       {n.preview}
                     </p>
                   )}
-                  <div className="mt-2 flex flex-wrap gap-2">
+                  <div className="mb-3 flex flex-wrap gap-2">
                     {n.categories.map((c) => (
                       <Badge key={c.slug} name={c.name} />
                     ))}
                   </div>
-                  <div className="border-light-blue-shade mt-3 flex items-center justify-between border-t pt-3">
-                    <span className="text-dark-blue-shade/70 text-xs">
+                  <div className="border-light-blue-shade flex items-center justify-between border-t pt-3">
+                    <span className="text-dark-blue-shade/70 text-button">
                       {formatNewsDate(n.date)}
                     </span>
-                    <span className="text-onda-blue text-xs font-semibold">Baca →</span>
+                    <span className="text-onda-blue text-button font-semibold">Baca →</span>
                   </div>
                 </div>
               </a>

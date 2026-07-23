@@ -41,7 +41,7 @@ export default function HeroCarouselSection({
   }
 
   const btnClass =
-    'rounded-xl px-5 py-2.5 text-xs font-semibold md:text-sm transition-all duration-200 cursor-pointer'
+    'rounded-xl px-5 py-2.5 font-semibold text-button transition-all duration-200 cursor-pointer'
 
   return (
     <section className="via-light-blue-shade/40 bg-gradient-to-b from-white from-5% via-45% to-white to-100% ...">
