@@ -40,7 +40,6 @@ export default function CultureGrid({
           )}
         </div>
       )}
-
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {items.map((item, i) => (
           <CultureCard key={i} item={item} images={imagesOf(item)} onOpen={() => setOpenIndex(i)} />
@@ -88,9 +87,9 @@ function CultureCard({
       onClick={onOpen}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      className="group border-onda-blue/10 block overflow-hidden rounded-2xl border bg-white text-left shadow-sm transition-shadow hover:shadow-md"
+      className="group border-onda-blue/10 flex flex-col overflow-hidden rounded-2xl border bg-white text-left shadow-sm transition-shadow hover:shadow-md"
     >
-      <div className="bg-light-blue-shade relative aspect-video w-full overflow-hidden">
+      <div className="bg-light-blue-shade relative aspect-video w-full shrink-0 overflow-hidden">
         {images.map((src, i) => (
           <img
             key={i}
@@ -104,12 +103,12 @@ function CultureCard({
         ))}
       </div>
 
-      <div className="p-5">
+      <div className="flex flex-1 flex-col p-5">
         <h3 className="text-onda-blue text-h4 font-bold">{item.title}</h3>
         {item.preview && (
           <p className="text-dark-blue-shade/70 text-body mt-2 leading-relaxed">{item.preview}</p>
         )}
-        <span className="text-onda-blue text-body mt-3 inline-flex items-center gap-1 font-semibold">
+        <span className="text-onda-blue text-body mt-auto inline-flex items-center gap-1 pt-3 font-semibold">
           Klik untuk tahu lebih lanjut
           <span aria-hidden="true">→</span>
         </span>
@@ -150,7 +149,7 @@ function CultureModal({
       onClick={onClose}
     >
       <motion.div
-        className="relative max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-t-2xl bg-white sm:rounded-2xl"
+        className="relative max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-t-2xl bg-white p-5 sm:rounded-2xl sm:p-6"
         initial={{ y: 48 }}
         animate={{ y: 0 }}
         exit={{ y: 48 }}
@@ -161,58 +160,62 @@ function CultureModal({
           type="button"
           onClick={onClose}
           aria-label="Tutup"
-          className="text-dark-blue-shade absolute top-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-xl leading-none shadow-md transition-colors hover:bg-white"
+          className="text-dark-blue-shade absolute top-4 right-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-xl leading-none shadow-md transition-colors hover:bg-white"
         >
           ✕
         </button>
 
+        {/* Kotak gambar — lebih kecil, rounded, kepisah dari pinggir */}
         {images.length > 0 && (
-          <div className="bg-light-blue-shade relative aspect-video">
+          <div className="bg-light-blue-shade aspect-video w-full overflow-hidden rounded-xl">
             <img
               src={img(images[idx], 1400)}
               alt={item.title}
               className="h-full w-full object-cover"
             />
-            {images.length > 1 && (
-              <>
-                <button
-                  type="button"
-                  onClick={() => go(-1)}
-                  aria-label="Sebelumnya"
-                  className="text-dark-blue-shade absolute top-1/2 left-4 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-2xl leading-none shadow transition-colors hover:bg-white"
-                >
-                  ‹
-                </button>
-                <button
-                  type="button"
-                  onClick={() => go(1)}
-                  aria-label="Berikutnya"
-                  className="text-dark-blue-shade absolute top-1/2 right-4 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-2xl leading-none shadow transition-colors hover:bg-white"
-                >
-                  ›
-                </button>
-                <div className="absolute inset-x-0 bottom-4 flex justify-center gap-1.5">
-                  {images.map((_, i) => (
-                    <span
-                      key={i}
-                      className={`h-1.5 rounded-full transition-all ${
-                        i === idx ? 'w-6 bg-white' : 'w-1.5 bg-white/60'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
           </div>
         )}
 
-        <div className="px-6 py-6 md:px-10 md:py-8">
+        {/* Kontrol slide: ‹ • • • › */}
+        {images.length > 1 && (
+          <div className="mt-3 flex items-center justify-center gap-4">
+            <button
+              type="button"
+              onClick={() => go(-1)}
+              aria-label="Sebelumnya"
+              className="border-onda-blue/30 text-onda-blue hover:bg-onda-blue flex h-9 w-9 items-center justify-center rounded-full border text-xl leading-none transition-colors hover:text-white"
+            >
+              ‹
+            </button>
+            <div className="flex items-center gap-1.5">
+              {images.map((_, i) => (
+                <span
+                  key={i}
+                  className={`h-1.5 rounded-full transition-all ${
+                    i === idx ? 'bg-onda-blue w-5' : 'bg-onda-blue/30 w-1.5'
+                  }`}
+                />
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => go(1)}
+              aria-label="Berikutnya"
+              className="border-onda-blue/30 text-onda-blue hover:bg-onda-blue flex h-9 w-9 items-center justify-center rounded-full border text-xl leading-none transition-colors hover:text-white"
+            >
+              ›
+            </button>
+          </div>
+        )}
+
+        {/* Teks */}
+        <div className="mt-5">
           <h3 className="text-onda-blue text-h3 font-bold">{item.title}</h3>
           {item.content ? (
-            <RichTextRenderer content={item.content} className="text-dark-blue-shade/80 mt-4" />
+            <RichTextRenderer content={item.content} className="text-dark-blue-shade/80 mt-3" />
           ) : (
             item.preview && (
-              <p className="text-dark-blue-shade/80 text-body mt-4 leading-relaxed">
+              <p className="text-dark-blue-shade/80 text-body mt-3 leading-relaxed">
                 {item.preview}
               </p>
             )
