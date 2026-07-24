@@ -5,7 +5,8 @@ type Get = (name: string) => string
 export function initWaForm(
   formId: string,
   buildMessage: (get: Get) => string,
-  successHtml = 'Pesan Anda sudah berhasil disiapkan.<br> Silakan tekan tombol <b>Kirim</b> di WhatsApp untuk melanjutkan.'
+  successHtml = 'Pesan Anda sudah berhasil disiapkan.<br> Silakan tekan tombol <b>Kirim</b> di WhatsApp untuk melanjutkan.',
+  storeType?: 'contact' | 'mitra'
 ) {
   const form = document.getElementById(formId) as HTMLFormElement | null
   if (!form) return
@@ -34,6 +35,17 @@ export function initWaForm(
 
     const data = new FormData(form)
     const get: Get = (name) => (data.get(name) || '').toString().trim()
+
+    if (storeType) {
+      const payload: Record<string, string> = { type: storeType, page: location.pathname }
+      data.forEach((v, k) => (payload[k] = v.toString()))
+      fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        keepalive: true,
+      }).catch(() => {})
+    }
 
     window.open(`https://wa.me/${wa}?text=${encodeURIComponent(buildMessage(get))}`, '_blank')
 

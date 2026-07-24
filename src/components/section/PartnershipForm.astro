@@ -51,6 +51,14 @@ const partnershipTypes = ['Agen Teknik', 'Agen Bangunan', 'PDAM', 'Dept. Store',
       <div class="shadow-onda-blue/50 rounded-2xl bg-white p-6 shadow-lg md:p-8" data-reveal>
         <form id="partnership-form" data-wa={waNumber} class="flex flex-col gap-4">
           <input
+            type="text"
+            name="_hp"
+            tabindex="-1"
+            autocomplete="off"
+            class="hidden"
+            aria-hidden="true"
+          />
+          <input
             class={inputClass}
             type="text"
             name="name"
@@ -162,6 +170,7 @@ const partnershipTypes = ['Agen Teknik', 'Agen Bangunan', 'PDAM', 'Dept. Store',
       const opening = '*PENGAJUAN KEMITRAAN*\nHalo ONDA, saya tertarik menjadi mitra distribusi.'
       return `${opening}\n\n${lines.join('\n')}`
     },
-    'Pengajuanmu sudah otomatis disiapkan.<br/>Tinggal tekan tombol <b>Kirim</b> di WhatsApp ya 🙏'
+    'Pengajuanmu sudah otomatis disiapkan.<br/>Tinggal tekan tombol <b>Kirim</b> di WhatsApp ya 🙏',
+    'mitra'
   )
 </script>

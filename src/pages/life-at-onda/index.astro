@@ -3,8 +3,9 @@ import Layout from '../../layouts/Layout.astro'
 import Navbar from '../../components/global/Navbar.astro'
 import BlockRenderer from '../../components/section/BlockRenderer.astro'
 import { getPage } from '../../lib/data/pages'
+import { fetchSiteSettings } from '../../lib/data/site-settings'
 
-const page = await getPage('life-at-onda')
+const [page, settings] = await Promise.all([getPage('life-at-onda'), fetchSiteSettings()])
 const blocks = page?.blocks ?? []
 ---
 
@@ -14,7 +15,7 @@ const blocks = page?.blocks ?? []
   ogImage={page?.meta?.image?.url}
 >
   <Navbar variant="transparent" scrollBehavior="scroll-to-white" />
-  <div class="relative pb-20 md:pb-28">
-    <BlockRenderer blocks={blocks} />
+  <div class="relative">
+    <BlockRenderer blocks={blocks} settings={settings ?? undefined} formVariant="career" />
   </div>
 </Layout>

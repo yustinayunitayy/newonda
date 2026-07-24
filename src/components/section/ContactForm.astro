@@ -99,6 +99,14 @@ const contactRows = [
     >
       <input
         type="text"
+        name="_hp"
+        tabindex="-1"
+        autocomplete="off"
+        class="hidden"
+        aria-hidden="true"
+      />
+      <input
+        type="text"
         name="name"
         required
         minlength="2"
@@ -199,14 +207,19 @@ const contactRows = [
     Lainnya: '*💬 PESAN LAINNYA*\nHalo ONDA, saya mau menghubungi tim Anda',
   }
 
-  initWaForm('contact-form', (get) => {
-    const opening = OPENING[get('subject')] ?? OPENING['Lainnya']
-    const lines = [
-      get('name') && `*Nama:* ${get('name')}`,
-      get('email') && `*Email:* ${get('email')}`,
-      get('phone') && `*No. HP:* ${get('phone')}`,
-      get('message') && `*Pesan:* ${get('message')}`,
-    ].filter(Boolean)
-    return `${opening}\n\n${lines.join('\n')}`
-  })
+  initWaForm(
+    'contact-form',
+    (get) => {
+      const opening = OPENING[get('subject')] ?? OPENING['Lainnya']
+      const lines = [
+        get('name') && `*Nama:* ${get('name')}`,
+        get('email') && `*Email:* ${get('email')}`,
+        get('phone') && `*No. HP:* ${get('phone')}`,
+        get('message') && `*Pesan:* ${get('message')}`,
+      ].filter(Boolean)
+      return `${opening}\n\n${lines.join('\n')}`
+    },
+    undefined,
+    'contact'
+  )
 </script>

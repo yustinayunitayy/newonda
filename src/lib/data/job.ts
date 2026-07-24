@@ -80,8 +80,9 @@ function toJob(rec: any): Job | null {
   const title = asText(f['Position']).trim()
   const penempatan = asText(f['Penempatan']).trim()
   const generated = f['Generate Link?'] === true
+  const opening = asText(f['Status']).trim().toLowerCase()
 
-  if (!generated || !title) return null
+  if (opening !== 'On process' || !generated || !title) return null
 
   return {
     recordId: rec.record_id,

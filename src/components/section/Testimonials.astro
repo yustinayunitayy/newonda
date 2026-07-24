@@ -1,0 +1,118 @@
+---
+import { textColorMap } from '../../lib/colour'
+import { img } from '../../lib/image'
+
+type Item = { quote: string; name: string; position?: string; avatar?: { url?: string } }
+
+interface Props {
+  miniLabel?: string
+  labelTextColor?: string
+  heading?: string
+  headingTextColor?: string
+  items: Item[]
+}
+
+const { miniLabel, labelTextColor, heading, headingTextColor, items = [] } = Astro.props
+const labelColor = textColorMap[labelTextColor ?? ''] ?? 'var(--color-onda-blue)'
+const headingColor = textColorMap[headingTextColor ?? ''] ?? 'var(--color-onda-blue)'
+
+const initials = (name: string) =>
+  name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0] ?? '')
+    .join('')
+    .toUpperCase()
+
+const showArrows = items.length > 3
+---
+
+<section class="section w-full">
+  <div class="mb-6 flex items-end justify-between gap-4">
+    <div>
+      {
+        miniLabel && (
+          <p class="text-mini-label mb-2 font-bold tracking-[0.2em]" style={`color:${labelColor}`}>
+            {miniLabel}
+          </p>
+        )
+      }
+      {
+        heading && (
+          <h2 class="text-h2 font-extrabold" style={`color:${headingColor}`}>
+            {heading}
+          </h2>
+        )
+      }
+    </div>
+    {
+      showArrows && (
+        <div class="hidden flex-none gap-2 sm:flex">
+          <button
+            type="button"
+            data-testi-prev
+            aria-label="Sebelumnya"
+            class="border-onda-blue/30 text-onda-blue hover:bg-onda-blue flex h-10 w-10 items-center justify-center rounded-full border text-xl leading-none transition-colors hover:text-white"
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            data-testi-next
+            aria-label="Berikutnya"
+            class="border-onda-blue/30 text-onda-blue hover:bg-onda-blue flex h-10 w-10 items-center justify-center rounded-full border text-xl leading-none transition-colors hover:text-white"
+          >
+            ›
+          </button>
+        </div>
+      )
+    }
+  </div>
+
+  <div
+    data-testi-track
+    class="flex snap-x snap-mandatory [scrollbar-width:none] gap-6 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+  >
+    {
+      items.map((t) => (
+        <figure class="border-onda-blue/15 flex shrink-0 basis-full snap-start flex-col rounded-2xl border bg-white p-6 shadow-sm sm:basis-[calc(50%-12px)] lg:basis-[calc(33.333%-16px)]">
+          <div class="flex items-center gap-3">
+            {t.avatar?.url ? (
+              <img
+                src={img(t.avatar.url, 96)}
+                alt={t.name}
+                loading="lazy"
+                class="h-12 w-12 flex-none rounded-full object-cover"
+              />
+            ) : (
+              <div class="bg-light-blue-shade text-onda-blue text-body flex h-12 w-12 flex-none items-center justify-center rounded-full font-bold">
+                {initials(t.name)}
+              </div>
+            )}
+            <figcaption>
+              <p class="text-dark-blue-shade text-body leading-tight font-bold">{t.name}</p>
+              {t.position && <p class="text-dark-blue-shade/60 text-button">{t.position}</p>}
+            </figcaption>
+          </div>
+          <blockquote class="text-dark-blue-shade/80 text-button mt-4 leading-relaxed italic">
+            "{t.quote}"
+          </blockquote>
+        </figure>
+      ))
+    }
+  </div>
+</section>
+
+<script>
+  const track = document.querySelector<HTMLElement>('[data-testi-track]')
+  if (track) {
+    const step = () => track.clientWidth * 0.9
+    document
+      .querySelector('[data-testi-prev]')
+      ?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }))
+    document
+      .querySelector('[data-testi-next]')
+      ?.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }))
+  }
+</script>
