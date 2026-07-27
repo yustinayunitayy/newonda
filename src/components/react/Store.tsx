@@ -1,5 +1,7 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import type { StoreItem } from '../../lib/data/oe-store'
+import { usePaginate } from './UsePagination'
+import Pagination from './Pagination'
 
 type Props = {
   miniLabel?: string
@@ -23,6 +25,9 @@ export default function StoreLocator({
       (s) => s.storeName.toLowerCase().includes(q) || s.address.toLowerCase().includes(q)
     )
   }, [query, stores])
+
+  const listRef = useRef<HTMLDivElement>(null)
+  const { page, totalPages, pageItems, goTo } = usePaginate(filtered, 10, listRef)
 
   const mapsUrl = (s: StoreItem) =>
     `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
@@ -52,13 +57,13 @@ export default function StoreLocator({
           />
         </div>
 
-        <div className="mt-6 flex flex-col gap-3">
+        <div ref={listRef} className="mt-6 flex scroll-mt-24 flex-col gap-3">
           {filtered.length === 0 ? (
             <p className="py-8 text-center text-sm text-white/50">
               Toko tidak ditemukan untuk "{query}".
             </p>
           ) : (
-            filtered.map((s, i) => (
+            pageItems.map((s, i) => (
               <a
                 key={i}
                 href={mapsUrl(s)}
@@ -74,6 +79,8 @@ export default function StoreLocator({
             ))
           )}
         </div>
+
+        <Pagination page={page} totalPages={totalPages} onChange={goTo} variant="dark" />
       </div>
     </section>
   )

@@ -49,7 +49,8 @@ async function notifyHR(d: {
   message: string
 }) {
   const html = `
-    <h2>Pengajuan Kolaborasi Baru</h2>
+    <h2>Halo HR Team,</h2>
+    <p>Ada pengajuan baru melalui halaman Career di website ONDA.</p>
     <table cellpadding="6" style="border-collapse:collapse;font-family:sans-serif">
       <tr><td><b>Nama</b></td><td>${esc(d.name)}</td></tr>
       <tr><td><b>Email</b></td><td>${esc(d.email)}</td></tr>
@@ -65,10 +66,10 @@ async function notifyHR(d: {
       accept: 'application/json',
     },
     body: JSON.stringify({
-      sender: { email: SENDER_EMAIL, name: 'Website ONDA' },
+      sender: { email: SENDER_EMAIL, name: 'ONDA Sanitary & Plumbing' },
       to: [{ email: RECIPIENT }],
       replyTo: { email: d.email, name: d.name },
-      subject: `[Kolaborasi] ${d.jenis} — ${d.institution}`,
+      subject: `New Career Collaboration Inquiry - ${d.jenis}, ${d.institution}`,
       htmlContent: html,
     }),
   })

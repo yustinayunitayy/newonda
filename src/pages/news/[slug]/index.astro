@@ -22,7 +22,7 @@ const articleLd = {
   '@type': 'Article',
   '@id': `${pageUrl}#article`,
   headline: news.title,
-  description: news.preview ?? news.subtitle ?? '',
+  description: news.preview ?? '',
   image: news.coverUrl ? [img(news.coverUrl, 1200)] : undefined,
   datePublished: news.date,
   dateModified: news.date,
@@ -42,10 +42,7 @@ const breadcrumbLd = {
 }
 ---
 
-<Layout
-  title={`${news.title} — ONDA Sanitary & Plumbing`}
-  description={news.preview ?? news.subtitle}
->
+<Layout title={`${news.title} — ONDA Sanitary & Plumbing`} description={news.preview}>
   <Navbar variant="white" />
   <main class="min-h-screen bg-white pt-16">
     <script
@@ -81,9 +78,7 @@ const breadcrumbLd = {
           )
         }
 
-        <h1 class="text-onda-blue text-h3 font-extrabold">{news.title}</h1>
-
-        {news.subtitle && <h2 class="text-onda-blue/80 text-h4 font-semibold">{news.subtitle}</h2>}
+        <h1 class="text-onda-blue text-h2 font-extrabold">{news.title}</h1>
 
         <div class="text-dark-blue-shade/70 flex items-center gap-2">
           <iconify-icon icon="mdi:calendar" width="20"></iconify-icon>

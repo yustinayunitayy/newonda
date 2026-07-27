@@ -21,6 +21,7 @@
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.4.4",
     "astro-icon": "^1.1.5",
+    "iconify-icon": "^3.0.2",
     "motion": "^12.40.0",
     "postgres": "^3.4.9",
     "react": "^19.2.7",

@@ -1,8 +1,10 @@
 'use client'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import type { NewsCategory, NewsItem } from '../../lib/data/onda-news'
 import { formatNewsDate } from '../../lib/data/onda-news'
 import { img } from '../../lib/image'
+import { usePaginate } from './UsePagination'
+import Pagination from './Pagination'
 
 type Props = {
   news: NewsItem[]
@@ -26,15 +28,16 @@ export default function News({ news, categories }: Props) {
     return news.filter((n) => {
       const matchCat = cat === 'all' || n.categories.some((c) => c.slug === cat)
       const matchQ =
-        !q ||
-        n.title.toLowerCase().includes(q) ||
-        (n.preview ?? '').toLowerCase().includes(q) ||
-        (n.subtitle ?? '').toLowerCase().includes(q)
+        !q || n.title.toLowerCase().includes(q) || (n.preview ?? '').toLowerCase().includes(q)
+
       return matchCat && matchQ
     })
   }, [news, query, cat])
 
-  const [latest, ...older] = filtered
+  const latest = filtered[0]
+  const older = useMemo(() => filtered.slice(1), [filtered])
+  const olderRef = useRef<HTMLHeadingElement>(null)
+  const { page, totalPages, pageItems, goTo } = usePaginate(older, 9, olderRef)
 
   return (
     <section className="section py-12">
@@ -101,9 +104,6 @@ export default function News({ news, categories }: Props) {
             )}
             <div className="order-2 flex flex-col gap-2 px-4 py-6 md:order-1 md:p-0">
               <h3 className="text-onda-blue text-h4 font-bold">{latest.title}</h3>
-              {latest.subtitle && (
-                <p className="text-dark-blue-shade text-body font-semibold">{latest.subtitle}</p>
-              )}
               {latest.preview && (
                 <p className="text-dark-blue-shade/80 text-button leading-relaxed">
                   {latest.preview}
@@ -123,11 +123,14 @@ export default function News({ news, categories }: Props) {
 
       {older.length > 0 && (
         <>
-          <h2 className="text-h2 text-onda-blue mt-12 text-center font-bold md:text-left">
+          <h2
+            ref={olderRef}
+            className="text-h2 text-onda-blue mt-12 scroll-mt-24 text-center font-bold md:text-left"
+          >
             Older News
           </h2>
           <div className="mt-4 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {older.map((n) => (
+            {pageItems.map((n) => (
               <a
                 key={n.id}
                 href={`/news/${n.slug}`}
@@ -143,20 +146,18 @@ export default function News({ news, categories }: Props) {
                 )}
                 <div className="flex flex-1 flex-col gap-2 px-4 py-6">
                   <h3 className="text-onda-blue text-h4 font-bold">{n.title}</h3>
-                  {n.subtitle && (
-                    <p className="text-dark-blue-shade text-body font-semibold">{n.subtitle}</p>
-                  )}
+                  <div className="flex flex-wrap gap-2">
+                    {n.categories.map((c) => (
+                      <Badge key={c.slug} name={c.name} />
+                    ))}
+                  </div>
                   {n.preview && (
                     <p className="text-dark-blue-shade/80 text-button leading-relaxed">
                       {n.preview}
                     </p>
                   )}
-                  <div className="mb-3 flex flex-wrap gap-2">
-                    {n.categories.map((c) => (
-                      <Badge key={c.slug} name={c.name} />
-                    ))}
-                  </div>
-                  <div className="border-light-blue-shade flex items-center justify-between border-t pt-3">
+
+                  <div className="border-light-blue-shade mt-auto flex items-center justify-between border-t pt-3">
                     <span className="text-dark-blue-shade/70 text-button">
                       {formatNewsDate(n.date)}
                     </span>
@@ -166,6 +167,7 @@ export default function News({ news, categories }: Props) {
               </a>
             ))}
           </div>
+          <Pagination page={page} totalPages={totalPages} onChange={goTo} variant="light" />
         </>
       )}
     </section>

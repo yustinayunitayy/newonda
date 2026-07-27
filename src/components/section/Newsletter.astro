@@ -3,6 +3,8 @@ import type { NewsletterBlock } from '../../lib/data/blocks/newsletter'
 
 type Props = NewsletterBlock
 const { heading = 'Daftar Newsletter ONDA', subheading } = Astro.props
+
+const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY
 ---
 
 <section class="w-full overflow-x-clip">
@@ -18,27 +20,45 @@ const { heading = 'Daftar Newsletter ONDA', subheading } = Astro.props
       }
     </div>
 
-    <form
-      id="newsletter-form"
-      class="flex w-full flex-col gap-2 sm:flex-row md:w-auto"
-      data-reveal-delay="150"
-    >
+    <form id="newsletter-form" class="flex w-full flex-col gap-3 md:w-auto" data-reveal-delay="150">
+      <div class="flex w-full flex-col gap-2 sm:flex-row">
+        <input
+          type="email"
+          name="email"
+          required
+          placeholder="Masukkan Email Anda"
+          class="text-dark-blue-shade w-full rounded-lg border-0 bg-white px-4 py-2.5 text-sm shadow-sm outline-none sm:flex-1 lg:w-64"
+        />
+        <button
+          type="submit"
+          class="bg-onda-blue rounded-lg px-6 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:brightness-110"
+        >
+          Subscribe
+        </button>
+      </div>
+
       <input
-        type="email"
-        name="email"
-        required
-        placeholder="Masukkan Email Anda"
-        class="text-dark-blue-shade w-full rounded-lg border-0 bg-white px-4 py-2.5 text-sm shadow-sm outline-none sm:flex-1 lg:w-64"
+        type="text"
+        name="_hp"
+        tabindex="-1"
+        autocomplete="off"
+        class="hidden"
+        aria-hidden="true"
       />
-      <button
-        type="submit"
-        class="bg-onda-blue rounded-lg px-6 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:brightness-110"
+
+      <div
+        class="cf-turnstile"
+        data-sitekey={TURNSTILE_SITE_KEY}
+        data-appearance="interaction-only"
+        data-size="flexible"
+        data-theme="light"
+        data-language="id"
       >
-        Subscribe
-      </button>
+      </div>
     </form>
   </div>
 </section>
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script>
   import Swal from 'sweetalert2'
 
@@ -60,6 +80,10 @@ const { heading = 'Daftar Newsletter ONDA', subheading } = Astro.props
     })
     if (!confirmed.isConfirmed) return
 
+    const token =
+      (form.querySelector('[name="cf-turnstile-response"]') as HTMLInputElement)?.value || ''
+    const hp = (form.elements.namedItem('_hp') as HTMLInputElement)?.value || ''
+
     btn.disabled = true
     Swal.fire({
       title: 'Sedang Memproses...',
@@ -73,7 +97,7 @@ const { heading = 'Daftar Newsletter ONDA', subheading } = Astro.props
       const res = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, token, _hp: hp }),
       })
       const data = await res.json().catch(() => ({}))
 
@@ -121,6 +145,7 @@ const { heading = 'Daftar Newsletter ONDA', subheading } = Astro.props
       })
     } finally {
       btn.disabled = false
+      ;(window as any).turnstile?.reset()
     }
   })
 </script>

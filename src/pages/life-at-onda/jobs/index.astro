@@ -1,0 +1,91 @@
+---
+import Layout from '../../../layouts/Layout.astro'
+import Navbar from '../../../components/global/Navbar.astro'
+import { getJobs } from '../../../lib/data/job'
+export const prerender = false
+
+const jobs = await getJobs()
+---
+
+<Layout
+  title="Lowongan Kerja — Life at ONDA"
+  description="Bergabung dengan tim ONDA. Lihat lowongan terbuka dan lamar posisi yang cocok buat kamu."
+>
+  <Navbar variant="white" />
+  <main class="min-h-screen bg-white pt-16">
+    <div class="section py-8">
+      <a
+        href="/life-at-onda"
+        class="text-onda-blue hover:text-onda-blue/80 group inline-flex items-center gap-2 transition-colors"
+      >
+        <iconify-icon
+          icon="mdi:arrow-left"
+          width="20"
+          class="transition-transform group-hover:-translate-x-1"></iconify-icon>
+        <span class="text-button">Kembali</span>
+      </a>
+    </div>
+
+    <div class="section pt-0 pb-16">
+      <div class="">
+        <p class="text-onda-blue mb-2 text-sm font-bold tracking-[0.2em]">LOWONGAN TERBUKA</p>
+        <h1 class="text-onda-blue text-h2 mb-2 font-extrabold">
+          Temukan Kesempatan Karier Anda di ONDA
+        </h1>
+        <p class="text-dark-blue-shade/70 mb-10 text-sm md:text-base">
+          {jobs.length} posisi terbuka saat ini
+        </p>
+
+        {
+          jobs.length === 0 ? (
+            <div class="border-onda-blue/15 rounded-2xl border bg-white p-10 text-center">
+              <iconify-icon
+                icon="mdi:briefcase-search-outline"
+                width="40"
+                class="text-onda-blue/40"
+              />
+              <p class="text-dark-blue-shade mt-3 font-semibold">
+                Belum ada lowongan terbuka saat ini
+              </p>
+              <p class="text-dark-blue-shade/60 mt-1 text-sm">
+                Pantau terus halaman ini, ya. Posisi baru bisa muncul kapan saja.
+              </p>
+            </div>
+          ) : (
+            <ul class="border-onda-blue/15 divide-onda-blue/10 divide-y overflow-hidden rounded-2xl border bg-white">
+              {jobs.map((job) => (
+                <li>
+                  <a
+                    href={`/life-at-onda/jobs/${job.slug}`}
+                    class="hover:bg-light-blue-shade/30 group flex items-center justify-between gap-4 px-5 py-5 transition-colors md:px-6"
+                  >
+                    <div>
+                      <p class="text-dark-blue-shade group-hover:text-onda-blue font-semibold transition-colors">
+                        {job.title}
+                      </p>
+                      <div class="text-dark-blue-shade/60 mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+                        {job.penempatan && (
+                          <span class="inline-flex items-center gap-1">
+                            <iconify-icon icon="mdi:map-marker-outline" width="16" />
+                            {job.penempatan}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <iconify-icon
+                      icon="mdi:arrow-right"
+                      width="22"
+                      class="text-onda-blue flex-none transition-transform group-hover:translate-x-1"
+                    />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script is:inline src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>

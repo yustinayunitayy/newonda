@@ -82,7 +82,7 @@ function toJob(rec: any): Job | null {
   const generated = f['Generate Link?'] === true
   const opening = asText(f['Status']).trim().toLowerCase()
 
-  if (opening !== 'On process' || !generated || !title) return null
+  if (opening !== 'on process' || !generated || !title) return null
 
   return {
     recordId: rec.record_id,

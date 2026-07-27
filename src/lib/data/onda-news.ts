@@ -9,7 +9,6 @@ export interface NewsItem {
   id: number
   slug: string
   title: string
-  subtitle?: string
   preview?: string
   categories: NewsCategory[]
   coverUrl?: string
@@ -36,7 +35,6 @@ function toItem(d: any): NewsItem {
     id: d.id,
     slug: d.slug ?? String(d.id),
     title: d.NewsTitle,
-    subtitle: d.NewsSubtitle,
     preview: d.NewsPreview,
     categories: mapCategories(d.Category),
     coverUrl: coverOf(d),

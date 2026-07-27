@@ -1,0 +1,127 @@
+---
+import Layout from '../../../../layouts/Layout.astro'
+import Navbar from '../../../../components/global/Navbar.astro'
+import { getJobBySlug } from '../../../../lib/data/job'
+
+export const prerender = false
+
+const { slug } = Astro.params
+const job = slug ? await getJobBySlug(slug) : null
+
+if (!job) return Astro.redirect('/life-at-onda/jobs', 302)
+
+const details = [
+  { label: 'Penempatan', value: job.penempatan, icon: 'mdi:map-marker-outline' },
+  { label: 'Pendidikan', value: job.pendidikan, icon: 'mdi:school-outline' },
+  { label: 'Jurusan', value: job.jurusan, icon: 'mdi:book-open-variant-outline' },
+  { label: 'Pengalaman', value: job.pengalamanKerja, icon: 'mdi:briefcase-outline' },
+  { label: 'Jenis Kelamin', value: job.jenisKelamin, icon: 'mdi:account-outline' },
+  { label: 'Usia Maks.', value: job.usiaMaks, icon: 'mdi:calendar-account-outline' },
+].filter((d) => d.value)
+---
+
+<Layout
+  title={`${job.title} — Lowongan ONDA`}
+  description={`Lowongan ${job.title}${job.penempatan ? ' di ' + job.penempatan : ''} di ONDA.`}
+>
+  <Navbar variant="white" />
+  <main class="min-h-screen bg-white pt-16">
+    <div class="section py-8">
+      <a
+        href="/life-at-onda/jobs"
+        class="text-onda-blue hover:text-onda-blue/80 group inline-flex items-center gap-2 transition-colors"
+      >
+        <iconify-icon
+          icon="mdi:arrow-left"
+          width="20"
+          class="transition-transform group-hover:-translate-x-1"></iconify-icon>
+        <span class="text-button">Kembali ke Lowongan</span>
+      </a>
+    </div>
+
+    <div class="section pt-0 pb-16">
+      <div class="mx-auto max-w-4xl">
+        <p class="text-onda-blue mb-2 text-sm font-bold tracking-[0.2em]">LOWONGAN TERBUKA</p>
+        <h1 class="text-onda-blue text-h2 font-extrabold">{job.title}</h1>
+        {
+          job.penempatan && (
+            <p class="text-dark-blue-shade/70 mt-2 inline-flex items-center gap-1.5 text-sm md:text-base">
+              <iconify-icon icon="mdi:map-marker-outline" width="18" />
+              {job.penempatan}
+            </p>
+          )
+        }
+
+        {
+          details.length > 0 && (
+            <div class="border-onda-blue/15 mt-8 grid grid-cols-1 gap-4 rounded-2xl border bg-white p-6 sm:grid-cols-2">
+              {details.map((d) => (
+                <div class="flex items-start gap-3">
+                  <span class="bg-onda-blue/10 text-onda-blue flex h-9 w-9 flex-none items-center justify-center rounded-full">
+                    <iconify-icon icon={d.icon} width="18" />
+                  </span>
+                  <div>
+                    <p class="text-dark-blue-shade/60 text-xs">{d.label}</p>
+                    <p class="text-dark-blue-shade font-semibold">{d.value}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )
+        }
+
+        {
+          job.jobDescription && (
+            <section class="mt-10">
+              <h2 class="text-onda-blue text-h4 mb-3 font-bold">Deskripsi Pekerjaan</h2>
+              <div class="text-dark-blue-shade/90 text-body leading-relaxed whitespace-pre-line">
+                {job.jobDescription}
+              </div>
+            </section>
+          )
+        }
+
+        {
+          job.kualifikasi && (
+            <section class="mt-8">
+              <h2 class="text-onda-blue text-h4 mb-3 font-bold">Kualifikasi</h2>
+              <div class="text-dark-blue-shade/90 text-body leading-relaxed whitespace-pre-line">
+                {job.kualifikasi}
+              </div>
+            </section>
+          )
+        }
+
+        {
+          job.applyUrl && (
+            <section class="mt-10">
+              <h2 class="text-onda-blue text-h4 mb-3 font-bold">Lamar Posisi Ini</h2>
+              <div class="border-onda-blue/15 overflow-hidden rounded-2xl border">
+                <iframe
+                  src={job.applyUrl}
+                  title={`Formulir lamaran — ${job.title}`}
+                  class="h-[900px] w-full border-0 md:h-[1050px]"
+                  loading="lazy"
+                />
+              </div>
+              <p class="text-dark-blue-shade/60 mt-3 text-sm">
+                Formulir nggak muncul?{' '}
+                <a
+                  href={job.applyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-onda-blue font-semibold underline"
+                >
+                  Buka di tab baru
+                </a>
+              </p>
+            </section>
+          )
+        }
+      </div>
+    </div>
+  </main>
+
+  <script is:inline src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"
+  ></script>
+</Layout>
