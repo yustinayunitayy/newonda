@@ -1,4 +1,4 @@
-import type { TextColor } from '../../colour'
+import type { TextColor, textPosition } from '../../colour'
 
 export interface InfoCard {
   background?: 'white' | 'light' | 'transparent'
@@ -17,5 +17,8 @@ export interface InfoCardsBlock {
   subheadingTextColor?: TextColor
   style?: 'icon-top' | 'icon-left'
   columns?: '2' | '3' | '4'
+  textAlign?: textPosition
+  iconColor?: TextColor
+  anchorId?: string
   cards: InfoCard[]
 }

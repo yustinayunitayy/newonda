@@ -1,26 +1,9 @@
 ---
-import type { TextColor } from '../../lib/colour'
-import { textColorMap } from '../../lib/colour'
+import type { InfoCardsBlock } from '../../lib/data/blocks'
+import { textColorMap, textPositionMap } from '../../lib/colour'
 import { RichTextRenderer } from '../react/RichTextRenderer'
 
-interface InfoCard {
-  background?: 'white' | 'light' | 'transparent'
-  icon: string
-  title: string
-  content?: any
-}
-
-interface Props {
-  miniLabel?: string
-  labelTextColor?: TextColor
-  heading?: string
-  headingTextColor?: TextColor
-  subheading?: string
-  subheadingTextColor?: TextColor
-  style?: 'icon-top' | 'icon-left'
-  columns?: '2' | '3' | '4'
-  cards: InfoCard[]
-}
+type Props = InfoCardsBlock
 
 const {
   miniLabel,
@@ -29,15 +12,18 @@ const {
   headingTextColor = 'blue',
   subheading,
   subheadingTextColor = 'darkBlue',
+  textAlign = 'center-center',
   style = 'icon-top',
   columns = '3',
   cards = [],
+  anchorId,
 } = Astro.props
 
 const labelColor = textColorMap[labelTextColor] ?? textColorMap.blue
 const headingColor = textColorMap[headingTextColor] ?? textColorMap.blue
 const subheadingColor = textColorMap[subheadingTextColor] ?? textColorMap.darkBlue
 
+const pos = textPositionMap[textAlign] ?? textPositionMap['center-center']
 const isTop = style === 'icon-top'
 
 const colMap: Record<string, string> = {
@@ -50,17 +36,19 @@ const gridCols = colMap[columns] ?? colMap['3']
 const bgMap: Record<string, string> = {
   white: 'bg-white border border-light-blue-shade/60 shadow-[0_10px_30px_rgba(0,93,166,0.08)]',
   light: 'bg-light-blue-shade/40',
-  transparent: 'bg-transparent',
+  transparent: 'bg-white/20',
 }
 ---
 
-<section class="section">
-  <!-- Header -->
+<section id={anchorId} class={anchorId ? 'section scroll-mt-24' : 'section'}>
   {
     (miniLabel || heading || subheading) && (
-      <div class={`mb-10${isTop ? 'mx-auto text-center' : 'text-left'}`}>
+      <div
+        class="mb-10 flex flex-col gap-2"
+        style={`align-items:${pos.alignItems}; text-align:${pos.textAlign}; ${pos.textAlign === 'center' ? 'margin-inline:auto;' : ''}`}
+      >
         {miniLabel && (
-          <p class="text-mini-label mb-3" style={`color:${labelColor}`} data-reveal>
+          <p class="text-mini-label" style={`color:${labelColor}`} data-reveal>
             {miniLabel}
           </p>
         )}
@@ -70,11 +58,7 @@ const bgMap: Record<string, string> = {
           </h2>
         )}
         {subheading && (
-          <p
-            class="text-body mt-3 mb-3 leading-relaxed"
-            style={`color:${subheadingColor}`}
-            data-reveal
-          >
+          <p class="text-body leading-relaxed" style={`color:${subheadingColor}`} data-reveal>
             {subheading}
           </p>
         )}
@@ -87,26 +71,57 @@ const bgMap: Record<string, string> = {
     {
       cards.map((c) => {
         const bg = bgMap[c.background ?? 'light'] ?? bgMap.light
+        const dark = c.background === 'transparent'
         return isTop ? (
           <div class={`flex flex-col items-center rounded-2xl p-6 text-center md:p-8 ${bg}`}>
-            <iconify-icon icon={c.icon} width="48" class="text-onda-blue mb-4" />
-            <h2 class="text-h3 text-onda-blue mb-2 font-bold tracking-wide">{c.title}</h2>
+            {dark ? (
+              <span class="bg-onda-yellow mb-4 flex h-14 w-14 items-center justify-center rounded-xl">
+                <iconify-icon icon={c.icon} width="28" class="text-dark-blue-shade" />
+              </span>
+            ) : (
+              <iconify-icon icon={c.icon} width="48" class="text-onda-blue mb-4" />
+            )}
+            <h2
+              class={`text-h3 mb-2 font-bold tracking-wide ${dark ? 'text-white' : 'text-onda-blue'}`}
+            >
+              {c.title}
+            </h2>
             {c.content && (
-              <div class="text-body text-center text-slate-500">
-                <RichTextRenderer content={c.content} className="leading-relaxed" />
+              <div class={`text-body text-center ${dark ? 'text-white/80' : 'text-slate-500'}`}>
+                <RichTextRenderer
+                  content={c.content}
+                  className={
+                    dark
+                      ? 'leading-relaxed [&_li]:text-white/80 [&_p]:text-white/80'
+                      : 'leading-relaxed'
+                  }
+                />
               </div>
             )}
           </div>
         ) : (
           <div class={`flex items-start gap-4 rounded-2xl p-6 md:p-7 ${bg}`}>
-            <span class="text-onda-blue flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-white shadow-sm">
-              <iconify-icon icon={c.icon} width="22" />
+            <span
+              class={`flex h-10 w-10 flex-none items-center justify-center rounded-lg ${dark ? 'bg-onda-yellow' : 'bg-white shadow-sm'}`}
+            >
+              <iconify-icon
+                icon={c.icon}
+                width="22"
+                class={dark ? 'text-dark-blue-shade' : 'text-onda-blue'}
+              />
             </span>
             <div>
-              <h3 class="text-onda-blue font-bold">{c.title}</h3>
+              <h3 class={`font-bold ${dark ? 'text-white' : 'text-onda-blue'}`}>{c.title}</h3>
               {c.content && (
-                <div class="text-body mt-1 text-slate-500">
-                  <RichTextRenderer content={c.content} className="leading-relaxed" />
+                <div class={`text-body mt-1 ${dark ? 'text-white/80' : 'text-slate-500'}`}>
+                  <RichTextRenderer
+                    content={c.content}
+                    className={
+                      dark
+                        ? 'leading-relaxed [&_li]:text-white/80 [&_p]:text-white/80'
+                        : 'leading-relaxed'
+                    }
+                  />
                 </div>
               )}
             </div>

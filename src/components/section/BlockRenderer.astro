@@ -18,6 +18,7 @@ import PartnershipForm from '../section/PartnershipForm.astro'
 import CultureGrid from '../react/CultureGrid'
 import Testimonials from '../section/Testimonials.astro'
 import CareerForm from '../section/CareerForm.astro'
+import MitraSteps from './MitraSteps.astro'
 import { STREAM_BASE, toBrandVideoItems } from '../../lib/data/brand-video'
 
 interface Props {
@@ -61,6 +62,8 @@ const { blocks, settings, formVariant = 'contact' } = Astro.props
           return <CultureGrid client:visible {...block} />
         case 'testimonials':
           return <Testimonials {...block} />
+        case 'mitra-steps':
+          return <MitraSteps {...block} />
         case 'brand-video-grid':
           return (
             <BrandVideoGrid

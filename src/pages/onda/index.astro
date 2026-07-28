@@ -13,7 +13,7 @@ const blocks = page?.blocks ?? []
   description={page?.meta?.description}
   ogImage={page?.meta?.image?.url}
 >
-  <Navbar variant="white" />
+  <Navbar variant="transparent" scrollBehavior="scroll-to-white" />
   <div class="relative pb-20 md:pb-28">
     <BlockRenderer blocks={blocks} />
   </div>
