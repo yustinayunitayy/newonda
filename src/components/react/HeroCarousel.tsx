@@ -24,7 +24,8 @@ export default function HeroCarouselSection({
   subheadingColor = 'darkBlue',
   buttons,
   backgroundImage,
-  overlay = 'none',
+  overlayColor = 'none',
+  overlayOpacity = 40,
   backgroundBlur = 'none',
   images = [],
 }: HeroCarouselBlock) {
@@ -48,7 +49,11 @@ export default function HeroCarouselSection({
   const bgUrl = backgroundImage?.url ? cdnimg(backgroundImage.url, 1920) : null
   const noBgClass =
     'via-light-blue-shade/40 bg-gradient-to-b from-white from-5% via-45% to-white to-100%'
-  const overlayClass = overlay === 'dark' ? 'bg-black/50' : overlay === 'light' ? 'bg-white/50' : ''
+  const overlayColorMap: Record<string, string> = {
+    black: '#000000',
+    white: '#ffffff',
+    blue: 'var(--color-onda-blue)',
+  }
   const blurMap: Record<string, string> = { none: '', sm: 'blur-sm', md: 'blur-md', lg: 'blur-lg' }
   const blurClass = blurMap[backgroundBlur] ?? ''
   const blobClass = bgUrl ? 'bg-white/40' : 'bg-onda-blue/15'
@@ -66,8 +71,14 @@ export default function HeroCarouselSection({
             aria-hidden="true"
             className={`pointer-events-none absolute inset-0 h-full w-full scale-110 object-cover ${blurClass}`}
           />
-          {overlayClass && (
-            <div className={`pointer-events-none absolute inset-0 ${overlayClass}`} />
+          {overlayColor !== 'none' && overlayOpacity > 0 && (
+            <div
+              className="pointer-events-none absolute inset-0"
+              style={{
+                backgroundColor: overlayColorMap[overlayColor],
+                opacity: overlayOpacity / 100,
+              }}
+            />
           )}
         </>
       )}

@@ -8,7 +8,7 @@ import { img } from '../../lib/image'
 type Phase = 'intro' | 'content' | 'done'
 
 // Timing (ms)
-const INTRO_MS = 5000
+const INTRO_MS = 3000
 const CONTENT_MS = 1200
 const NAVBAR_DELAY_MS = 800
 
