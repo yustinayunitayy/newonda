@@ -10,6 +10,8 @@ export interface TextWithImageBlock {
   labelTextColor?: TextColor
   heading: string
   headingTextColor?: TextColor
+  subheading: string
+  subheadingTextColor?: TextColor
   body: string
   bodyTextColor?: TextColor
   buttonEnabled?: boolean

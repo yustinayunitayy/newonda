@@ -13,6 +13,8 @@ const {
   labelTextColor,
   heading,
   headingTextColor = 'blue',
+  subheading,
+  subheadingTextColor = 'blue',
   body,
   bodyTextColor = 'darkBlue',
   buttonEnabled,
@@ -48,7 +50,7 @@ const btnClass = 'cursor-pointer rounded-xl text-button font-semibold transition
       }
 
       <h2 class="text-h2" style={`color:${textColorMap[headingTextColor]}`}>{heading}</h2>
-
+      <h3 class="text-h4" style={`color:${textColorMap[subheadingTextColor]}`}>{subheading}</h3>
       {
         body && (
           <p
