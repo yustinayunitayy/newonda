@@ -26,7 +26,7 @@ export default function BrandVideoGrid({
   const [activeId, setActiveId] = useState<string | null>(null)
 
   const thumb = (v: Video) =>
-    v.thumbnail || `${streamBase}/${v.videoId}/thumbnails/thumbnail.jpg?height=600`
+    v.thumbnail || `${streamBase}/${v.videoId}/thumbnails/thumbnail.jpg?time=2s&height=600`
   const iframe = (id: string) => `${streamBase}/${id}/iframe`
 
   return (
