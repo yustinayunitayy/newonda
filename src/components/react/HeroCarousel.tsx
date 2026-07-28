@@ -23,6 +23,9 @@ export default function HeroCarouselSection({
   subheading,
   subheadingColor = 'darkBlue',
   buttons,
+  backgroundImage,
+  overlay = 'none',
+  backgroundBlur = 'none',
   images = [],
 }: HeroCarouselBlock) {
   const [active, setActive] = useState(0)
@@ -42,10 +45,34 @@ export default function HeroCarouselSection({
 
   const btnClass =
     'rounded-xl px-5 py-2.5 font-semibold text-button transition-all duration-200 cursor-pointer'
+  const bgUrl = backgroundImage?.url ? cdnimg(backgroundImage.url, 1920) : null
+  const noBgClass =
+    'via-light-blue-shade/40 bg-gradient-to-b from-white from-5% via-45% to-white to-100%'
+  const overlayClass = overlay === 'dark' ? 'bg-black/50' : overlay === 'light' ? 'bg-white/50' : ''
+  const blurMap: Record<string, string> = { none: '', sm: 'blur-sm', md: 'blur-md', lg: 'blur-lg' }
+  const blurClass = blurMap[backgroundBlur] ?? ''
+  const blobClass = bgUrl ? 'bg-white/40' : 'bg-onda-blue/15'
+  const dotClass = bgUrl ? 'bg-white' : 'bg-onda-blue'
 
   return (
-    <section className="via-light-blue-shade/40 bg-gradient-to-b from-white from-5% via-45% to-white to-100% ...">
-      <div className="section grid items-center gap-8 py-16 pb-0 lg:grid-cols-2 lg:gap-12">
+    <section
+      className={`relative flex min-h-[70dvh] items-center overflow-hidden md:min-h-dvh ${bgUrl ? '' : noBgClass}`}
+    >
+      {bgUrl && (
+        <>
+          <img
+            src={bgUrl}
+            alt=""
+            aria-hidden="true"
+            className={`pointer-events-none absolute inset-0 h-full w-full scale-110 object-cover ${blurClass}`}
+          />
+          {overlayClass && (
+            <div className={`pointer-events-none absolute inset-0 ${overlayClass}`} />
+          )}
+        </>
+      )}
+
+      <div className="section relative z-10 grid w-full items-center gap-8 py-16 lg:grid-cols-2 lg:gap-12">
         <motion.div
           className="order-2 flex flex-col gap-4 lg:order-1"
           variants={container}
@@ -102,8 +129,10 @@ export default function HeroCarouselSection({
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.25, ease: EASE }}
         >
-          <div className="relative flex h-80 w-full items-center justify-center md:h-[30rem]">
-            <div className="bg-onda-blue/15 pointer-events-none absolute h-64 w-64 rounded-full blur-3xl md:h-80 md:w-80" />
+          <div className="relative flex h-70 w-full items-center justify-center md:h-[30rem]">
+            <div
+              className={`pointer-events-none absolute h-64 w-64 rounded-full blur-3xl md:h-80 md:w-80 ${blobClass}`}
+            />
             {images.map((img, i) => {
               if (!img.image?.url) return null
               const d = rel(i)
@@ -141,7 +170,7 @@ export default function HeroCarouselSection({
                   key={i}
                   onClick={() => setActive(i)}
                   aria-label={`Produk ${i + 1}`}
-                  className="bg-onda-blue h-2 rounded-full transition-all duration-300"
+                  className={`h-2 rounded-full transition-all duration-300 ${dotClass}`}
                   style={{
                     width: i === active ? '1.5rem' : '0.5rem',
                     opacity: i === active ? 1 : 0.3,
