@@ -1,82 +1,58 @@
 ---
 import type { SiteSettings, FormBlock } from '../../lib/data/site-settings'
-import { textColorMap } from '../../lib/colour'
 
 type Props = FormBlock & { settings: SiteSettings }
-
-const { miniLabel, labelTextColor, heading, headingTextColor, body, bodyTextColor, settings } =
-  Astro.props
-
+const { miniLabel, heading, body, settings } = Astro.props
 const waNumber = settings.contact?.csPhone?.replace(/\D/g, '') ?? ''
 
-const labelColor = textColorMap[labelTextColor]
-const headingColor = textColorMap[headingTextColor]
-const bodyColor = textColorMap[bodyTextColor]
-
 const inputClass =
-  'w-full rounded-lg border border-light-blue-shade bg-white px-4 py-3 text-sm text-dark-blue-shade placeholder:text-onda-blue/80 focus:border-onda-blue focus:outline-none focus:ring-2 focus:ring-onda-blue/20 transition'
-
+  'w-full rounded-lg border border-light-blue-shade bg-white px-4 py-3 text-sm text-dark-blue-shade placeholder:text-onda-blue/70 focus:border-onda-blue focus:outline-none focus:ring-2 focus:ring-onda-blue/20 transition'
+const selectChevron =
+  "background-image:url(\"data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23005da6' stroke-width='2'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3e%3c/svg%3e\")"
 const partnershipTypes = ['Agen Teknik', 'Agen Bangunan', 'PDAM', 'Dept. Store', 'Lainnya']
 ---
 
-<section
-  class="section-full from-onda-blue to-dark-blue-shade relative overflow-hidden bg-linear-to-b"
->
-  <div class="section">
-    <div class="grid gap-10 lg:grid-cols-2 lg:gap-16">
-      <div data-reveal>
+<section class="section">
+  <div class="overflow-hidden rounded-2xl bg-white shadow-xl" data-reveal>
+    <div class="grid gap-8 p-6 md:grid-cols-2 md:gap-10 md:p-10">
+      <div>
         {
           miniLabel && (
-            <p class="mb-4 text-sm font-bold tracking-[0.2em]" style={`color:${labelColor}`}>
-              {miniLabel}
-            </p>
+            <p class="text-onda-blue text-mini-label font-bold tracking-[0.2em]">{miniLabel}</p>
           )
         }
-        <h2
-          class="text-h2 mb-5 max-w-sm font-extrabold text-shadow-lg"
-          style={`color:${headingColor}`}
-        >
-          {heading}
-        </h2>
+        <h2 class="text-onda-blue text-h2 mt-1 font-extrabold">{heading}</h2>
         {
           body && (
-            <p class="text-body leading-relaxed whitespace-pre-line" style={`color:${bodyColor}`}>
+            <p class="text-dark-blue-shade/70 text-button mt-3 leading-relaxed whitespace-pre-line">
               {body}
             </p>
           )
         }
       </div>
 
-      <!-- Kanan: form (hardcode) -->
-      <div class="shadow-onda-blue/50 rounded-2xl bg-white p-6 shadow-lg md:p-8" data-reveal>
-        <form id="partnership-form" data-wa={waNumber} class="flex flex-col gap-4">
-          <input
-            type="text"
-            name="_hp"
-            tabindex="-1"
-            autocomplete="off"
-            class="hidden"
-            aria-hidden="true"
-          />
+      <!-- kanan: form -->
+      <form id="partnership-form" data-wa={waNumber} class="flex flex-col gap-4">
+        <input
+          type="text"
+          name="_hp"
+          tabindex="-1"
+          autocomplete="off"
+          class="hidden"
+          aria-hidden="true"
+        />
+        <div class="grid gap-4 sm:grid-cols-2">
           <input
             class={inputClass}
             type="text"
             name="name"
             required
             minlength="2"
-            data-label="Nama"
             placeholder="Nama Lengkap"
-            title="Masukkan nama lengkap Anda"
           />
-          <input
-            class={inputClass}
-            type="email"
-            name="email"
-            required
-            data-label="Email"
-            placeholder="Email Aktif"
-            title="Masukkan alamat email yang valid"
-          />
+          <input class={inputClass} type="email" name="email" required placeholder="Email Aktif" />
+        </div>
+        <div class="grid gap-4 sm:grid-cols-2">
           <input
             class={inputClass}
             type="tel"
@@ -85,75 +61,50 @@ const partnershipTypes = ['Agen Teknik', 'Agen Bangunan', 'PDAM', 'Dept. Store',
             inputmode="numeric"
             pattern="[0-9]{8,15}"
             maxlength="15"
-            data-label="No. WA / Telp"
-            placeholder="No. WA / Telp Aktif"
-            title="Nomor hanya boleh angka, 8–15 digit"
+            placeholder="No. WA / Telp"
           />
           <input
             class={inputClass}
             type="text"
             name="company"
-            data-label="Perusahaan / Toko"
             placeholder="Nama Perusahaan / Toko"
           />
-
-          <div class="grid gap-4 sm:grid-cols-2">
-            <input
-              class={inputClass}
-              type="text"
-              name="area"
-              data-label="Area"
-              placeholder="Area (Kota/Kab)"
-            />
-            <input
-              class={inputClass}
-              type="text"
-              name="industri"
-              data-label="Industri"
-              placeholder="Industri"
-            />
-          </div>
-          <fieldset>
-            <legend class="text-onda-blue mb-2 text-base tracking-wide">Jenis Kemitraan</legend>
-            <div class="flex flex-wrap gap-x-5 gap-y-2">
-              {
-                partnershipTypes.map((type, i) => (
-                  <label class="text-onda-blue flex cursor-pointer items-center gap-2 text-sm">
-                    <input
-                      type="radio"
-                      name="jenis"
-                      value={type}
-                      checked={i === 0}
-                      class="border-onda-blue checked:border-onda-blue checked:bg-onda-blue h-4 w-4 flex-none appearance-none rounded-full border-2 transition checked:shadow-[inset_0_0_0_3px_white]"
-                    />
-                    {type}
-                  </label>
-                ))
-              }
-            </div>
-          </fieldset>
-
-          <textarea
-            class={`${inputClass} resize-none`}
-            name="message"
-            rows="4"
-            data-label="Pesan"
-            placeholder="Pesan"></textarea>
-
-          <button
-            type="submit"
-            class="bg-onda-blue hover:bg-dark-blue-shade mt-1 cursor-pointer rounded-lg py-3 text-sm font-bold text-white transition"
-          >
-            Kirim & Lanjut di Whatsapp
-          </button>
-        </form>
-      </div>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <input class={inputClass} type="text" name="area" placeholder="Area (Kota/Kab)" />
+          <input class={inputClass} type="text" name="industri" placeholder="Industri" />
+        </div>
+        <select
+          name="jenis"
+          required
+          class={`${inputClass} appearance-none bg-[length:1.25rem] bg-[right_0.75rem_center] bg-no-repeat`}
+          style={selectChevron}
+        >
+          <option value="" disabled selected>Pilih jenis kemitraan</option>
+          {partnershipTypes.map((t) => <option value={t}>{t}</option>)}
+        </select>
+        <textarea
+          class={`${inputClass} resize-none`}
+          name="message"
+          rows="3"
+          placeholder="Ceritakan singkat tentang bisnis Anda"></textarea>
+        <button
+          type="submit"
+          class="bg-onda-blue hover:bg-dark-blue-shade mt-1 cursor-pointer rounded-lg py-3 text-sm font-bold text-white transition"
+        >
+          Kirim & Lanjut di Whatsapp
+        </button>
+      </form>
     </div>
   </div>
 </section>
+<style>
+  #partnership-form select:invalid {
+    color: color-mix(in oklab, var(--color-onda-blue) 70%, transparent);
+  }
+</style>
 <script>
   import { initWaForm } from '../../lib/wa-form'
-
   initWaForm(
     'partnership-form',
     (get) => {

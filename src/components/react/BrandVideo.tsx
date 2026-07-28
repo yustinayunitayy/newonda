@@ -8,6 +8,7 @@ type Video = {
   videoId: string
   title?: string
   thumbnail?: string
+  brand?: string
 }
 
 type Props = {
@@ -25,8 +26,10 @@ export default function BrandVideoGrid({
 }: Props) {
   const [activeId, setActiveId] = useState<string | null>(null)
 
-  const thumb = (v: Video) =>
-    v.thumbnail || `${streamBase}/${v.videoId}/thumbnails/thumbnail.jpg?time=2s&height=600`
+  const thumb = (v: Video) => {
+    const time = v.brand === 'onda-exclusive' ? 'time=2s&' : ''
+    return `${streamBase}/${v.videoId}/thumbnails/thumbnail.jpg?${time}height=600`
+  }
   const iframe = (id: string) => `${streamBase}/${id}/iframe`
 
   return (

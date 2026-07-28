@@ -7,6 +7,11 @@ import { fetchSiteSettings } from '../../lib/data/site-settings'
 
 const [page, settings] = await Promise.all([getPage('about'), fetchSiteSettings()])
 const blocks = page?.blocks ?? []
+const isPartner = (b: any) =>
+  b?.anchorId === 'mitra' || b?.blockType === 'mitra-steps' || b?.blockType === 'form-wording'
+const cut = blocks.findIndex(isPartner)
+const topBlocks = cut === -1 ? blocks : blocks.slice(0, cut)
+const partnershipBlocks = cut === -1 ? [] : blocks.slice(cut)
 ---
 
 <Layout
@@ -16,6 +21,19 @@ const blocks = page?.blocks ?? []
 >
   <Navbar variant="transparent" scrollBehavior="scroll-to-white" />
   <div class="relative">
-    <BlockRenderer blocks={blocks} settings={settings ?? undefined} formVariant="partnership" />
+    <BlockRenderer blocks={topBlocks} settings={settings ?? undefined} formVariant="partnership" />
+    {
+      partnershipBlocks.length > 0 && (
+        <div class="bg-dark-blue-shade py-20 md:py-28">
+          <div class="flex flex-col gap-14 md:gap-24">
+            <BlockRenderer
+              blocks={partnershipBlocks}
+              settings={settings ?? undefined}
+              formVariant="partnership"
+            />
+          </div>
+        </div>
+      )
+    }
   </div>
 </Layout>

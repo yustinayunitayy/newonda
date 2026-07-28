@@ -4,6 +4,7 @@ export interface BrandVideoItem {
   videoId: string
   thumbnail?: string
   title: string
+  brand?: string
 }
 
 type BrandSlug = 'onda' | 'onda-valve' | 'onda-exclusive'
@@ -16,6 +17,7 @@ export function toBrandVideoItems(docs: any[]): BrandVideoItem[] {
       videoId: d.stream.videoId as string,
       thumbnail: (d.stream.thumbnailUrl as string | undefined) ?? undefined,
       title: d.title as string,
+      brand: d.brand as string | undefined,
     }))
 }
 
