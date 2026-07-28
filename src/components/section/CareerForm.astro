@@ -1,0 +1,186 @@
+---
+import type { SiteSettings, FormBlock } from '../../lib/data/site-settings'
+import { textColorMap } from '../../lib/colour'
+
+type Props = FormBlock & { settings?: SiteSettings }
+
+const { miniLabel, labelTextColor, heading, headingTextColor, body, bodyTextColor } = Astro.props
+
+const labelColor = textColorMap[labelTextColor]
+const headingColor = textColorMap[headingTextColor]
+const bodyColor = textColorMap[bodyTextColor]
+
+const inputClass =
+  'w-full rounded-lg border border-light-blue-shade bg-white px-4 py-3 text-sm text-dark-blue-shade placeholder:text-onda-blue/80 focus:border-onda-blue focus:outline-none focus:ring-2 focus:ring-onda-blue/20 transition'
+const selectChevron =
+  "background-image:url(\"data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23005da6' stroke-width='2'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3e%3c/svg%3e\")"
+
+const kolaborasiTypes = [
+  'Magang / Internship',
+  'Rekrutmen Kampus (Campus Hiring)',
+  'Kunjungan Industri (Company Visit)',
+  'Kuliah Tamu / Guest Lecture',
+  'Job Fair',
+  'Kerja Sama Lainnya',
+]
+---
+
+<section
+  class="section-full from-onda-blue to-dark-blue-shade relative overflow-hidden bg-linear-to-b"
+>
+  <div class="section">
+    <div class="grid gap-10 lg:grid-cols-2 lg:gap-16">
+      <div data-reveal>
+        {
+          miniLabel && (
+            <p class="mb-4 text-sm font-bold tracking-[0.2em]" style={`color:${labelColor}`}>
+              {miniLabel}
+            </p>
+          )
+        }
+        <h2
+          class="text-h2 mb-5 max-w-sm font-extrabold text-shadow-lg"
+          style={`color:${headingColor}`}
+        >
+          {heading}
+        </h2>
+        {
+          body && (
+            <p class="text-body leading-relaxed whitespace-pre-line" style={`color:${bodyColor}`}>
+              {body}
+            </p>
+          )
+        }
+      </div>
+
+      <!-- Kanan: form (hardcode) -->
+      <div class="shadow-onda-blue/50 rounded-2xl bg-white p-6 shadow-lg md:p-8" data-reveal>
+        <form id="career-form" class="flex flex-col gap-4">
+          <input
+            type="text"
+            name="_hp"
+            tabindex="-1"
+            autocomplete="off"
+            class="hidden"
+            aria-hidden="true"
+          />
+
+          <input
+            class={inputClass}
+            type="text"
+            name="name"
+            required
+            minlength="2"
+            placeholder="Nama Lengkap"
+            title="Masukkan nama lengkap Anda"
+          />
+          <input
+            class={inputClass}
+            type="email"
+            name="email"
+            required
+            placeholder="Email Aktif"
+            title="Masukkan alamat email yang valid"
+          />
+          <input
+            class={inputClass}
+            type="text"
+            name="institution"
+            required
+            placeholder="Nama Institusi / Perusahaan"
+          />
+          <select
+            name="jenis"
+            required
+            class={`${inputClass} appearance-none bg-[length:1.25rem] bg-[right_0.75rem_center] bg-no-repeat`}
+            style={selectChevron}
+          >
+            <option value="" disabled selected>Jenis Kolaborasi</option>
+            {kolaborasiTypes.map((t) => <option value={t}>{t}</option>)}
+          </select>
+          <textarea
+            class={`${inputClass} resize-none`}
+            name="message"
+            required
+            minlength="5"
+            rows="4"
+            placeholder="Pesan"
+            title="Tuliskan pesan Anda"></textarea>
+
+          <button
+            type="submit"
+            class="bg-onda-blue hover:bg-dark-blue-shade mt-1 cursor-pointer rounded-lg py-3 text-sm font-bold text-white transition"
+          >
+            Kirim
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  #career-form select:invalid {
+    color: color-mix(in oklab, var(--color-onda-blue) 80%, transparent);
+  }
+</style>
+<script>
+  import Swal from 'sweetalert2'
+
+  const form = document.getElementById('career-form') as HTMLFormElement | null
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      if (!form.checkValidity()) {
+        form.reportValidity()
+        return
+      }
+
+      const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement
+      const payload: Record<string, string> = { page: location.pathname }
+      new FormData(form).forEach((v, k) => (payload[k] = v.toString()))
+
+      btn.disabled = true
+      Swal.fire({
+        title: 'Mengirim...',
+        text: 'Mohon tunggu sebentar.',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => Swal.showLoading(),
+      })
+
+      try {
+        const res = await fetch('/api/career', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+        const out = await res.json().catch(() => ({}))
+        if (!res.ok || !out.ok) {
+          await Swal.fire({
+            icon: 'error',
+            title: 'Gagal Mengirim',
+            text: out.error ?? 'Terjadi kendala. Coba lagi beberapa saat.',
+            confirmButtonText: 'Tutup',
+          })
+          return
+        }
+        await Swal.fire({
+          icon: 'success',
+          title: 'Terkirim! 🎉',
+          text: 'Terima kasih. Tim kami akan menghubungi Anda lewat email.',
+          confirmButtonText: 'Oke',
+        })
+        form.reset()
+      } catch {
+        await Swal.fire({
+          icon: 'error',
+          title: 'Oops!',
+          text: 'Tidak dapat menghubungi server. Cek koneksi lalu coba lagi.',
+          confirmButtonText: 'Oke',
+        })
+      } finally {
+        btn.disabled = false
+      }
+    })
+  }
+</script>

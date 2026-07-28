@@ -86,7 +86,7 @@ export default function IntroHero(block: HeroBlock & { videoUrl?: string }) {
   }
 
   const btnClass =
-    'rounded-xl px-3 py-2 text-xs font-medium md:px-8 md:text-sm transition-all duration-200 cursor-pointer'
+    'rounded-xl px-3 py-2 font-medium md:px-8 text-button transition-all duration-200 cursor-pointer'
 
   return (
     <section className="relative min-h-svh w-full overflow-hidden bg-black pb-24 md:min-h-screen">

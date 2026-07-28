@@ -58,7 +58,7 @@ const bgMap: Record<string, string> = {
   <!-- Header -->
   {
     (miniLabel || heading || subheading) && (
-      <div class={`mb-10 max-w-2xl ${isTop ? 'mx-auto text-center' : 'text-left'}`}>
+      <div class={`mb-10${isTop ? 'mx-auto text-center' : 'text-left'}`}>
         {miniLabel && (
           <p class="text-mini-label mb-3" style={`color:${labelColor}`} data-reveal>
             {miniLabel}
@@ -70,7 +70,11 @@ const bgMap: Record<string, string> = {
           </h2>
         )}
         {subheading && (
-          <p class="text-body mt-3 leading-relaxed" style={`color:${subheadingColor}`} data-reveal>
+          <p
+            class="text-body mt-3 mb-3 leading-relaxed"
+            style={`color:${subheadingColor}`}
+            data-reveal
+          >
             {subheading}
           </p>
         )}

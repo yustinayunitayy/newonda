@@ -15,12 +15,15 @@ import Timeline from '../section/Timeline.astro'
 import Certification from '../section/Certification.astro'
 import ContactForm from '../section/ContactForm.astro'
 import PartnershipForm from '../section/PartnershipForm.astro'
+import CultureGrid from '../react/CultureGrid'
+import Testimonials from '../section/Testimonials.astro'
+import CareerForm from '../section/CareerForm.astro'
 import { STREAM_BASE, toBrandVideoItems } from '../../lib/data/brand-video'
 
 interface Props {
   blocks: any[]
   settings?: SiteSettings
-  formVariant?: 'contact' | 'partnership'
+  formVariant?: 'contact' | 'partnership' | 'career'
 }
 
 const { blocks, settings, formVariant = 'contact' } = Astro.props
@@ -54,6 +57,10 @@ const { blocks, settings, formVariant = 'contact' } = Astro.props
           return <Timeline {...block} />
         case 'certifications':
           return <Certification {...block} />
+        case 'culture-grid':
+          return <CultureGrid client:visible {...block} />
+        case 'testimonials':
+          return <Testimonials {...block} />
         case 'brand-video-grid':
           return (
             <BrandVideoGrid
@@ -65,11 +72,10 @@ const { blocks, settings, formVariant = 'contact' } = Astro.props
             />
           )
         case 'form-wording':
-          return formVariant === 'partnership' ? (
-            <PartnershipForm {...block} settings={settings} />
-          ) : (
-            <ContactForm {...block} settings={settings} />
-          )
+          if (formVariant === 'partnership')
+            return <PartnershipForm {...block} settings={settings} />
+          if (formVariant === 'career') return <CareerForm {...block} settings={settings} />
+          return <ContactForm {...block} settings={settings} />
         default:
           return null
       }

@@ -16,7 +16,7 @@ export default function BrandTabs({
   const position = textPositionMap[textAlign] ?? textPositionMap['center-center']
 
   const btnClass =
-    'rounded-xl px-5 py-2.5 text-xs font-semibold md:text-sm transition-all duration-200 cursor-pointer active:scale-[0.98]'
+    'rounded-xl px-5 py-2.5 text-button font-semibold transition-all duration-200 cursor-pointer active:scale-[0.98]'
 
   const reveal = {
     initial: { opacity: 0, y: 16 },
@@ -45,8 +45,8 @@ export default function BrandTabs({
           )}
           {subheading && (
             <p
-              className="text-body text-dark-blue-shade"
-              style={{ textAlign: textAlignStyle, maxWidth: position.maxWidth }}
+              className="text-body text-dark-blue-shade max-w-5xl"
+              style={{ textAlign: textAlignStyle }}
             >
               {subheading}
             </p>
@@ -63,7 +63,7 @@ export default function BrandTabs({
           <button
             key={i}
             onClick={() => setActiveIndex(i)}
-            className="relative cursor-pointer px-2 py-4 text-xs font-semibold transition-all duration-200 md:text-sm"
+            className="text-button relative cursor-pointer px-2 py-4 font-semibold transition-all duration-200"
             style={{
               background: activeIndex === i ? 'var(--color-onda-blue)' : '#ffffff',
               color: activeIndex === i ? '#ffffff' : 'var(--color-onda-blue)',
@@ -80,59 +80,61 @@ export default function BrandTabs({
         {...reveal}
         className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg"
       >
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeIndex}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col md:flex-row"
-          >
-            {active.image && (
-              <div className="w-full shrink-0 md:w-[50%]">
-                <img
-                  src={img(active.image.url, 800)}
-                  alt={active.image.alt ?? active.brandName ?? active.tabLabel}
-                  className="h-56 w-full object-cover object-center md:h-105"
-                  loading="lazy"
-                />
-              </div>
-            )}
-
-            <div className="flex flex-1 flex-col justify-center gap-4 p-8 md:p-12">
-              {active.brandName && <h3 className="text-h3 text-onda-blue">{active.brandName}</h3>}
-              {active.description && (
-                <p className="text-body text-dark-blue-shade">{active.description}</p>
-              )}
-
-              {active.buttonEnabled && active.buttons && active.buttons.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-3">
-                  {active.buttons.map((btn, i) => {
-                    const isScroll = btn.buttonType === 'scroll'
-                    return (
-                      <HoverButton
-                        key={i}
-                        className={btnClass}
-                        variant={btn.variant}
-                        {...(isScroll
-                          ? {
-                              onClick: () =>
-                                document
-                                  .getElementById(btn.scrollTarget ?? '')
-                                  ?.scrollIntoView({ behavior: 'smooth' }),
-                            }
-                          : { href: btn.url, target: btn.openInNewTab ? '_blank' : undefined })}
-                      >
-                        {btn.text}
-                      </HoverButton>
-                    )
-                  })}
-                </div>
-              )}
+        <div className="flex flex-col md:flex-row">
+          {active.image && (
+            <div className="w-full shrink-0 md:w-[50%]">
+              <img
+                src={img(active.image.url, 800)}
+                alt={active.image.alt ?? active.brandName ?? active.tabLabel}
+                className="h-56 w-full object-cover object-center md:h-105"
+                loading="lazy"
+              />
             </div>
-          </motion.div>
-        </AnimatePresence>
+          )}
+
+          <div className="flex flex-1 flex-col justify-center p-8 md:p-12">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeIndex}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                className="flex flex-col gap-4"
+              >
+                {active.brandName && <h3 className="text-h3 text-onda-blue">{active.brandName}</h3>}
+                {active.description && (
+                  <p className="text-body text-dark-blue-shade">{active.description}</p>
+                )}
+
+                {active.buttonEnabled && active.buttons && active.buttons.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-3">
+                    {active.buttons.map((btn, i) => {
+                      const isScroll = btn.buttonType === 'scroll'
+                      return (
+                        <HoverButton
+                          key={i}
+                          className={btnClass}
+                          variant={btn.variant}
+                          {...(isScroll
+                            ? {
+                                onClick: () =>
+                                  document
+                                    .getElementById(btn.scrollTarget ?? '')
+                                    ?.scrollIntoView({ behavior: 'smooth' }),
+                              }
+                            : { href: btn.url, target: btn.openInNewTab ? '_blank' : undefined })}
+                        >
+                          {btn.text}
+                        </HoverButton>
+                      )
+                    })}
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
       </motion.div>
     </section>
   )

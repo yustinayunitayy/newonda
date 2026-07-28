@@ -48,12 +48,9 @@ export function RichTextRenderer({ content, className = '' }: RichTextRendererPr
       case 'heading': {
         const level = node.tag ? parseInt(node.tag.replace('h', '')) : 2
         const cls: Record<number, string> = {
-          1: 'font-bold text-3xl text-onda-blue mt-6 mb-4',
-          2: 'font-bold text-2xl text-onda-blue mt-6 mb-4',
-          3: 'font-semibold text-xl text-onda-blue mt-5 mb-3',
-          4: 'font-semibold text-lg text-onda-blue mt-4 mb-3',
-          5: 'font-semibold text-base text-onda-blue mt-3 mb-2',
-          6: 'font-semibold text-sm text-onda-blue mt-3 mb-2',
+          1: 'font-bold text-2xl text-onda-blue mt-6 mb-4',
+          2: 'font-bold text-xl text-onda-blue mt-6 mb-4',
+          3: 'font-semibold text-lg text-onda-blue mt-5 mb-3',
         }
         const children = node.children?.map(renderNode)
         return React.createElement(`h${level}`, { key, className: cls[level] ?? cls[2] }, children)
@@ -116,18 +113,33 @@ export function RichTextRenderer({ content, className = '' }: RichTextRendererPr
       }
 
       case 'upload': {
-        const img = node.value
-        if (!img) return null
+        const media = node.value
+        if (!media) return null
+
+        const mime: string = media.mimeType || ''
+        const url: string = media.url || ''
+        const isVideo = mime.startsWith('video/') || /\.(mp4|webm|ogg|mov|m4v)$/i.test(url)
+
         return (
           <div key={key} className="my-6">
-            <img
-              src={cdnimg(img.url, 1200)}
-              alt={img.alt || img.filename || ''}
-              className="h-auto w-full rounded-lg"
-              loading="lazy" // ➕
-            />
-            {img.caption && (
-              <p className="mt-2 text-center text-sm text-gray-400 italic">{img.caption}</p>
+            {isVideo ? (
+              <video
+                src={url}
+                controls
+                playsInline
+                preload="metadata"
+                className="h-auto w-full rounded-lg"
+              />
+            ) : (
+              <img
+                src={cdnimg(url, 1200)}
+                alt={media.alt || media.filename || ''}
+                className="h-auto w-full rounded-lg"
+                loading="lazy"
+              />
+            )}
+            {media.caption && (
+              <p className="mt-2 text-center text-sm text-gray-400 italic">{media.caption}</p>
             )}
           </div>
         )

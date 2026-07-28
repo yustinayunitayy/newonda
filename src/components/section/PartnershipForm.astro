@@ -20,7 +20,7 @@ const partnershipTypes = ['Agen Teknik', 'Agen Bangunan', 'PDAM', 'Dept. Store',
 ---
 
 <section
-  class="section-full from-onda-blue to-dark-blue-shade relative -mt-20 overflow-hidden bg-linear-to-b md:-mt-28"
+  class="section-full from-onda-blue to-dark-blue-shade relative overflow-hidden bg-linear-to-b"
 >
   <div class="section">
     <div class="grid gap-10 lg:grid-cols-2 lg:gap-16">
@@ -50,8 +50,14 @@ const partnershipTypes = ['Agen Teknik', 'Agen Bangunan', 'PDAM', 'Dept. Store',
       <!-- Kanan: form (hardcode) -->
       <div class="shadow-onda-blue/50 rounded-2xl bg-white p-6 shadow-lg md:p-8" data-reveal>
         <form id="partnership-form" data-wa={waNumber} class="flex flex-col gap-4">
-          <input type="text" name="_hp" tabindex="-1" autocomplete="off" class="hidden" />
-
+          <input
+            type="text"
+            name="_hp"
+            tabindex="-1"
+            autocomplete="off"
+            class="hidden"
+            aria-hidden="true"
+          />
           <input
             class={inputClass}
             type="text"
@@ -138,67 +144,33 @@ const partnershipTypes = ['Agen Teknik', 'Agen Bangunan', 'PDAM', 'Dept. Store',
             type="submit"
             class="bg-onda-blue hover:bg-dark-blue-shade mt-1 cursor-pointer rounded-lg py-3 text-sm font-bold text-white transition"
           >
-            Kirim
+            Kirim & Lanjut di Whatsapp
           </button>
         </form>
       </div>
     </div>
   </div>
 </section>
-
 <script>
-  import Swal from 'sweetalert2'
+  import { initWaForm } from '../../lib/wa-form'
 
-  const form = document.getElementById('partnership-form') as HTMLFormElement | null
-  const phone = form?.querySelector<HTMLInputElement>('input[name="phone"]')
-  phone?.addEventListener('input', () => {
-    phone.value = phone.value.replace(/\D/g, '')
-  })
-
-  form?.addEventListener('submit', (e) => {
-    e.preventDefault()
-    if (!form.checkValidity()) {
-      form.reportValidity()
-      return
-    }
-
-    const wa = form.dataset.wa
-    if (!wa) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Nomor WhatsApp belum diset',
-        text: 'Hubungi admin untuk melengkapi kontak.',
-        confirmButtonColor: '#0050b3',
-      })
-      return
-    }
-
-    const data = new FormData(form)
-    const get = (name: string) => (data.get(name) || '').toString().trim()
-
-    const lines = [
-      get('name') && `*Nama:* ${get('name')}`,
-      get('email') && `*Email:* ${get('email')}`,
-      get('phone') && `*No. WA/Telp:* ${get('phone')}`,
-      get('company') && `*Perusahaan/Toko:* ${get('company')}`,
-      get('area') && `*Area:* ${get('area')}`,
-      get('industri') && `*Industri:* ${get('industri')}`,
-      get('jenis') && `*Jenis Kemitraan:* ${get('jenis')}`,
-      get('message') && `*Pesan:* ${get('message')}`,
-    ].filter(Boolean)
-
-    const opening = '*PENGAJUAN KEMITRAAN*\nHalo ONDA, saya tertarik menjadi mitra distribusi.'
-    const text = `${opening}\n\n${lines.join('\n')}`
-    window.open(`https://wa.me/${wa}?text=${encodeURIComponent(text)}`, '_blank')
-
-    Swal.fire({
-      icon: 'success',
-      title: 'Mengarahkan ke WhatsApp...',
-      html: 'Pengajuanmu sudah otomatis disiapkan.<br/>Tinggal tekan tombol <b>Kirim</b> di WhatsApp ya 🙏',
-      confirmButtonText: 'Oke, mengerti',
-      confirmButtonColor: '#0050b3',
-    })
-
-    form.reset()
-  })
+  initWaForm(
+    'partnership-form',
+    (get) => {
+      const lines = [
+        get('name') && `*Nama:* ${get('name')}`,
+        get('email') && `*Email:* ${get('email')}`,
+        get('phone') && `*No. WA/Telp:* ${get('phone')}`,
+        get('company') && `*Perusahaan/Toko:* ${get('company')}`,
+        get('area') && `*Area:* ${get('area')}`,
+        get('industri') && `*Industri:* ${get('industri')}`,
+        get('jenis') && `*Jenis Kemitraan:* ${get('jenis')}`,
+        get('message') && `*Pesan:* ${get('message')}`,
+      ].filter(Boolean)
+      const opening = '*PENGAJUAN KEMITRAAN*\nHalo ONDA, saya tertarik menjadi mitra distribusi.'
+      return `${opening}\n\n${lines.join('\n')}`
+    },
+    'Pengajuanmu sudah otomatis disiapkan.<br/>Tinggal tekan tombol <b>Kirim</b> di WhatsApp ya 🙏',
+    'mitra'
+  )
 </script>
