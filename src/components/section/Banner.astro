@@ -1,6 +1,7 @@
 ---
 import type { BannerBlock } from '../../lib/data/blocks/banner'
-import { buttonStyleMap, textPositionMap, textColorMap } from '../../lib/colour'
+import { textPositionMap, resolveColor } from '../../lib/colour'
+import Buttons from './Buttons.astro'
 import { img } from '../../lib/image'
 
 type Props = BannerBlock
@@ -29,9 +30,6 @@ const overlayBg =
       : null
 
 const clampedOpacity = Math.min(Math.max(overlayOpacity, 0), 100) / 100
-
-const btnClass =
-  'cursor-pointer rounded-xl px-6 py-2 text-button font-semibold transition-all duration-200'
 ---
 
 <section class="relative w-full overflow-hidden overflow-x-clip">
@@ -53,13 +51,13 @@ const btnClass =
   }
 
   <div
-    class="max -w-7xl relative z-10 flex w-full flex-col px-6 py-16 md:px-24 md:py-24"
+    class="relative z-10 mx-auto flex w-full flex-col px-6 py-16 md:px-24 md:py-24"
     data-reveal="right"
     style={`align-items:${position.alignItems}; gap:${position.gap}`}
   >
     {
       miniLabel && (
-        <p class="text-mini-label" style={`color:${textColorMap[labelTextColor]}`}>
+        <p class="text-mini-label" style={`color:${resolveColor(labelTextColor, 'white')}`}>
           {miniLabel}
         </p>
       )
@@ -67,7 +65,7 @@ const btnClass =
 
     <h2
       class="text-h2"
-      style={`text-align:${position.textAlign}; max-width:${position.maxWidth}; color:${textColorMap[headingTextColor]}`}
+      style={`text-align:${position.textAlign}; max-width:${position.maxWidth}; color:${resolveColor(headingTextColor, 'white')}`}
     >
       {heading}
     </h2>
@@ -76,45 +74,16 @@ const btnClass =
       subheading && (
         <p
           class="text-body"
-          style={`text-align:${position.textAlign}; max-width:${position.maxWidth}; color:${textColorMap[subheadingTextColor]}`}
+          style={`text-align:${position.textAlign}; max-width:${position.maxWidth}; color:${resolveColor(subheadingTextColor, 'white')}`}
         >
           {subheading}
         </p>
       )
     }
-
     {
       buttons && buttons.length > 0 && (
-        <div class="mt-2 flex flex-wrap gap-3">
-          {buttons.map((btn) => {
-            const style = buttonStyleMap[btn.variant] ?? {}
-            return btn.buttonType === 'scroll' ? (
-              <button data-scroll-target={btn.scrollTarget} class={btnClass} style={style}>
-                {btn.text}
-              </button>
-            ) : (
-              <a
-                href={btn.url}
-                target={btn.openInNewTab ? '_blank' : '_self'}
-                rel={btn.openInNewTab ? 'noopener noreferrer' : undefined}
-                class={btnClass}
-                style={style}
-              >
-                {btn.text}
-              </a>
-            )
-          })}
-        </div>
+        <Buttons buttons={buttons} class="mt-2 flex flex-wrap gap-3" />
       )
     }
   </div>
 </section>
-
-<script>
-  document.querySelectorAll<HTMLButtonElement>('[data-scroll-target]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const target = btn.dataset.scrollTarget
-      if (target) document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' })
-    })
-  })
-</script>

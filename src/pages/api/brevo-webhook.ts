@@ -1,10 +1,10 @@
 import type { APIRoute } from 'astro'
-import { sql } from '../../utils/lib'
+import { getSql } from '../../utils/lib'
 
 export const prerender = false
 
 const WEBHOOK_SECRET = import.meta.env.BREVO_WEBHOOK_SECRET
-
+const sql = getSql()
 function extractToken(request: Request, url: URL): string {
   const auth = request.headers.get('authorization') || ''
   const bearer = auth.replace(/^Bearer\s+/i, '').trim()
@@ -29,7 +29,7 @@ export const POST: APIRoute = async ({ request, url }) => {
   console.log('[brevo-webhook] headers:', [...request.headers.keys()].join(', '))
 
   const provided = extractToken(request, url)
-  if (WEBHOOK_SECRET && provided !== WEBHOOK_SECRET) {
+  if (!WEBHOOK_SECRET || provided !== WEBHOOK_SECRET) {
     console.warn('[brevo-webhook] token mismatch / missing')
     return json({ ok: false }, 401)
   }

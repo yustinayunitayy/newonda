@@ -3,8 +3,9 @@ import Layout from '../../layouts/Layout.astro'
 import Navbar from '../../components/global/Navbar.astro'
 import BlockRenderer from '../../components/section/BlockRenderer.astro'
 import { getPage } from '../../lib/data/pages'
+import { fetchSiteSettings } from '../../lib/data/site-settings'
 
-const page = await getPage('onda')
+const [page, settings] = await Promise.all([getPage('onda'), fetchSiteSettings()])
 const blocks = page?.blocks ?? []
 ---
 
@@ -15,6 +16,6 @@ const blocks = page?.blocks ?? []
 >
   <Navbar variant="transparent" scrollBehavior="scroll-to-white" />
   <div class="relative pb-20 md:pb-28">
-    <BlockRenderer blocks={blocks} />
+    <BlockRenderer blocks={blocks} settings={settings ?? undefined} />
   </div>
 </Layout>

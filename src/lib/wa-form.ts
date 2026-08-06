@@ -39,7 +39,7 @@ export function initWaForm(
     if (storeType) {
       const payload: Record<string, string> = { type: storeType, page: location.pathname }
       data.forEach((v, k) => (payload[k] = v.toString()))
-      fetch('/api/lead', {
+      fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

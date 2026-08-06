@@ -1,7 +1,7 @@
 const APP_ID = import.meta.env.LARK_APP_ID
 const APP_SECRET = import.meta.env.LARK_APP_SECRET
-const APP_TOKEN = import.meta.env.LARK_APP_TOKEN
-const TABLE_ID = import.meta.env.LARK_TABLE_ID
+const APP_TOKEN = import.meta.env.HR_APP_TOKEN
+const TABLE_ID = import.meta.env.HR_TABLE_ID
 const BASE = 'https://open.larksuite.com/open-apis'
 
 export type Job = {

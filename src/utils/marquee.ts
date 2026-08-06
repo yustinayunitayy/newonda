@@ -21,7 +21,8 @@ export function initMarquee(trackSelector: string) {
   if (track.dataset.initialized) return
   track.dataset.initialized = 'true'
 
-  const containerWidth = track.parentElement!.getBoundingClientRect().width
+  const containerWidth =
+    track.parentElement?.getBoundingClientRect().width ?? track.getBoundingClientRect().width
   const itemWidth = containerWidth / columns
 
   track.style.setProperty('--marquee-item-width', `${itemWidth}px`)

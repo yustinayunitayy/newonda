@@ -21,8 +21,20 @@ export interface CertificationsBlock {
   subheading?: string
   subheadingTextColor?: TextColor
   awardsHeading?: string
-  awards?: { image?: { url: string; alt?: string }; label?: string; year?: string }[]
+  awards?: AwardItem[]
   certsHeading?: string
   certs?: { image?: { url: string; alt?: string }; title: string; description?: string }[]
   warrantyBadge?: { years?: number; heading?: string; caption?: string }
+}
+
+export interface AwardItem {
+  image?: { url: string; alt?: string }
+  label?: string
+  year?: string
+}
+
+export interface MitraStepsBlock {
+  blockType: 'mitra-steps'
+  heading?: string
+  steps: { title: string; description?: string }[]
 }

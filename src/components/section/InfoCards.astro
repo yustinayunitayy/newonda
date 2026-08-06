@@ -1,6 +1,6 @@
 ---
 import type { InfoCardsBlock } from '../../lib/data/blocks'
-import { textColorMap, textPositionMap } from '../../lib/colour'
+import { resolveColor, textPositionMap } from '../../lib/colour'
 import { RichTextRenderer } from '../react/RichTextRenderer'
 
 type Props = InfoCardsBlock
@@ -19,9 +19,9 @@ const {
   anchorId,
 } = Astro.props
 
-const labelColor = textColorMap[labelTextColor] ?? textColorMap.blue
-const headingColor = textColorMap[headingTextColor] ?? textColorMap.blue
-const subheadingColor = textColorMap[subheadingTextColor] ?? textColorMap.darkBlue
+const labelColor = resolveColor(labelTextColor, 'blue')
+const headingColor = resolveColor(headingTextColor, 'blue')
+const subheadingColor = resolveColor(subheadingTextColor, 'darkBlue')
 
 const pos = textPositionMap[textAlign] ?? textPositionMap['center-center']
 const isTop = style === 'icon-top'
@@ -131,5 +131,3 @@ const bgMap: Record<string, string> = {
     }
   </div>
 </section>
-
-<script is:inline src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>

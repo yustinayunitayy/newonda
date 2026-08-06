@@ -1,14 +1,13 @@
 ---
 import type { SiteSettings, FormBlock } from '../../lib/data/site-settings'
-import { textColorMap } from '../../lib/colour'
+import { resolveColor } from '../../lib/colour'
 
 type Props = FormBlock & { settings?: SiteSettings }
 
 const { miniLabel, labelTextColor, heading, headingTextColor, body, bodyTextColor } = Astro.props
-
-const labelColor = textColorMap[labelTextColor]
-const headingColor = textColorMap[headingTextColor]
-const bodyColor = textColorMap[bodyTextColor]
+const headingColor = resolveColor(headingTextColor, 'yellow')
+const labelColor = resolveColor(labelTextColor, 'white')
+const bodyColor = resolveColor(bodyTextColor, 'white')
 
 const inputClass =
   'w-full rounded-lg border border-light-blue-shade bg-white px-4 py-3 text-sm text-dark-blue-shade placeholder:text-onda-blue/80 focus:border-onda-blue focus:outline-none focus:ring-2 focus:ring-onda-blue/20 transition'

@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro'
-import { sql } from '../../utils/lib'
+import { getSql } from '../../utils/lib'
 
 export const prerender = false
 
@@ -22,7 +22,7 @@ export const POST: APIRoute = async ({ request }) => {
       return json({ ok: false, error: 'Mohon lengkapi semua kolom.' }, 400)
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
       return json({ ok: false, error: 'Email tidak valid.' }, 400)
-
+    const sql = getSql()
     await sql`
       insert into career_submissions (name, email, institution, jenis, message, meta)
       values (${name}, ${email}, ${institution}, ${jenis}, ${message},

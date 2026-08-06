@@ -1,8 +1,8 @@
 import { motion, AnimatePresence } from 'motion/react'
 import { useEffect, useState } from 'react'
 import type { HeroBlock } from '../../lib/data/blocks'
-import { textColorMap, textPositionMap } from '../../lib/colour'
-import HoverButton from './HoverButton'
+import { resolveColor, textPositionMap } from '../../lib/colour'
+import { ButtonGroup } from './HoverButton'
 import { img } from '../../lib/image'
 
 type Phase = 'intro' | 'content' | 'done'
@@ -37,9 +37,8 @@ export default function IntroHero(block: HeroBlock & { videoUrl?: string }) {
   const [phase, setPhase] = useState<Phase>(() =>
     typeof window !== 'undefined' && sessionStorage.getItem('intro-seen') ? 'done' : 'intro'
   )
-
-  const headingColor = headingTextColor ? textColorMap[headingTextColor] : '#ffffff'
-  const subheadingColor = subheadingTextColor ? textColorMap[subheadingTextColor] : '#ffffff'
+  const headingColor = resolveColor(headingTextColor, 'white')
+  const subheadingColor = resolveColor(subheadingTextColor, 'white')
   const position = textPositionMap[textAlign] ?? textPositionMap['bottom-center']
 
   useEffect(() => {
@@ -80,10 +79,6 @@ export default function IntroHero(block: HeroBlock & { videoUrl?: string }) {
       return () => clearTimeout(t)
     }
   }, [phase])
-
-  function handleScroll(target: string) {
-    document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' })
-  }
 
   const btnClass =
     'rounded-xl px-3 py-2 font-medium md:px-8 text-button transition-all duration-200 cursor-pointer'
@@ -169,21 +164,7 @@ export default function IntroHero(block: HeroBlock & { videoUrl?: string }) {
                 className="mt-2 flex flex-wrap items-center gap-3"
                 style={{ justifyContent: position.alignItems }}
               >
-                {buttons.map((btn, i) => {
-                  const isScroll = btn.buttonType === 'scroll'
-                  return (
-                    <HoverButton
-                      key={i}
-                      className={btnClass}
-                      variant={btn.variant}
-                      {...(isScroll
-                        ? { onClick: () => handleScroll(btn.scrollTarget ?? '') }
-                        : { href: btn.url, target: btn.openInNewTab ? '_blank' : undefined })}
-                    >
-                      {btn.text}
-                    </HoverButton>
-                  )
-                })}
+                <ButtonGroup buttons={buttons} className={btnClass} />
               </motion.div>
             )}
           </motion.div>

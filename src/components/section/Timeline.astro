@@ -1,6 +1,6 @@
 ---
 import type { TimelineBlock } from '../../lib/data/blocks/about'
-import { textColorMap } from '../../lib/colour'
+import { resolveColor } from '../../lib/colour'
 
 type Props = TimelineBlock
 
@@ -21,7 +21,7 @@ const {
         {heading && (
           <h2
             class="text-h2 font-extrabold"
-            style={`color:${textColorMap[headingTextColor]}`}
+            style={`color:${resolveColor(headingTextColor, 'blue')}`}
             data-reveal
           >
             {heading}
@@ -30,7 +30,7 @@ const {
         {subheading && (
           <p
             class="text-body mt-3 leading-relaxed"
-            style={`color:${textColorMap[subheadingTextColor]}`}
+            style={`color:${resolveColor(subheadingTextColor, 'darkBlue')}`}
             data-reveal
           >
             {subheading}
@@ -56,7 +56,6 @@ const {
               class="grid grid-cols-[4.5rem_2rem_1fr] items-center md:grid-cols-[7.5rem_2.5rem_1fr]"
               data-reveal
             >
-              {/* tahun gede */}
               <div class="pr-1 text-right">
                 <span
                   class:list={[
@@ -68,7 +67,6 @@ const {
                 </span>
               </div>
 
-              {/* dot di tengah */}
               <div class="flex justify-center">
                 <span
                   class:list={[
@@ -78,7 +76,6 @@ const {
                 />
               </div>
 
-              {/* card */}
               <div
                 class:list={[
                   'rounded-2xl p-4 shadow-[0_14px_38px_rgba(0,93,166,0.1)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_54px_rgba(0,93,166,0.2)] md:p-8',
@@ -121,5 +118,3 @@ const {
     </div>
   </div>
 </section>
-
-<script is:inline src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>

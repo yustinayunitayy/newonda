@@ -14,11 +14,11 @@ export async function GET(context: APIContext) {
     site: context.site?.href ?? 'https://onda.id/',
     items: news.map((n) => ({
       title: n.title,
-      description: n.preview ?? n.subtitle ?? '',
+      description: n.preview ?? '',
       link: `/news/${n.slug}`,
       pubDate: n.date ? new Date(n.date) : undefined,
       content: n.coverUrl
-        ? `<img src="${img(n.coverUrl, 1200)}" alt="${n.title}" /><p>${n.preview ?? n.subtitle ?? ''}</p>`
+        ? `<img src="${img(n.coverUrl, 1200)}" alt="${n.title}" /><p>${n.preview ?? ''}</p>`
         : undefined,
     })),
     customData: '<language>id-ID</language>',

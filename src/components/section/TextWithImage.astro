@@ -1,6 +1,7 @@
 ---
 import type { TextWithImageBlock } from '../../lib/data/blocks/text-with-image'
-import { buttonVariants, textColorMap } from '../../lib/colour'
+import { resolveColor } from '../../lib/colour'
+import Buttons from './Buttons.astro'
 import { img } from '../../lib/image'
 
 type Props = TextWithImageBlock
@@ -24,8 +25,6 @@ const {
 
 const isTextLeft = layout === 'text-left'
 const resolvedId = enableSectionId && sectionId ? sectionId : undefined
-
-const btnClass = 'cursor-pointer rounded-xl text-button font-semibold transition-all duration-200'
 ---
 
 <section class="section">
@@ -40,57 +39,28 @@ const btnClass = 'cursor-pointer rounded-xl text-button font-semibold transition
     <div class="flex flex-1 flex-col gap-4" data-reveal-group>
       {
         miniLabel && (
-          <p
-            class="text-mini-label"
-            style={labelTextColor ? `color:${textColorMap[labelTextColor]}` : undefined}
-          >
+          <p class="text-mini-label" style={`color:${resolveColor(labelTextColor, 'darkBlue')}`}>
             {miniLabel}
           </p>
         )
       }
 
-      <h2 class="text-h2" style={`color:${textColorMap[headingTextColor]}`}>{heading}</h2>
-      <h3 class="text-h3" style={`color:${textColorMap[subheadingTextColor]}`}>{subheading}</h3>
+      <h2 class="text-h2" style={`color:${resolveColor(headingTextColor, 'blue')}`}>{heading}</h2>
+      <h3 class="text-h3" style={`color:${resolveColor(subheadingTextColor, 'blue')}`}>
+        {subheading}
+      </h3>
       {
         body && (
           <p
             class="text-body leading-relaxed whitespace-pre-line"
-            style={`color:${textColorMap[bodyTextColor]}`}
+            style={`color:${resolveColor(bodyTextColor, 'darkBlue')}`}
           >
             {body}
           </p>
         )
       }
 
-      {
-        buttonEnabled && buttons && buttons.length > 0 && (
-          <div class="flex flex-wrap items-center gap-3">
-            {buttons.map((btn) => {
-              const variant = buttonVariants[btn.variant] ?? {}
-              const isTextOnly = btn.variant.endsWith('-text')
-              const commonProps = {
-                class: `${btnClass} ${isTextOnly ? 'px-0 py-1' : 'px-6 py-2.5'}`,
-                style: variant.base,
-                'data-hover': JSON.stringify(variant.hover ?? {}),
-              }
-              return btn.buttonType === 'scroll' ? (
-                <button data-scroll-target={btn.scrollTarget} {...commonProps}>
-                  {btn.text}
-                </button>
-              ) : (
-                <a
-                  href={btn.url}
-                  target={btn.openInNewTab ? '_blank' : '_self'}
-                  rel={btn.openInNewTab ? 'noopener noreferrer' : undefined}
-                  {...commonProps}
-                >
-                  {btn.text}
-                </a>
-              )
-            })}
-          </div>
-        )
-      }
+      <Buttons buttons={buttons} enabled={buttonEnabled} />
     </div>
 
     <!-- Image side -->

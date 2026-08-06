@@ -8,11 +8,11 @@ const base = Astro.site?.href ?? 'https://onda.id/'
 const url = new URL(Astro.url.pathname, base).href
 
 const clean = (obj: unknown) =>
-  JSON.parse(JSON.stringify(obj, (_, v) =>
-    v === '' || v == null || v === false || (Array.isArray(v) && v.length === 0)
-      ? undefined
-      : v
-  ))
+  JSON.parse(
+    JSON.stringify(obj, (_, v) =>
+      v === '' || v == null || v === false || (Array.isArray(v) && v.length === 0) ? undefined : v
+    )
+  )
 
 const jsonLd = clean({
   '@context': 'https://schema.org',
@@ -57,4 +57,5 @@ const jsonLd = clean({
   ],
 })
 ---
-<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

@@ -70,9 +70,12 @@ export async function getOne<T = any>(
   return data?.docs?.[0] ?? null
 }
 
-// Payload globals
 export async function fetchGlobal<T>(slug: string, depth = 1): Promise<T | null> {
   try {
+    if (!PAYLOAD_API) {
+      console.error('PAYLOAD_URL not set')
+      return null
+    }
     const res = await fetch(`${PAYLOAD_API}/api/globals/${slug}?depth=${depth}`)
     if (!res.ok) return null
     return res.json() as Promise<T>
