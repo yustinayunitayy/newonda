@@ -31,11 +31,11 @@ const seo = await resolveSeo({ title, description, ogImage })
     <GTMHeader />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+    <meta name="apple-mobile-web-app-title" content="Onda.id" />
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="Onda.id" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -44,6 +44,8 @@ const seo = await resolveSeo({ title, description, ogImage })
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
       rel="stylesheet"
     />
+    <script is:inline src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"
+    ></script>
     <SEO {...seo} {noIndex} />
     <JsonLd title={seo.title} description={seo.description} />
   </head>

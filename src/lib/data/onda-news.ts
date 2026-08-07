@@ -69,19 +69,10 @@ export async function getNewsCategories(): Promise<NewsCategory[]> {
 
 export function formatNewsDate(iso?: string): string {
   if (!iso) return ''
-  const d = new Date(iso)
-  const tgl = d.toLocaleDateString('id-ID', {
+  return new Date(iso).toLocaleDateString('id-ID', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
     timeZone: 'Asia/Jakarta',
   })
-  const jam = d
-    .toLocaleTimeString('id-ID', {
-      hour: '2-digit',
-      minute: '2-digit',
-      timeZone: 'Asia/Jakarta',
-    })
-    .replace(':', '.')
-  return `${tgl}, ${jam} WIB`
 }

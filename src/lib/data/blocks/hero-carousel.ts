@@ -2,7 +2,7 @@ import type { ButtonField } from '../button'
 import type { TextColor } from '../../colour'
 
 export interface HeroCarouselBlock {
-  blockType: 'brand-slider'
+  blockType: 'hero-carousel'
   backgroundImage?: { url: string; alt?: string }
   overlayColor?: 'none' | 'black' | 'white' | 'blue'
   overlayOpacity?: number

@@ -1,6 +1,6 @@
 ---
 import type { ProductGridBlock } from '../../lib/data/blocks/product-grid'
-import { textColorMap } from '../../lib/colour'
+import { resolveColor } from '../../lib/colour'
 import { img } from '../../lib/image'
 
 type Props = ProductGridBlock
@@ -9,83 +9,97 @@ const {
   miniLabel,
   labelTextColor,
   heading,
-  headingTextColor = 'blue',
+  headingTextColor,
   subheading,
-  subheadingTextColor = 'darkBlue',
+  subheadingTextColor,
+  background = 'none',
   items,
 } = Astro.props
 
-const count = Math.min(items.length, 4)
 const colsMap: Record<number, string> = {
   1: 'grid-cols-1',
   2: 'grid-cols-2',
   3: 'grid-cols-2 lg:grid-cols-3',
   4: 'grid-cols-2 lg:grid-cols-4',
+  6: 'grid-cols-2 lg:grid-cols-3',
 }
-const colClass = colsMap[count] ?? 'grid-cols-2 lg:grid-cols-4'
+const colClass = colsMap[items.length] ?? 'grid-cols-2 lg:grid-cols-4'
+
+const bgMap = { none: '', light: 'bg-light-blue-shade', dark: 'bg-dark-blue-shade' }
+const bgClass = bgMap[background] ?? ''
+const dark = background === 'dark'
 ---
 
-<section class="section">
-  {
-    (miniLabel || heading || subheading) && (
-      <div class="mb-8 flex flex-col gap-3" data-reveal-group>
-        {miniLabel && (
-          <p
-            class="text-mini-label"
-            style={labelTextColor ? `color:${textColorMap[labelTextColor]}` : undefined}
-          >
-            {miniLabel}
-          </p>
-        )}
-        {heading && (
-          <h2 class="text-h2" style={`color:${textColorMap[headingTextColor]}`}>
-            {heading}
-          </h2>
-        )}
-        {subheading && (
-          <p class="text-body" style={`color:${textColorMap[subheadingTextColor]}`}>
-            {subheading}
-          </p>
-        )}
-      </div>
-    )
-  }
-  <div class:list={['grid gap-4 lg:gap-6', colClass]} data-reveal-group>
+<section class:list={['w-full', bgClass, bgClass && 'py-14 md:py-20']}>
+  <div class="section">
     {
-      items.map((item) => {
-        const Tag = item.link ? 'a' : 'div'
-        const external = item.link?.startsWith('http')
-        return (
-          <Tag
-            href={item.link || undefined}
-            target={external ? '_blank' : undefined}
-            rel={external ? 'noopener noreferrer' : undefined}
-            class="group relative block h-72 overflow-hidden rounded-2xl md:h-96"
-          >
-            {item.image?.url && (
-              <img
-                src={img(item.image.url, 800)}
-                alt={item.image.alt ?? item.label ?? ''}
-                class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                loading="lazy"
-              />
-            )}
-
-            <div class="absolute inset-0 bg-linear-to-t from-black/75 via-black/15 to-transparent" />
-
-            <div class="absolute inset-x-0 bottom-0 p-4 md:p-5">
-              {item.label && (
-                <h3 class="text-h3 font-bold tracking-wide text-white uppercase">{item.label}</h3>
-              )}
-              {item.description && (
-                <p class="text-body mt-1 text-white/85 transition-all duration-300 lg:translate-y-2 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100">
-                  {item.description}
-                </p>
-              )}
-            </div>
-          </Tag>
-        )
-      })
+      (miniLabel || heading || subheading) && (
+        <div class="mb-8 flex flex-col gap-3" data-reveal-group>
+          {miniLabel && (
+            <p
+              class="text-mini-label"
+              style={`color:${resolveColor(labelTextColor, dark ? 'lightBlue' : 'darkBlue')}`}
+            >
+              {miniLabel}
+            </p>
+          )}
+          {heading && (
+            <h2
+              class="text-h2"
+              style={`color:${resolveColor(headingTextColor, dark ? 'white' : 'blue')}`}
+            >
+              {heading}
+            </h2>
+          )}
+          {subheading && (
+            <p
+              class="text-body"
+              style={`color:${resolveColor(subheadingTextColor, dark ? 'lightBlue' : 'darkBlue')}`}
+            >
+              {subheading}
+            </p>
+          )}
+        </div>
+      )
     }
+    <div class:list={['grid gap-4 lg:gap-6', colClass]} data-reveal-group>
+      {
+        items.map((item) => {
+          const Tag = item.link ? 'a' : 'div'
+          const external = item.link?.startsWith('http')
+          return (
+            <Tag
+              id={item.anchorId || undefined}
+              href={item.link || undefined}
+              target={external ? '_blank' : undefined}
+              rel={external ? 'noopener noreferrer' : undefined}
+              class="group relative block h-72 scroll-mt-28 overflow-hidden rounded-2xl md:h-96"
+            >
+              {item.image?.url && (
+                <img
+                  src={img(item.image.url, 800)}
+                  alt={item.image.alt ?? item.label ?? ''}
+                  class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+              )}
+
+              <div class="absolute inset-0 bg-linear-to-t from-black/75 via-black/15 to-transparent" />
+
+              <div class="absolute inset-x-0 bottom-0 p-4 md:p-5">
+                {item.label && (
+                  <h3 class="text-h3 font-bold tracking-wide text-white uppercase">{item.label}</h3>
+                )}
+                {item.description && (
+                  <p class="text-body mt-1 text-white/85 transition-all duration-300 lg:translate-y-2 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100">
+                    {item.description}
+                  </p>
+                )}
+              </div>
+            </Tag>
+          )
+        })
+      }
+    </div>
   </div>
 </section>

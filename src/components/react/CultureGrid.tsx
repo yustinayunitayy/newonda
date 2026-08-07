@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { textColorMap } from '../../lib/colour'
+import { resolveColor } from '../../lib/colour'
 import { img } from '../../lib/image'
 import { RichTextRenderer } from './RichTextRenderer'
 import type { CultureGridBlock, CultureItem } from '../../lib/data/blocks/culture-grid'
@@ -18,8 +18,8 @@ export default function CultureGrid({
   items = [],
 }: CultureGridBlock) {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
-  const labelColor = textColorMap[labelTextColor ?? ''] ?? 'var(--color-onda-blue)'
-  const headingColor = textColorMap[headingTextColor ?? ''] ?? 'var(--color-onda-blue)'
+  const labelColor = resolveColor(labelTextColor, 'blue')
+  const headingColor = resolveColor(headingTextColor, 'blue')
 
   return (
     <section className="section w-full">

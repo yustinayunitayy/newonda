@@ -10,9 +10,7 @@ export const prerender = false
 const { slug } = Astro.params
 const news = slug ? await getNewsBySlug(slug) : null
 
-if (!news) {
-  return Astro.redirect('/404')
-}
+if (!news) return Astro.rewrite('/404')
 
 const base = Astro.site?.href ?? 'https://onda.id/'
 const pageUrl = new URL(Astro.url.pathname, base).href
@@ -45,10 +43,8 @@ const breadcrumbLd = {
 <Layout title={`${news.title} — ONDA Sanitary & Plumbing`} description={news.preview}>
   <Navbar variant="white" />
   <main class="min-h-screen bg-white pt-16">
-    <script
-      type="application/ld+json"
-      set:html={JSON.stringify([articleLd, breadcrumbLd]).replace(/</g, '\\u003c')}
-    />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
 
     <div class="section py-8">
       <a
@@ -105,7 +101,4 @@ const breadcrumbLd = {
       </div>
     </div>
   </main>
-
-  <script is:inline src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"
-  ></script>
 </Layout>

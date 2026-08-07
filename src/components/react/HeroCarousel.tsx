@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { motion, type Variants } from 'motion/react'
 import type { HeroCarouselBlock } from '../../lib/data/blocks/hero-carousel'
-import { textColorMap } from '../../lib/colour'
-import HoverButton from './HoverButton'
+import { resolveColor } from '../../lib/colour'
+import { ButtonGroup } from './HoverButton'
 import { img as cdnimg } from '../../lib/image'
 
 const EASE = [0.16, 1, 0.3, 1] as const
@@ -93,7 +93,7 @@ export default function HeroCarouselSection({
           <motion.h2
             variants={item}
             className="text-h2 leading-tight whitespace-pre-line"
-            style={{ color: textColorMap[headingColor] }}
+            style={{ color: resolveColor(headingColor, 'white') }}
           >
             {heading}
           </motion.h2>
@@ -102,7 +102,7 @@ export default function HeroCarouselSection({
             <motion.p
               variants={item}
               className="text-body max-w-md whitespace-pre-line"
-              style={{ color: textColorMap[subheadingColor] }}
+              style={{ color: resolveColor(subheadingColor, 'white') }}
             >
               {subheading}
             </motion.p>
@@ -110,26 +110,7 @@ export default function HeroCarouselSection({
 
           {buttons && buttons.length > 0 && (
             <motion.div variants={item} className="mt-2 flex flex-wrap gap-3">
-              {buttons.map((btn, i) => {
-                const isScroll = btn.buttonType === 'scroll'
-                return (
-                  <HoverButton
-                    key={i}
-                    className={btnClass}
-                    variant={btn.variant}
-                    {...(isScroll
-                      ? {
-                          onClick: () =>
-                            document
-                              .getElementById(btn.scrollTarget ?? '')
-                              ?.scrollIntoView({ behavior: 'smooth' }),
-                        }
-                      : { href: btn.url, target: btn.openInNewTab ? '_blank' : undefined })}
-                  >
-                    {btn.text}
-                  </HoverButton>
-                )
-              })}
+              <ButtonGroup buttons={buttons} className={btnClass} />
             </motion.div>
           )}
         </motion.div>

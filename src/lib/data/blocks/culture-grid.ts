@@ -1,3 +1,4 @@
+import type { TextColor } from '../../colour'
 export interface CultureItem {
   coverImage?: { url?: string }
   title: string
@@ -9,8 +10,8 @@ export interface CultureItem {
 export interface CultureGridBlock {
   blockType: 'culture-grid'
   miniLabel?: string
-  labelTextColor?: string
+  labelTextColor?: TextColor
   heading?: string
-  headingTextColor?: string
+  headingTextColor?: TextColor
   items: CultureItem[]
 }

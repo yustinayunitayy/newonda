@@ -1,6 +1,6 @@
 ---
 import type { SiteSettings, FormBlock } from '../../lib/data/site-settings'
-import { textColorMap } from '../../lib/colour'
+import { resolveColor } from '../../lib/colour'
 import HoverButton from '../react/HoverButton'
 
 type Props = FormBlock & { settings: SiteSettings }
@@ -9,9 +9,9 @@ const { miniLabel, labelTextColor, heading, headingTextColor, body, bodyTextColo
   Astro.props
 const { contact, headOffice } = settings
 
-const headingColor = textColorMap[headingTextColor]
-const labelColor = textColorMap[labelTextColor]
-const bodyColor = textColorMap[bodyTextColor]
+const headingColor = resolveColor(headingTextColor, 'blue')
+const labelColor = resolveColor(labelTextColor, 'blue')
+const bodyColor = resolveColor(bodyTextColor, 'darkBlue')
 
 const waNumber = contact?.csPhone?.replace(/\D/g, '') ?? ''
 const mapSrc = 'https://maps.google.com/maps?q=PT.+Onda+Mega+Integra&z=17&output=embed'

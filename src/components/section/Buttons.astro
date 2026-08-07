@@ -1,0 +1,66 @@
+---
+import { buttonVariants } from '../../lib/colour'
+import type { ButtonField } from '../../lib/data/button'
+
+interface Props {
+  buttons?: ButtonField[]
+  enabled?: boolean
+  class?: string
+  buttonClass?: string
+}
+const {
+  buttons = [],
+  enabled = true,
+  class: wrapperClass = 'flex flex-wrap items-center gap-3',
+  buttonClass = 'rounded-xl text-button font-semibold cursor-pointer transition-all duration-200',
+} = Astro.props
+---
+
+{
+  enabled && buttons.length > 0 && (
+    <div class={wrapperClass}>
+      {buttons.map((btn) => {
+        const variant = buttonVariants[btn.variant]
+        const isTextOnly = btn.variant.endsWith('-text')
+        const common = {
+          class: `${buttonClass} ${isTextOnly ? 'px-0 py-1' : 'px-6 py-2.5'}`,
+          style: variant.base,
+          'data-hover': JSON.stringify(variant.hover ?? {}),
+        }
+        return btn.buttonType === 'scroll' ? (
+          <button data-scroll-target={btn.scrollTarget} {...common}>
+            {btn.text}
+          </button>
+        ) : (
+          <a
+            href={btn.url}
+            target={btn.openInNewTab ? '_blank' : '_self'}
+            rel={btn.openInNewTab ? 'noopener noreferrer' : undefined}
+            {...common}
+          >
+            {btn.text}
+          </a>
+        )
+      })}
+    </div>
+  )
+}
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-scroll-target]').forEach((el) => {
+    el.addEventListener('click', () => {
+      const t = el.dataset.scrollTarget
+      if (t) document.getElementById(t)?.scrollIntoView({ behavior: 'smooth' })
+    })
+  })
+
+  document.querySelectorAll<HTMLElement>('[data-hover]').forEach((el) => {
+    const base = el.getAttribute('style') || ''
+    let hover: Record<string, string> = {}
+    try {
+      hover = JSON.parse(el.dataset.hover || '{}')
+    } catch {}
+    el.addEventListener('mouseenter', () => Object.assign(el.style, hover))
+    el.addEventListener('mouseleave', () => el.setAttribute('style', base))
+  })
+</script>

@@ -83,7 +83,13 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 }
 
 async function verifyTurnstile(token: string, ip?: string): Promise<boolean> {
-  if (!TURNSTILE_SECRET) return true
+  if (!TURNSTILE_SECRET) {
+    if (import.meta.env.PROD) {
+      console.error('TURNSTILE_SECRET_KEY belum diset di production')
+      return false
+    }
+    return true
+  }
   if (!token) return false
   try {
     const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {

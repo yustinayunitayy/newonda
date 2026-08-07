@@ -1,9 +1,8 @@
 ---
 import type { SiteSettings, FormBlock } from '../../lib/data/site-settings'
 
-type Props = FormBlock & { settings: SiteSettings }
-const { miniLabel, heading, body, settings } = Astro.props
-const waNumber = settings.contact?.csPhone?.replace(/\D/g, '') ?? ''
+type Props = FormBlock & { settings?: SiteSettings }
+const { miniLabel, heading, body } = Astro.props
 
 const inputClass =
   'w-full rounded-lg border border-light-blue-shade bg-white px-4 py-3 text-sm text-dark-blue-shade placeholder:text-onda-blue/70 focus:border-onda-blue focus:outline-none focus:ring-2 focus:ring-onda-blue/20 transition'
@@ -32,7 +31,7 @@ const partnershipTypes = ['Agen Teknik', 'Agen Bangunan', 'PDAM', 'Dept. Store',
       </div>
 
       <!-- kanan: form -->
-      <form id="partnership-form" data-wa={waNumber} class="flex flex-col gap-4">
+      <form id="partnership-form" class="flex flex-col gap-4">
         <input
           type="text"
           name="_hp"
@@ -59,8 +58,8 @@ const partnershipTypes = ['Agen Teknik', 'Agen Bangunan', 'PDAM', 'Dept. Store',
             name="phone"
             required
             inputmode="numeric"
-            pattern="[0-9]{8,15}"
-            maxlength="15"
+            pattern="\[0-9]{10,13}"
+            maxlength="14"
             placeholder="No. WA / Telp"
           />
           <input
@@ -71,18 +70,40 @@ const partnershipTypes = ['Agen Teknik', 'Agen Bangunan', 'PDAM', 'Dept. Store',
           />
         </div>
         <div class="grid gap-4 sm:grid-cols-2">
-          <input class={inputClass} type="text" name="area" placeholder="Area (Kota/Kab)" />
+          <div class="relative" id="area-combo">
+            <input
+              class={`${inputClass} text-onda-blue cursor-pointer appearance-none bg-[length:1.25rem] bg-[right_0.75rem_center] bg-no-repeat`}
+              style={selectChevron}
+              type="text"
+              name="area"
+              placeholder="Pilih Kab/Kota"
+              autocomplete="off"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-expanded="false"
+            />
+            <ul
+              class="border-light-blue-shade absolute z-20 mt-1 hidden max-h-56 w-full overflow-auto rounded-lg border bg-white shadow-lg"
+              role="listbox"
+            >
+            </ul>
+          </div>
           <input class={inputClass} type="text" name="industri" placeholder="Industri" />
         </div>
-        <select
-          name="jenis"
-          required
-          class={`${inputClass} appearance-none bg-[length:1.25rem] bg-[right_0.75rem_center] bg-no-repeat`}
-          style={selectChevron}
-        >
-          <option value="" disabled selected>Pilih jenis kemitraan</option>
-          {partnershipTypes.map((t) => <option value={t}>{t}</option>)}
-        </select>
+        <fieldset>
+          <legend class="text-onda-blue/70 mb-2 text-sm">Jenis Kemitraan</legend>
+          <div class="flex flex-wrap gap-x-5 gap-y-2">
+            {
+              partnershipTypes.map((t) => (
+                <label class="text-onda-blue/70 flex cursor-pointer items-center gap-2 text-sm">
+                  <input type="radio" name="jenis" value={t} required class="peer sr-only" />
+                  <span class="border-onda-blue/40 peer-checked:border-onda-blue after:bg-onda-blue relative h-4 w-4 rounded-full border-2 transition after:absolute after:top-1/2 after:left-1/2 after:h-2 after:w-2 after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:opacity-0 after:content-[''] peer-checked:after:opacity-100" />
+                  {t}
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
         <textarea
           class={`${inputClass} resize-none`}
           name="message"
@@ -90,38 +111,105 @@ const partnershipTypes = ['Agen Teknik', 'Agen Bangunan', 'PDAM', 'Dept. Store',
           placeholder="Ceritakan singkat tentang bisnis Anda"></textarea>
         <button
           type="submit"
-          class="bg-onda-blue hover:bg-dark-blue-shade mt-1 cursor-pointer rounded-lg py-3 text-sm font-bold text-white transition"
+          class="bg-onda-blue hover:bg-dark-blue-shade mt-1 cursor-pointer rounded-lg py-3 text-sm font-bold text-white transition disabled:opacity-60"
         >
-          Kirim & Lanjut di Whatsapp
+          Kirim Pengajuan
         </button>
       </form>
     </div>
   </div>
 </section>
-<style>
-  #partnership-form select:invalid {
-    color: color-mix(in oklab, var(--color-onda-blue) 70%, transparent);
-  }
-</style>
 <script>
-  import { initWaForm } from '../../lib/wa-form'
-  initWaForm(
-    'partnership-form',
-    (get) => {
-      const lines = [
-        get('name') && `*Nama:* ${get('name')}`,
-        get('email') && `*Email:* ${get('email')}`,
-        get('phone') && `*No. WA/Telp:* ${get('phone')}`,
-        get('company') && `*Perusahaan/Toko:* ${get('company')}`,
-        get('area') && `*Area:* ${get('area')}`,
-        get('industri') && `*Industri:* ${get('industri')}`,
-        get('jenis') && `*Jenis Kemitraan:* ${get('jenis')}`,
-        get('message') && `*Pesan:* ${get('message')}`,
-      ].filter(Boolean)
-      const opening = '*PENGAJUAN KEMITRAAN*\nHalo ONDA, saya tertarik menjadi mitra distribusi.'
-      return `${opening}\n\n${lines.join('\n')}`
-    },
-    'Pengajuanmu sudah otomatis disiapkan.<br/>Tinggal tekan tombol <b>Kirim</b> di WhatsApp ya 🙏',
-    'mitra'
-  )
+  import kabkota from '../../lib/data/kabkota.json'
+  import Swal from 'sweetalert2'
+
+  const form = document.getElementById('partnership-form') as HTMLFormElement | null
+  if (form) {
+    const phone = form.querySelector<HTMLInputElement>('input[name="phone"]')
+    phone?.addEventListener('input', () => {
+      phone.value = phone.value.replace(/\D/g, '')
+    })
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      if (!form.checkValidity()) {
+        form.reportValidity()
+        return
+      }
+
+      const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]')
+      const data = new FormData(form)
+      const payload: Record<string, string> = { page: location.pathname }
+      data.forEach((v, k) => (payload[k] = v.toString()))
+
+      if (btn) btn.disabled = true
+      Swal.fire({ title: 'Mengirim…', allowOutsideClick: false, didOpen: () => Swal.showLoading() })
+
+      try {
+        const res = await fetch('/api/lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+        const out = await res.json().catch(() => ({}))
+        if (!res.ok || !out.ok) throw new Error(out.error || 'Gagal mengirim, coba lagi.')
+
+        form.reset()
+        Swal.fire({
+          icon: 'success',
+          title: 'Terkirim! 🎉',
+          html: 'Pengajuan kemitraanmu sudah kami terima.<br/>Tim ONDA akan menghubungi kamu dalam <b>2×24 jam</b> ya 🙏',
+          confirmButtonText: 'Oke, mengerti',
+        })
+      } catch (err) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal Mengirim',
+          text: (err as Error).message,
+          confirmButtonText: 'Coba lagi',
+        })
+      } finally {
+        if (btn) btn.disabled = false
+      }
+    })
+  }
+
+  const combo = document.getElementById('area-combo')
+  if (combo) {
+    const input = combo.querySelector('input') as HTMLInputElement
+    const list = combo.querySelector('ul') as HTMLUListElement
+    const DATA = kabkota as string[]
+
+    const close = () => {
+      list.classList.add('hidden')
+      input.setAttribute('aria-expanded', 'false')
+    }
+    const render = (items: string[]) => {
+      if (!items.length) return close()
+      list.innerHTML = items
+        .slice(0, 60)
+        .map(
+          (x) =>
+            `<li role="option" class="text-dark-blue-shade hover:bg-light-blue-shade cursor-pointer px-4 py-2 text-sm">${x}</li>`
+        )
+        .join('')
+      list.classList.remove('hidden')
+      input.setAttribute('aria-expanded', 'true')
+    }
+    const open = () => {
+      const q = input.value.trim().toLowerCase()
+      render(q ? DATA.filter((x) => x.toLowerCase().includes(q)) : DATA)
+    }
+
+    input.addEventListener('focus', open)
+    input.addEventListener('input', open)
+    list.addEventListener('mousedown', (e) => {
+      const t = e.target as HTMLElement
+      if (t.tagName === 'LI') {
+        input.value = t.textContent || ''
+        close()
+      }
+    })
+    input.addEventListener('blur', () => setTimeout(close, 120))
+  }
 </script>

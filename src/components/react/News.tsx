@@ -1,4 +1,3 @@
-'use client'
 import { useMemo, useRef, useState } from 'react'
 import type { NewsCategory, NewsItem } from '../../lib/data/onda-news'
 import { formatNewsDate } from '../../lib/data/onda-news'
@@ -25,13 +24,14 @@ export default function News({ news, categories }: Props) {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return news.filter((n) => {
-      const matchCat = cat === 'all' || n.categories.some((c) => c.slug === cat)
-      const matchQ =
-        !q || n.title.toLowerCase().includes(q) || (n.preview ?? '').toLowerCase().includes(q)
-
-      return matchCat && matchQ
-    })
+    return news
+      .filter((n) => {
+        const matchCat = cat === 'all' || n.categories.some((c) => c.slug === cat)
+        const matchQ =
+          !q || n.title.toLowerCase().includes(q) || (n.preview ?? '').toLowerCase().includes(q)
+        return matchCat && matchQ
+      })
+      .sort((a, b) => new Date(b.date ?? 0).getTime() - new Date(a.date ?? 0).getTime())
   }, [news, query, cat])
 
   const latest = filtered[0]
@@ -103,9 +103,9 @@ export default function News({ news, categories }: Props) {
               />
             )}
             <div className="order-2 flex flex-col gap-2 px-4 py-6 md:order-1 md:p-0">
-              <h3 className="text-onda-blue text-h4 font-bold">{latest.title}</h3>
+              <h3 className="text-onda-blue text-h4 max-w-lg font-bold">{latest.title}</h3>
               {latest.preview && (
-                <p className="text-dark-blue-shade/80 text-button leading-relaxed">
+                <p className="text-dark-blue-shade/80 text-button max-w-lg leading-relaxed">
                   {latest.preview}
                 </p>
               )}

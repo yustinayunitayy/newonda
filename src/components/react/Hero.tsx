@@ -1,8 +1,8 @@
 import { motion } from 'motion/react'
 import { useState } from 'react'
 import type { HeroBlock } from '../../lib/data/blocks'
-import { textColorMap, textPositionMap } from '../../lib/colour'
-import HoverButton from './HoverButton'
+import { resolveColor, textPositionMap } from '../../lib/colour'
+import { ButtonGroup } from './HoverButton'
 import { img } from '../../lib/image'
 
 const EASE = [0.16, 1, 0.3, 1] as const
@@ -22,13 +22,9 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
 
   const [videoReady, setVideoReady] = useState(false)
 
-  const headingColor = headingTextColor ? textColorMap[headingTextColor] : '#ffffff'
-  const subheadingColor = subheadingTextColor ? textColorMap[subheadingTextColor] : '#ffffff'
+  const headingColor = resolveColor(headingTextColor, 'white')
+  const subheadingColor = resolveColor(subheadingTextColor, 'white')
   const position = textPositionMap[textAlign] ?? textPositionMap['bottom-center']
-
-  function handleScroll(target: string) {
-    document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' })
-  }
 
   const btnClass =
     'rounded-xl px-3 py-2 text-xs font-medium md:px-8 md:text-sm transition-all duration-200 cursor-pointer'
@@ -111,21 +107,7 @@ export default function Hero(block: HeroBlock & { videoUrl?: string }) {
             className="mt-2 flex flex-wrap items-center gap-3"
             style={{ justifyContent: position.alignItems }}
           >
-            {buttons.map((btn, i) => {
-              const isScroll = btn.buttonType === 'scroll'
-              return (
-                <HoverButton
-                  key={i}
-                  className={btnClass}
-                  variant={btn.variant}
-                  {...(isScroll
-                    ? { onClick: () => handleScroll(btn.scrollTarget ?? '') }
-                    : { href: btn.url, target: btn.openInNewTab ? '_blank' : undefined })}
-                >
-                  {btn.text}
-                </HoverButton>
-              )
-            })}
+            <ButtonGroup buttons={buttons} className={btnClass} />
           </motion.div>
         )}
       </div>

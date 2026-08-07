@@ -1,10 +1,12 @@
 ---
 import type { NewsletterBlock } from '../../lib/data/blocks/newsletter'
+import type { SiteSettings } from '../../lib/data/site-settings'
 
-type Props = NewsletterBlock
-const { heading = 'Daftar Newsletter ONDA', subheading } = Astro.props
+type Props = NewsletterBlock & { settings?: SiteSettings }
+const { heading = 'Daftar Newsletter ONDA', subheading, settings } = Astro.props
 
 const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY
+const csEmail = settings?.contact?.email
 ---
 
 <section class="w-full overflow-x-clip">
@@ -20,7 +22,12 @@ const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY
       }
     </div>
 
-    <form id="newsletter-form" class="flex w-full flex-col gap-3 md:w-auto" data-reveal-delay="150">
+    <form
+      id="newsletter-form"
+      data-cs-email={csEmail}
+      class="flex w-full flex-col gap-3 md:w-auto"
+      data-reveal-delay="150"
+    >
       <div class="flex w-full flex-col gap-2 sm:flex-row">
         <input
           type="email"
@@ -63,7 +70,7 @@ const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY
   import Swal from 'sweetalert2'
 
   const form = document.getElementById('newsletter-form') as HTMLFormElement
-
+  const csEmail = form.dataset.csEmail
   form.addEventListener('submit', async (e) => {
     e.preventDefault()
     const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim()
@@ -124,7 +131,7 @@ const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY
         await Swal.fire({
           icon: 'info',
           title: 'Email Pernah Berhenti Berlangganan',
-          text: 'Email ini sebelumnya telah berhenti berlangganan newsletter ONDA. Jika ingin berlangganan kembali, silakan hubungi kami melalui cs@onda.id.',
+          text: `Email ini sebelumnya telah berhenti berlangganan newsletter ONDA. Jika ingin berlangganan kembali, silakan hubungi kami melalui ${csEmail}.`,
           confirmButtonText: 'Mengerti',
         })
       } else {

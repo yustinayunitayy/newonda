@@ -1,13 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { img } from '../../lib/image'
+import type { AwardItem } from '../../lib/data/blocks/about'
 
-type Award = {
-  image?: { url?: string; alt?: string }
-  label?: string
-  year?: string
-}
-
-function Card({ a }: { a: Award }) {
+function Card({ a }: { a: AwardItem }) {
   return (
     <div className="shadow-onda-blue/30 flex h-full flex-col items-center rounded-2xl bg-white p-6 text-center shadow-sm">
       <div className="bg-light-blue-shade mb-3 flex h-20 w-20 items-center justify-center overflow-hidden rounded-full">
@@ -38,7 +33,7 @@ const DESKTOP_PER = 4
 const MOBILE_PER = 2
 const AUTOPLAY_MS = 4500
 
-export default function AwardsCarousel({ awards = [] }: { awards: Award[] }) {
+export default function AwardsCarousel({ awards = [] }: { awards: AwardItem[] }) {
   const [isMobile, setIsMobile] = useState(false)
   const [page, setPage] = useState(0)
   const [mPage, setMPage] = useState(0)
@@ -65,7 +60,6 @@ export default function AwardsCarousel({ awards = [] }: { awards: Award[] }) {
     if (page > pages - 1) setPage(0)
   }, [pages, page])
 
-  // autoplay — desktop & mobile
   useEffect(() => {
     if (!isCarousel) return
     const t = setInterval(() => {
@@ -81,7 +75,6 @@ export default function AwardsCarousel({ awards = [] }: { awards: Award[] }) {
     return () => clearInterval(t)
   }, [isMobile, isCarousel, pages])
 
-  // ── item ≤ per-halaman → grid statis, ketengah ──
   if (!isCarousel) {
     return (
       <div className="flex flex-wrap justify-center gap-4 md:gap-6">

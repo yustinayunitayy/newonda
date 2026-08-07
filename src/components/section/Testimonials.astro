@@ -1,20 +1,13 @@
 ---
-import { textColorMap } from '../../lib/colour'
+import { resolveColor } from '../../lib/colour'
 import { img } from '../../lib/image'
+import type { TestimonialsBlock } from '../../lib/data/blocks/testimonials'
 
-type Item = { quote: string; name: string; position?: string; avatar?: { url?: string } }
-
-interface Props {
-  miniLabel?: string
-  labelTextColor?: string
-  heading?: string
-  headingTextColor?: string
-  items: Item[]
-}
+type Props = TestimonialsBlock
 
 const { miniLabel, labelTextColor, heading, headingTextColor, items = [] } = Astro.props
-const labelColor = textColorMap[labelTextColor ?? ''] ?? 'var(--color-onda-blue)'
-const headingColor = textColorMap[headingTextColor ?? ''] ?? 'var(--color-onda-blue)'
+const labelColor = resolveColor(labelTextColor, 'blue')
+const headingColor = resolveColor(headingTextColor, 'blue')
 
 const initials = (name: string) =>
   name

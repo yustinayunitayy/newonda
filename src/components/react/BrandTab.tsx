@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import type { BrandTabsBlock } from '../../lib/data/blocks/brand-tab'
 import { textPositionMap } from '../../lib/colour'
-import HoverButton from './HoverButton'
+import { ButtonGroup } from './HoverButton'
 import { img } from '../../lib/image'
 
 export default function BrandTabs({
@@ -109,26 +109,11 @@ export default function BrandTabs({
 
                 {active.buttonEnabled && active.buttons && active.buttons.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-3">
-                    {active.buttons.map((btn, i) => {
-                      const isScroll = btn.buttonType === 'scroll'
-                      return (
-                        <HoverButton
-                          key={i}
-                          className={btnClass}
-                          variant={btn.variant}
-                          {...(isScroll
-                            ? {
-                                onClick: () =>
-                                  document
-                                    .getElementById(btn.scrollTarget ?? '')
-                                    ?.scrollIntoView({ behavior: 'smooth' }),
-                              }
-                            : { href: btn.url, target: btn.openInNewTab ? '_blank' : undefined })}
-                        >
-                          {btn.text}
-                        </HoverButton>
-                      )
-                    })}
+                    {active.buttonEnabled && active.buttons && active.buttons.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-3">
+                        <ButtonGroup buttons={active.buttons} className={btnClass} />
+                      </div>
+                    )}
                   </div>
                 )}
               </motion.div>

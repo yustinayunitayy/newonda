@@ -11,6 +11,12 @@ const C = {
 } as const
 export type TextColor = keyof typeof C
 export const textColorMap: Record<string, string> = C
+export function resolveColor(
+  color: string | null | undefined,
+  fallback: TextColor = 'blue'
+): string {
+  return C[color as TextColor] ?? C[fallback]
+}
 const lift = { transform: 'translateY(-1px)' } as const
 type Position = 'center-left' | 'center-center' | 'center-right' | 'bottom-center'
 
@@ -98,12 +104,3 @@ export const buttonVariants: Record<ButtonVariant, ButtonStyle> = {
     hover: { ...lift, background: 'rgba(255,255,255,0.12)' },
   },
 }
-
-// ─── Back-compat helpers (optional — hapus kalau sudah pakai buttonVariants) ──
-export const buttonStyleMap = Object.fromEntries(
-  Object.entries(buttonVariants).map(([k, v]) => [k, v.base])
-) as Record<ButtonVariant, CSSProperties>
-
-export const buttonHoverStyleMap = Object.fromEntries(
-  Object.entries(buttonVariants).map(([k, v]) => [k, v.hover])
-) as Record<ButtonVariant, CSSProperties>

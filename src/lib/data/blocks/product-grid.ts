@@ -10,6 +10,7 @@ export interface ProductGridItem {
   label?: string
   description?: string
   link?: string
+  anchorId?: string
 }
 
 export interface ProductGridBlock {
@@ -21,4 +22,5 @@ export interface ProductGridBlock {
   subheading?: string
   subheadingTextColor?: TextColor
   items: ProductGridItem[]
+  background?: 'none' | 'light' | 'dark'
 }

@@ -19,6 +19,7 @@ import CultureGrid from '../react/CultureGrid'
 import Testimonials from '../section/Testimonials.astro'
 import CareerForm from '../section/CareerForm.astro'
 import MitraSteps from './MitraSteps.astro'
+import CategoryExplorer from './CategoryExplorer.astro'
 import { STREAM_BASE, toBrandVideoItems } from '../../lib/data/brand-video'
 
 interface Props {
@@ -51,7 +52,7 @@ const { blocks, settings, formVariant = 'contact' } = Astro.props
         case 'faq-accordion':
           return <FAQ {...block} />
         case 'newsletter':
-          return <Newsletter {...block} />
+          return <Newsletter {...block} settings={settings} />
         case 'info-cards':
           return <InfoCards {...block} />
         case 'timeline':
@@ -64,6 +65,8 @@ const { blocks, settings, formVariant = 'contact' } = Astro.props
           return <Testimonials {...block} />
         case 'mitra-steps':
           return <MitraSteps {...block} />
+        case 'category-explorer':
+          return <CategoryExplorer {...block} />
         case 'brand-video-grid':
           return (
             <BrandVideoGrid
