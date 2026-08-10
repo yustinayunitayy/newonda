@@ -108,8 +108,16 @@ const waNumber = contact?.csPhone?.replace(/\D/g, '')
         }
       </div>
     </div>
-
     <hr class="mt-10 border-white/20" />
-    {copyright && <p class="mt-5 text-center text-sm text-white/80">{copyright}</p>}
+    <div
+      class="mt-5 flex flex-col items-center gap-2 text-sm text-white/80 sm:flex-row sm:justify-between"
+    >
+      {copyright && <p>{copyright}</p>}
+      <nav class="flex gap-5">
+        <a href="/snk-garansi" class="transition-colors hover:text-white hover:underline">
+          S&K Garansi
+        </a>
+      </nav>
+    </div>
   </div>
 </footer>
