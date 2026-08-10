@@ -15,7 +15,7 @@ const blocks = page?.blocks ?? []
   ogImage={page?.meta?.image?.url}
 >
   <Navbar variant="white" />
-  <main class="relative pb-20 md:pb-28">
+  <main class="relative pt-16">
     <BlockRenderer blocks={blocks} settings={settings ?? undefined} />
   </main>
 </Layout>
