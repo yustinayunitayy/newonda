@@ -1,0 +1,322 @@
+{
+  "redirects": [
+    {
+      "source": "/tentang-kami/",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/hubungi-kami/",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/karir/",
+      "destination": "/life-at-onda",
+      "permanent": true
+    },
+    {
+      "source": "/dunia-onda/",
+      "destination": "/news",
+      "permanent": true
+    },
+    {
+      "source": "/industrial/",
+      "destination": "/onda",
+      "permanent": true
+    },
+    {
+      "source": "/exclusive/",
+      "destination": "/onda-exclusive",
+      "permanent": true
+    },
+    {
+      "source": "/e-shop/",
+      "destination": "https://store-onda.id/",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "series",
+          "value": "exclusive"
+        }
+      ],
+      "destination": "/onda-exclusive",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "series",
+          "value": "industrial"
+        }
+      ],
+      "destination": "/onda",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "series",
+          "value": "sanitary-plumbing"
+        }
+      ],
+      "destination": "/onda",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/aksesoris-all/",
+      "destination": "/onda#aksesoris",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/aksesoris-all/aksesoris/",
+      "destination": "/onda#aksesoris",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/aksesoris-all/floor-drainer/",
+      "destination": "/onda#aksesoris",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/aksesoris-all/meteran/",
+      "destination": "/onda#water-meter",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/kran/",
+      "destination": "/onda#kran",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/kran/kran-cabang/",
+      "destination": "/onda#kran",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/kran/kran-dapur/",
+      "destination": "/onda#kran",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/kran/kran-tembok/",
+      "destination": "/onda#kran",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/kran/kran-wastafel/",
+      "destination": "/onda#kran",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/kran/mixer/",
+      "destination": "/onda#kran",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/kran/stop-kran/",
+      "destination": "/onda#kran",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/others/",
+      "destination": "/onda",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/plumbing/",
+      "destination": "/onda#plumbing",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/plumbing/brass-valve-fitting/",
+      "destination": "/onda#valve",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/plumbing/pdam/",
+      "destination": "/onda#plumbing",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/plumbing/pipa-pe-x/",
+      "destination": "/onda#plumbing",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/plumbing/pvc-valve/",
+      "destination": "/onda#valve",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/shower-all/",
+      "destination": "/onda#shower",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/shower-all/jet-shower/",
+      "destination": "/onda#shower",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/shower-all/rain-shower/",
+      "destination": "/onda#shower",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/shower-all/shower-bar/",
+      "destination": "/onda#shower",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/shower-all/shower-mixer/",
+      "destination": "/onda#shower",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/shower-all/shower/",
+      "destination": "/onda#shower",
+      "permanent": true
+    },
+    {
+      "source": "/kategori/:path*",
+      "destination": "/onda",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:path*",
+      "destination": "/catalogue",
+      "permanent": true
+    },
+    {
+      "source": "/product/:path*",
+      "destination": "/catalogue",
+      "permanent": true
+    },
+    {
+      "source": "/material/:path*",
+      "destination": "/catalogue",
+      "permanent": true
+    },
+    {
+      "source": "/size/:path*",
+      "destination": "/catalogue",
+      "permanent": true
+    },
+    {
+      "source": "/area/:path*",
+      "destination": "/onda",
+      "permanent": true
+    },
+    {
+      "source": "/category/:path*",
+      "destination": "/news",
+      "permanent": true
+    },
+    {
+      "source": "/news/wcf-01-sudah-hadir/",
+      "destination": "/news/wcf01-sudah-hadir",
+      "permanent": true
+    },
+    {
+      "source": "/news/coming-soon-bathtub-mixer-mantul/",
+      "destination": "/news/new-item-onda-bathtub-mixer-mantul-andalan-keluarga-jaman-now",
+      "permanent": true
+    },
+    {
+      "source": "/news/new-item-onda-v-696-gku-v649gkuv648gku-andalan-keluarga-jaman-now/",
+      "destination": "/news/new-item-onda-v-696-gku-andalan-keluarga-jaman-now",
+      "permanent": true
+    },
+    {
+      "source": "/news/coming-soon-onda-x-prj/",
+      "destination": "/news/coming-soon-onda-x-prj-2022",
+      "permanent": true
+    },
+    {
+      "source": "/events/kejutan-spesial-2/",
+      "destination": "/news/kejutan-spesial",
+      "permanent": true
+    },
+    {
+      "source": "/social-media/tokopedia-x-onda-official-store/",
+      "destination": "/news/onda-kini-hadir-di-genggamanmu",
+      "permanent": true
+    },
+    {
+      "source": "/events/:slug",
+      "destination": "/news/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/social-media/:slug",
+      "destination": "/news/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/wp-content/uploads/2021/08/CATALOG-AT-2020-2.pdf",
+      "destination": "https://ondasystem.work/media/CATALOG%20AT-1.pdf",
+      "permanent": true
+    },
+    {
+      "source": "/wp-content/uploads/2021/08/Catalog-Onda-Exclusive-Non-Pricelist.pdf",
+      "destination": "https://ondasystem.work/media/Catalog%20oe.pdf",
+      "permanent": true
+    },
+    {
+      "source": "/wp-content/uploads/2023/02/ALL-IN-ONE-NON-PRICE-LOW-1.pdf",
+      "destination": "/catalogue",
+      "permanent": true
+    },
+    {
+      "source": "/wp-content/uploads/2023/05/ALL-IN-ONE-NON-PRICE-REV-compress.pdf",
+      "destination": "/catalogue",
+      "permanent": true
+    },
+    {
+      "source": "/wp-content/uploads/2024/02/CATALOG-TERBARU-NON-PRICELIST-2023.pdf",
+      "destination": "/catalogue",
+      "permanent": true
+    },
+    {
+      "source": "/wp-content/uploads/2025/08/NEW-CATALOG-2025-OMI.pdf",
+      "destination": "https://ondasystem.work/media/NEW-CATALOG-2025-OMI.pdf",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    }
+  ]
+}
