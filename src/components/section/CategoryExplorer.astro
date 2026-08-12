@@ -14,11 +14,11 @@ const {
 } = Astro.props
 
 const tones = {
-  navy: {
-    tile: 'bg-dark-blue-shade',
+  blue: {
+    tile: 'bg-onda-blue',
     title: 'text-white',
-    chip: 'bg-white/10 text-light-blue-shade',
-    link: 'text-light-blue-shade',
+    chip: 'bg-white text-onda-blue',
+    link: 'text-white',
   },
   light: {
     tile: 'bg-light-blue-shade',
@@ -64,7 +64,7 @@ const tones = {
   <div class="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5" data-reveal-group>
     {
       groups.map((g) => {
-        const t = tones[g.tone ?? 'light']
+        const t = tones[g.tone as keyof typeof tones] ?? tones.light
         const subs = (g.subtypes ?? '')
           .split(',')
           .map((s) => s.trim())
@@ -84,9 +84,7 @@ const tones = {
               {subs.length > 0 && (
                 <ul class="mt-3 flex flex-wrap gap-1.5">
                   {subs.map((s) => (
-                    <li class:list={['rounded-md px-2.5 py-1 text-xs font-semibold', t.chip]}>
-                      {s}
-                    </li>
+                    <li class:list={['rounded-md px-2.5 py-1 text-xs font-bold', t.chip]}>{s}</li>
                   ))}
                 </ul>
               )}
@@ -121,7 +119,7 @@ const tones = {
 
 <style>
   .cat-tile:target {
-    outline: 3px solid var(--color-onda-yellow);
+    outline: 3px solid var(--color-dark-blue-shade);
     outline-offset: 3px;
   }
 </style>

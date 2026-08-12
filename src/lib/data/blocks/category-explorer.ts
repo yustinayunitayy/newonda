@@ -7,7 +7,7 @@ export interface CategoryTile {
   title: string
   subtypes?: string
   size?: 'normal' | 'wide'
-  tone?: 'light' | 'navy' | 'yellow'
+  tone?: 'light' | 'blue' | 'yellow'
   linkText?: string
   linkUrl?: string
 }
