@@ -8,7 +8,9 @@ import { resolveSeo } from '../lib/data/seo-fetch'
 import GTMHeader from '../components/seo/GTMHeader.astro'
 import GTMBody from '../components/seo/GTMBody.astro'
 import Footer from '../components/global/Footer.astro'
+import Floating from '../components/global/Floating.astro'
 import { fetchSiteSettings } from '../lib/data/site-settings'
+
 const settings = await fetchSiteSettings()
 
 interface Props {
@@ -57,6 +59,7 @@ const seo = await resolveSeo({ title, description, ogImage })
       <slot />
     </main>
     {settings && <Footer settings={settings} variant={footerVariant} />}
+    <Floating {settings} />
 
     <script>
       function show(el: HTMLElement, delay: number) {
