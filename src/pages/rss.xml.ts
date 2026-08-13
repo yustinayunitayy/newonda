@@ -1,6 +1,5 @@
 import type { APIContext } from 'astro'
 import { getNewsList } from '../lib/data/onda-news'
-import { img } from '../lib/image'
 
 export const prerender = false
 
@@ -11,7 +10,13 @@ function esc(s: string): string {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
 }
-
+function emailImg(url?: string, width = 1000): string {
+  if (!url) return ''
+  return url.replace(
+    /^(https?:\/\/[^/]+)(\/.*)$/,
+    `$1/cdn-cgi/image/width=${width},quality=80,format=jpeg$2`
+  )
+}
 export async function GET({ site }: APIContext) {
   const base = site?.href ?? 'https://onda.id/'
   const news = await getNewsList()
@@ -20,7 +25,7 @@ export async function GET({ site }: APIContext) {
     .map((n) => {
       const url = new URL(`/news/${n.slug}`, base).href
       const pub = n.date ? `<pubDate>${new Date(n.date).toUTCString()}</pubDate>` : ''
-      const body = `${n.coverUrl ? `<img src="${img(n.coverUrl, 1200)}" alt="${esc(n.title)}" />` : ''}<p>${esc(n.preview ?? '')}</p>`
+      const body = `${n.coverUrl ? `<img src="${emailImg(n.coverUrl, 1000)}" alt="${esc(n.title)}" style="max-width:100%;height:auto;" />` : ''}<p>${esc(n.preview ?? '')}</p>`
       return `  <item>
     <title>${esc(n.title)}</title>
     <link>${url}</link>
