@@ -4,6 +4,7 @@ export const prerender = false
 
 const BREVO_API_KEY = import.meta.env.BREVO_API_KEY
 const BREVO_LIST_ID = Number(import.meta.env.BREVO_LIST_ID)
+const BREVO_POPUP_LIST_ID = Number(import.meta.env.BREVO_POPUP_LIST_ID)
 const TURNSTILE_SECRET = import.meta.env.TURNSTILE_SECRET_KEY
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
@@ -11,6 +12,9 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     let email = ''
     let token = ''
     let hp = ''
+    let source = ''
+    let list = ''
+
     const contentType = request.headers.get('content-type') || ''
 
     if (contentType.includes('application/json')) {
@@ -18,12 +22,19 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       email = (body.email || '').trim().toLowerCase()
       token = (body.token || '').toString()
       hp = (body._hp || '').toString().trim()
+      source = (body.source || '').toString().trim().toLowerCase().slice(0, 50)
+      list = (body.list || '').toString().trim().toLowerCase()
     } else {
       const form = await request.formData()
       email = (form.get('email')?.toString() || '').trim().toLowerCase()
       token = form.get('cf-turnstile-response')?.toString() || form.get('token')?.toString() || ''
       hp = (form.get('_hp')?.toString() || '').trim()
+      source = (form.get('source')?.toString() || '').trim().toLowerCase().slice(0, 50)
+      list = (form.get('list')?.toString() || '').trim().toLowerCase()
     }
+
+    const isPopup = list === 'popup' && !!BREVO_POPUP_LIST_ID
+    const targetList = isPopup ? BREVO_POPUP_LIST_ID : BREVO_LIST_ID
 
     if (hp) return json({ status: 'ok' }, 200)
 
@@ -46,15 +57,21 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       const contact = await check.json()
 
       if (contact.emailBlacklisted) return json({ status: 'unsubscribed' }, 200)
-      if (contact.listIds?.includes(BREVO_LIST_ID)) return json({ status: 'already' }, 200)
+      if (contact.listIds?.includes(targetList)) return json({ status: 'already' }, 200)
 
-      const add = await fetch(
-        `https://api.brevo.com/v3/contacts/lists/${BREVO_LIST_ID}/contacts/add`,
-        { method: 'POST', headers, body: JSON.stringify({ emails: [email] }) }
-      )
-      if (!add.ok) {
-        console.error('Brevo add-to-list error:', await add.text())
-        return json({ error: 'Gagal subscribe, coba lagi' }, 500)
+      const wantLists = isPopup ? [BREVO_POPUP_LIST_ID, BREVO_LIST_ID] : [targetList]
+      const missing = wantLists.filter((id) => !contact.listIds?.includes(id))
+
+      for (const id of missing) {
+        const add = await fetch(`https://api.brevo.com/v3/contacts/lists/${id}/contacts/add`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ emails: [email] }),
+        })
+        if (!add.ok) {
+          console.error('Brevo add-to-list error:', await add.text())
+          return json({ error: 'Gagal subscribe, coba lagi' }, 500)
+        }
       }
       return json({ status: 'ok' }, 200)
     }
@@ -67,7 +84,11 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     const create = await fetch('https://api.brevo.com/v3/contacts', {
       method: 'POST',
       headers,
-      body: JSON.stringify({ email, listIds: [BREVO_LIST_ID] }),
+      body: JSON.stringify({
+        email,
+        listIds: isPopup ? [BREVO_LIST_ID, BREVO_POPUP_LIST_ID] : [BREVO_LIST_ID],
+        ...(source ? { attributes: { SOURCE: source } } : {}),
+      }),
     })
 
     if (!create.ok) {

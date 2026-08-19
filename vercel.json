@@ -318,5 +318,6 @@
         }
       ]
     }
-  ]
+  ],
+  "crons": [{ "path": "/api/cron/sync-brevo", "schedule": "0 17 * * *" }]
 }
