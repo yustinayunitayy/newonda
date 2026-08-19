@@ -12,10 +12,12 @@ function esc(s: string): string {
 }
 function emailImg(url?: string, width = 1000): string {
   if (!url) return ''
-  return url.replace(
-    /^(https?:\/\/[^/]+)(\/.*)$/,
-    `$1/cdn-cgi/image/width=${width},quality=80,format=jpeg$2`
-  )
+  return url
+    .replace(
+      /^(https?:\/\/[^/]+)(\/.*)$/,
+      `$1/cdn-cgi/image/width=${width},quality=80,format=jpeg$2`
+    )
+    .replace(/ /g, '%20')
 }
 export async function GET({ site }: APIContext) {
   const base = site?.href ?? 'https://onda.id/'

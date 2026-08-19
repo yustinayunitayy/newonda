@@ -28,8 +28,12 @@ const waText = encodeURIComponent('Halo ONDA, saya ingin bertanya tentang produk
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat WhatsApp CS ONDA"
-        class="wa-reveal flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform hover:scale-105"
+        class="wa-reveal group relative flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform hover:scale-105"
       >
+        <span class="text-onda-blue pointer-events-none invisible absolute right-full mr-3 -translate-x-1 rounded-lg bg-white px-3 py-2 text-sm font-medium whitespace-nowrap opacity-0 shadow-lg transition-all duration-200 group-hover:visible group-hover:translate-x-0 group-hover:opacity-100">
+          Ada yang bisa kami bantu?
+          <span class="absolute top-1/2 right-[-4px] h-2 w-2 -translate-y-1/2 rotate-45 bg-white" />
+        </span>
         <iconify-icon icon="mdi:whatsapp" width="32" />
       </a>
     )

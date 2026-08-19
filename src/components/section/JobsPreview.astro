@@ -1,0 +1,113 @@
+---
+import type { JobsPreviewBlock } from '../../lib/data/blocks/jobs'
+import { resolveColor } from '../../lib/colour'
+import { getJobs } from '../../lib/data/job'
+
+type Props = JobsPreviewBlock
+const {
+  miniLabel,
+  labelTextColor,
+  heading,
+  headingTextColor,
+  subheading,
+  subheadingTextColor,
+  linkText,
+  linkUrl,
+} = Astro.props
+
+let jobs: Awaited<ReturnType<typeof getJobs>> = []
+try {
+  jobs = (await getJobs()).slice(0, 3)
+} catch {
+  jobs = []
+}
+const allUrl = linkUrl || '/life-at-onda/jobs'
+---
+
+<section class="via-light-blue-shade/40 w-full bg-gradient-to-b from-white to-white">
+  <div class="section py-14 md:py-24">
+    <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <div class="flex flex-col gap-2" data-reveal-group>
+        {
+          miniLabel && (
+            <p
+              class="text-mini-label font-bold tracking-[0.2em]"
+              style={`color:${resolveColor(labelTextColor, 'blue')}`}
+            >
+              {miniLabel}
+            </p>
+          )
+        }
+        {
+          heading && (
+            <h2
+              class="text-h2 font-extrabold"
+              style={`color:${resolveColor(headingTextColor, 'blue')}`}
+            >
+              {heading}
+            </h2>
+          )
+        }
+        {
+          subheading && (
+            <p class="text-body" style={`color:${resolveColor(subheadingTextColor, 'darkBlue')}`}>
+              {subheading}
+            </p>
+          )
+        }
+      </div>
+
+      {
+        jobs.length > 0 && (
+          <a
+            href={allUrl}
+            class="text-onda-blue border-onda-blue/20 hover:bg-light-blue-shade/40 inline-flex flex-none items-center gap-2 rounded-full border bg-white px-5 py-2.5 text-sm font-semibold whitespace-nowrap transition-colors"
+          >
+            {linkText || 'Jelajahi Lowongan Lainnya'}
+            <iconify-icon icon="mdi:arrow-right" width="16" />
+          </a>
+        )
+      }
+    </div>
+    <div class="flex min-h-[20rem] flex-col">
+      {
+        jobs.length === 0 ? (
+          <div class="border-onda-blue/15 flex flex-1 flex-col items-center justify-center rounded-2xl border bg-white p-10 text-center">
+            <span class="bg-light-blue-shade/50 mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+              <iconify-icon
+                icon="mdi:briefcase-search-outline"
+                width="34"
+                class="text-onda-blue/50"
+              />
+            </span>
+            <p class="text-dark-blue-shade text-lg font-semibold">
+              Belum ada lowongan terbuka saat ini
+            </p>
+          </div>
+        ) : (
+          <div class="flex flex-col gap-4" data-reveal-group>
+            {jobs.map((job) => (
+              <div class="flex flex-col gap-4 rounded-2xl bg-white px-6 py-5 shadow-[0_10px_30px_rgba(0,93,166,0.08)] sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p class="text-onda-blue text-lg font-bold">{job.title}</p>
+                  {job.penempatan && (
+                    <div class="text-dark-blue-shade/60 mt-1.5 flex items-center gap-1.5 text-sm">
+                      <iconify-icon icon="mdi:map-marker-outline" width="16" />
+                      {job.penempatan}
+                    </div>
+                  )}
+                </div>
+                <a
+                  href={`/life-at-onda/jobs/${job.slug}`}
+                  class="bg-onda-blue flex-none rounded-lg px-8 py-2.5 text-center text-sm font-semibold text-white transition hover:brightness-110"
+                >
+                  Apply
+                </a>
+              </div>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

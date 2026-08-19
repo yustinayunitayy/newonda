@@ -20,6 +20,7 @@ import Testimonials from '../section/Testimonials.astro'
 import CareerForm from '../section/CareerForm.astro'
 import MitraSteps from './MitraSteps.astro'
 import CategoryExplorer from './CategoryExplorer.astro'
+import JobsPreview from './JobsPreview.astro'
 import { STREAM_BASE, toBrandVideoItems } from '../../lib/data/brand-video'
 
 interface Props {
@@ -67,6 +68,8 @@ const { blocks, settings, formVariant = 'contact' } = Astro.props
           return <MitraSteps {...block} />
         case 'category-explorer':
           return <CategoryExplorer {...block} />
+        case 'jobs-preview':
+          return <JobsPreview {...block} />
         case 'brand-video-grid':
           return (
             <BrandVideoGrid
