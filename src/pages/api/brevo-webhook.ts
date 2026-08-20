@@ -41,27 +41,34 @@ export const POST: APIRoute = async ({ request, url }) => {
     console.log('[brevo-webhook] event:', event, email)
     if (!email) return json({ ok: true }, 200)
 
+    const TABLES = ['newsletter_subscribers', 'popup_subscribers'] as const
+
     if (event === 'delivered') {
-      await sql`
-        insert into newsletter_subscribers (email, status)
-        values (${email}, 'active')
-        on conflict (email) do update
-        set synced_at = now(),
-            bounce_status = null,
-            status = case
-              when newsletter_subscribers.status in ('unsubscribed','complaint','hard_bounce','blocked','invalid')
-              then newsletter_subscribers.status
-              else 'active' end`
+      for (const t of TABLES) {
+        await sql`
+          update ${sql(t)}
+          set synced_at = now(),
+              bounce_status = null,
+              status = case
+                when ${sql(t)}.status in ('unsubscribed','complaint','hard_bounce','blocked','invalid')
+                then ${sql(t)}.status
+                else 'active' end
+          where email = ${email}`
+      }
     } else if (event === 'soft_bounce') {
-      await sql`
-        update newsletter_subscribers
-        set bounce_status = 'soft', synced_at = now()
-        where email = ${email}`
+      for (const t of TABLES) {
+        await sql`
+          update ${sql(t)}
+          set bounce_status = 'soft', synced_at = now()
+          where email = ${email}`
+      }
     } else if (BAD_STATUS[event]) {
-      await sql`
-        update newsletter_subscribers
-        set status = ${BAD_STATUS[event]}, is_blacklisted = true, synced_at = now()
-        where email = ${email}`
+      for (const t of TABLES) {
+        await sql`
+          update ${sql(t)}
+          set status = ${BAD_STATUS[event]}, is_blacklisted = true, synced_at = now()
+          where email = ${email}`
+      }
     }
 
     return json({ ok: true }, 200)
