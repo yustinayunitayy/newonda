@@ -29,3 +29,13 @@
     transform: translateX(-50%);
   }
 }
+@keyframes revealFallback {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+[data-reveal],
+[data-reveal-group] > * {
+  animation: revealFallback 0s linear 2.5s forwards;
+}
