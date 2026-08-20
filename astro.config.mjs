@@ -14,7 +14,6 @@ export default defineConfig({
   adapter: vercel({
     isr: {
       expiration: 60,
-      exclude: [/^\/api\//],
     },
   }),
   site: env.SITE_URL,
