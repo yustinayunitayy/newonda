@@ -1,4 +1,5 @@
 import Swal from 'sweetalert2'
+import { toIdPhone } from '../utils/phone'
 
 type Get = (name: string) => string
 
@@ -22,7 +23,7 @@ export function initWaForm(
       form.reportValidity()
       return
     }
-
+    if (phone) phone.value = toIdPhone(phone.value)
     const wa = form.dataset.wa
     if (!wa) {
       Swal.fire({

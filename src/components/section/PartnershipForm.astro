@@ -58,9 +58,9 @@ const partnershipTypes = ['Agen Teknik', 'Agen Bangunan', 'PDAM', 'Department St
             name="phone"
             required
             inputmode="numeric"
-            pattern="\[0-9]{10,13}"
-            maxlength="14"
-            placeholder="No. WA / Telp"
+            pattern="[0-9]{9,15}"
+            maxlength="15"
+            placeholder="No. WA (cth: 08123456789 / 6512345678)"
           />
           <input
             class={inputClass}
@@ -128,7 +128,7 @@ const partnershipTypes = ['Agen Teknik', 'Agen Bangunan', 'PDAM', 'Department St
 <script>
   import kabkota from '../../lib/data/kabkota.json'
   import Swal from 'sweetalert2'
-
+  import { toIdPhone } from '../../utils/phone'
   const form = document.getElementById('partnership-form') as HTMLFormElement | null
   if (form) {
     const phone = form.querySelector<HTMLInputElement>('input[name="phone"]')
@@ -144,6 +144,7 @@ const partnershipTypes = ['Agen Teknik', 'Agen Bangunan', 'PDAM', 'Department St
       }
 
       const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]')
+      if (phone) phone.value = toIdPhone(phone.value)
       const data = new FormData(form)
       const payload: Record<string, string> = { page: location.pathname }
       data.forEach((v, k) => (payload[k] = v.toString()))

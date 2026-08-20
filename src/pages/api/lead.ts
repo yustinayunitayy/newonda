@@ -69,7 +69,9 @@ async function saveSupabase(l: Lead): Promise<void> {
 }
 
 async function saveLark(l: Lead): Promise<void> {
-  const fields: Record<string, string> = {}
+  const token = await getToken()
+
+  const fields: Record<string, unknown> = {}
   const put = (col: string, v: string) => {
     if (v) fields[col] = v
   }
@@ -79,10 +81,11 @@ async function saveLark(l: Lead): Promise<void> {
   put(FIELDS.company, l.company)
   put(FIELDS.area, l.area)
   put(FIELDS.industri, l.industri)
-  put(FIELDS.jenis, l.jenis)
   put(FIELDS.message, l.message)
 
-  const token = await getToken()
+  const jenisId = await findJenisRecordId(token, l.jenis)
+  if (jenisId) fields[FIELDS.jenis] = [jenisId]
+
   const res = await fetch(`${BASE}/bitable/v1/apps/${APP_TOKEN}/tables/${TABLE_ID}/records`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
@@ -92,6 +95,34 @@ async function saveLark(l: Lead): Promise<void> {
   if (data.code !== 0) throw new Error(JSON.stringify(data))
 }
 
+async function findJenisRecordId(token: string, jenisName: string): Promise<string | null> {
+  const tableId = import.meta.env.AGENT_JENIS_TABLE_ID
+  if (!tableId || !jenisName) {
+    console.error('[jenis-link] skip: tableId?', !!tableId, 'jenis?', jenisName)
+    return null
+  }
+  const res = await fetch(
+    `${BASE}/bitable/v1/apps/${APP_TOKEN}/tables/${tableId}/records?page_size=100`,
+    { headers: { Authorization: `Bearer ${token}` } }
+  )
+  const data = await res.json()
+  if (data.code !== 0) {
+    console.error('[jenis-link] fetch error:', JSON.stringify(data))
+    return null
+  }
+  const norm = (v: unknown): string => {
+    if (Array.isArray(v)) return v.map((p: any) => p?.text ?? '').join('')
+    return String(v ?? '')
+  }
+  const items = data.data?.items ?? []
+  const names = items.map((r: any) => norm(r.fields?.['Nama Kemitraan']))
+  const hit = items.find(
+    (r: any) =>
+      norm(r.fields?.['Nama Kemitraan']).trim().toLowerCase() === jenisName.trim().toLowerCase()
+  )
+  if (!hit) console.error('[jenis-link] NO MATCH. cari:', jenisName, '| yang ada:', names)
+  return hit?.record_id ?? null
+}
 async function getToken(): Promise<string> {
   const res = await fetch(`${BASE}/auth/v3/tenant_access_token/internal`, {
     method: 'POST',
