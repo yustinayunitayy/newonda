@@ -108,7 +108,14 @@ const show = popup?.active && (isNewsletter || hasImage)
 
 {
   show && isNewsletter && (
-    <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
+    <script is:inline>
+      {`if (!document.querySelector('script[src*="turnstile/v0/api.js"]')) {
+        var ts = document.createElement('script');
+        ts.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+        ts.async = true; ts.defer = true;
+        document.head.appendChild(ts);
+      }`}
+    </script>
   )
 }
 
