@@ -12,6 +12,16 @@ const catalogs = await getCatalogs()
 >
   <Navbar variant="white" />
   <main>
+    <section class="section pt-16 md:pt-24">
+      <div class="mb-8">
+        <p class="text-mini-label text-onda-blue">Katalog Produk</p>
+        <h1 class="text-h2 text-onda-blue mt-1 font-extrabold">Jelajahi Katalog Produk Onda</h1>
+        <p class="text-body text-dark-blue-shade mt-1">
+          Jelajahi dan unduh katalog lengkap ONDA Group — kran, shower, valve, water meter, hingga
+          koleksi premium ONDA Exclusive.
+        </p>
+      </div>
+    </section>
     <CatalogueViewer client:only="react" catalogs={catalogs} />
   </main>
 </Layout>

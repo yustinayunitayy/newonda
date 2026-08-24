@@ -3,11 +3,12 @@ interface Props {
   title: string
   description: string
   ogImage: string
+  ogType?: string
   siteName: string
   noIndex?: boolean
 }
 
-const { title, description, ogImage, siteName, noIndex = false } = Astro.props
+const { title, description, ogImage, ogType = 'website', siteName, noIndex = false } = Astro.props
 
 const fullTitle = title || siteName
 const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : Astro.url.pathname
@@ -27,7 +28,7 @@ const ogImageUrl = ogImage.startsWith('http')
 <meta property="og:description" content={description} />
 <meta property="og:image" content={ogImageUrl} />
 <meta property="og:url" content={canonicalUrl} />
-<meta property="og:type" content="website" />
+<meta property="og:type" content={ogType} />
 <meta property="og:site_name" content={siteName} />
 <meta property="og:locale" content="id_ID" />
 

@@ -19,6 +19,33 @@ export interface NewsDetail extends NewsItem {
   description: any
 }
 
+function textOf(node: any): string {
+  if (typeof node?.text === 'string') return node.text
+  if (Array.isArray(node?.children)) return node.children.map(textOf).join('')
+  return ''
+}
+
+function previewOf(d: any): string | undefined {
+  let text = (d.NewsPreview ?? '').trim()
+  if (!text) {
+    const children = d.Description?.root?.children
+    if (Array.isArray(children)) {
+      for (const node of children) {
+        if (node?.type !== 'paragraph') continue
+        const t = textOf(node).trim()
+        if (t) {
+          text = t
+          break
+        }
+      }
+    }
+  }
+  if (!text) return undefined
+  if (text.length <= 160) return text
+  const cut = text.slice(0, 160)
+  return cut.slice(0, cut.lastIndexOf(' ')) + '…'
+}
+
 function mapCategories(cat: any): NewsCategory[] {
   if (!Array.isArray(cat)) return []
   return cat
@@ -35,7 +62,7 @@ function toItem(d: any): NewsItem {
     id: d.id,
     slug: d.slug ?? String(d.id),
     title: d.NewsTitle,
-    preview: d.NewsPreview,
+    preview: previewOf(d),
     categories: mapCategories(d.Category),
     coverUrl: coverOf(d),
     date: d.createdAt,

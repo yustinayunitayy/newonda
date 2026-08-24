@@ -18,6 +18,7 @@ interface Props {
   title?: string
   description?: string
   ogImage?: string
+  ogType?: string
   noIndex?: boolean
   footerVariant?: 'blue' | 'black'
   showPopup?: boolean
@@ -27,6 +28,7 @@ const {
   title,
   description,
   ogImage,
+  ogType,
   noIndex = false,
   footerVariant = 'blue',
   showPopup = false,
@@ -57,7 +59,7 @@ const seo = await resolveSeo({ title, description, ogImage })
     />
     <script is:inline src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"
     ></script>
-    <SEO {...seo} {noIndex} />
+    <SEO {...seo} {noIndex} ogType={ogType} />
     <JsonLd title={seo.title} description={seo.description} />
   </head>
 

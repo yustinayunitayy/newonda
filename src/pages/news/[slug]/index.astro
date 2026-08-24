@@ -9,9 +9,12 @@ export const prerender = false
 
 const { slug } = Astro.params
 const news = slug ? await getNewsBySlug(slug) : null
-
 if (!news) return Astro.rewrite('/404')
-
+const rawPreview = (news.preview ?? '').trim()
+const metaDesc =
+  rawPreview.length <= 155
+    ? rawPreview
+    : rawPreview.slice(0, 155).slice(0, rawPreview.slice(0, 155).lastIndexOf(' ')) + '…'
 const base = Astro.site?.href ?? 'https://onda.id/'
 const pageUrl = new URL(Astro.url.pathname, base).href
 
@@ -40,7 +43,12 @@ const breadcrumbLd = {
 }
 ---
 
-<Layout title={`${news.title} — ONDA Sanitary & Plumbing`} description={news.preview}>
+<Layout
+  title={`${news.title} — ONDA Sanitary & Plumbing`}
+  description={metaDesc}
+  ogImage={news.coverUrl ? img(news.coverUrl, 1200) : undefined}
+  ogType="article"
+>
   <Navbar variant="white" />
   <main class="min-h-screen bg-white pt-16">
     <script is:inline type="application/ld+json" set:html={JSON.stringify(articleLd)} />

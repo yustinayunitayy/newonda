@@ -5,18 +5,10 @@ import PdfFlipbook from './PdfFlipbook'
 import { img } from '../../lib/image'
 
 type Props = {
-  miniLabel?: string
-  heading?: string
-  subheading?: string
   catalogs: CatalogItem[]
 }
 
-export default function CatalogueViewer({
-  miniLabel = 'Katalog Produk',
-  heading = 'Jelajahi Katalog Produk Onda',
-  subheading = 'Pilih katalog yang ingin dibaca',
-  catalogs = [],
-}: Props) {
+export default function CatalogueViewer({ catalogs = [] }: Props) {
   const [active, setActive] = useState<number | null>(null)
   const current = active !== null ? catalogs[active] : null
   const previewRef = useRef<HTMLDivElement>(null)
@@ -30,13 +22,7 @@ export default function CatalogueViewer({
   }, [active])
 
   return (
-    <section className="section py-16 md:py-24">
-      <div className="mb-8">
-        {miniLabel && <p className="text-mini-label text-onda-blue">{miniLabel}</p>}
-        {heading && <h1 className="text-h2 text-onda-blue mt-1 font-extrabold">{heading}</h1>}
-        {subheading && <p className="text-body text-dark-blue-shade mt-1">{subheading}</p>}
-      </div>
-
+    <section className="section pt-0 pb-16 md:pb-24">
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-5">
         {catalogs.map((c, i) => (
           <button
