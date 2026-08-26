@@ -121,9 +121,9 @@ export default function HeroCarouselSection({
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.25, ease: EASE }}
         >
-          <div className="relative flex h-52 w-full items-center justify-center md:h-[30rem]">
+          <div className="relative flex h-64 w-full items-center justify-center md:h-[30rem]">
             <div
-              className={`pointer-events-none absolute h-40 w-40 rounded-full blur-3xl md:h-80 md:w-80 ${blobClass}`}
+              className={`pointer-events-none absolute h-56 w-56 rounded-full blur-3xl md:h-80 md:w-80 ${blobClass}`}
             />
             {images.map((img, i) => {
               if (!img.image?.url) return null
@@ -135,7 +135,7 @@ export default function HeroCarouselSection({
               return (
                 <motion.div
                   key={i}
-                  className="absolute flex h-full w-60 items-center justify-center md:w-[23rem]"
+                  className="absolute flex h-full w-72 items-center justify-center md:w-[23rem]"
                   style={{ zIndex: isCenter ? 20 : 10 }}
                   animate={{
                     x: `${d * 17}rem`,

@@ -61,7 +61,7 @@ const tones = {
     )
   }
 
-  <div class="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5" data-reveal-group>
+  <div class="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-5" data-reveal-group>
     {
       groups.map((g) => {
         const t = tones[g.tone as keyof typeof tones] ?? tones.light
@@ -76,7 +76,6 @@ const tones = {
             class:list={[
               'cat-tile group flex min-h-44 scroll-mt-28 flex-col justify-between rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl md:min-h-52 md:p-6',
               t.tile,
-              g.size === 'wide' && 'col-span-2',
             ]}
           >
             <div>

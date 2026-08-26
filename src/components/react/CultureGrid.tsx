@@ -72,14 +72,10 @@ function CultureCard({
   const [hover, setHover] = useState(false)
 
   useEffect(() => {
-    if (!hover || images.length < 2) return
-    const t = setInterval(() => setIdx((p) => (p + 1) % images.length), 1000)
+    if (images.length < 2) return
+    const t = setInterval(() => setIdx((p) => (p + 1) % images.length), hover ? 1000 : 3000)
     return () => clearInterval(t)
   }, [hover, images.length])
-
-  useEffect(() => {
-    if (!hover) setIdx(0)
-  }, [hover])
 
   return (
     <button
@@ -138,18 +134,22 @@ function CultureModal({
     }
   }, [onClose])
 
-  const go = (d: number) => setIdx((p) => (p + d + images.length) % images.length)
+  useEffect(() => {
+    if (images.length < 2) return
+    const t = setInterval(() => setIdx((p) => (p + 1) % images.length), 3500)
+    return () => clearInterval(t)
+  }, [images.length])
 
   return (
     <motion.div
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-black/60 sm:items-center sm:p-6"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 sm:p-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
     >
       <motion.div
-        className="relative max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-t-2xl bg-white p-5 sm:rounded-2xl sm:p-6"
+        className="relative flex max-h-[85dvh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl bg-white"
         initial={{ y: 48 }}
         animate={{ y: 0 }}
         exit={{ y: 48 }}
@@ -160,64 +160,55 @@ function CultureModal({
           type="button"
           onClick={onClose}
           aria-label="Tutup"
-          className="text-dark-blue-shade absolute top-4 right-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-xl leading-none shadow-md transition-colors hover:bg-white"
+          className="text-dark-blue-shade absolute right-3 bottom-3 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-xl leading-none shadow-md transition-colors hover:bg-white"
         >
           ✕
         </button>
 
-        {/* Kotak gambar — lebih kecil, rounded, kepisah dari pinggir */}
         {images.length > 0 && (
-          <div className="bg-light-blue-shade aspect-video w-full overflow-hidden rounded-xl">
-            <img
-              src={img(images[idx], 1400)}
-              alt={item.title}
-              className="h-full w-full object-cover"
-            />
+          <div className="bg-light-blue-shade relative aspect-video w-full shrink-0 overflow-hidden">
+            {images.map((src, i) => (
+              <img
+                key={i}
+                src={img(src, 1400)}
+                alt={item.title}
+                className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
+                  i === idx ? 'opacity-100' : 'opacity-0'
+                }`}
+              />
+            ))}
+
+            {images.length > 1 && (
+              <div className="absolute inset-x-3 bottom-3 z-10 flex gap-1.5">
+                {images.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setIdx(i)}
+                    aria-label={`Foto ${i + 1}`}
+                    className={`h-1 flex-1 cursor-pointer rounded-full transition-all duration-300 ${
+                      i === idx ? 'bg-white' : 'bg-white/40'
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         )}
 
-        {/* Kontrol slide: ‹ • • • › */}
-        {images.length > 1 && (
-          <div className="mt-3 flex items-center justify-center gap-4">
-            <button
-              type="button"
-              onClick={() => go(-1)}
-              aria-label="Sebelumnya"
-              className="border-onda-blue/30 text-onda-blue hover:bg-onda-blue flex h-9 w-9 items-center justify-center rounded-full border text-xl leading-none transition-colors hover:text-white"
-            >
-              ‹
-            </button>
-            <div className="flex items-center gap-1.5">
-              {images.map((_, i) => (
-                <span
-                  key={i}
-                  className={`h-1.5 rounded-full transition-all ${
-                    i === idx ? 'bg-onda-blue w-5' : 'bg-onda-blue/30 w-1.5'
-                  }`}
-                />
-              ))}
-            </div>
-            <button
-              type="button"
-              onClick={() => go(1)}
-              aria-label="Berikutnya"
-              className="border-onda-blue/30 text-onda-blue hover:bg-onda-blue flex h-9 w-9 items-center justify-center rounded-full border text-xl leading-none transition-colors hover:text-white"
-            >
-              ›
-            </button>
-          </div>
-        )}
+        <div className="shrink-0 px-5 pt-5 sm:px-7">
+          <h3 className="text-onda-blue text-h3 pb-3 font-bold">{item.title}</h3>
+        </div>
 
-        {/* Teks */}
-        <div className="mt-5">
-          <h3 className="text-onda-blue text-h3 font-bold">{item.title}</h3>
+        <div className="flex-1 overflow-y-auto px-5 pb-6 sm:px-7 sm:pb-7">
           {item.content ? (
-            <RichTextRenderer content={item.content} className="text-dark-blue-shade/80 mt-3" />
+            <RichTextRenderer
+              content={item.content}
+              className="text-dark-blue-shade/80 leading-relaxed"
+            />
           ) : (
             item.preview && (
-              <p className="text-dark-blue-shade/80 text-body mt-3 leading-relaxed">
-                {item.preview}
-              </p>
+              <p className="text-dark-blue-shade/80 text-body leading-relaxed">{item.preview}</p>
             )
           )}
         </div>

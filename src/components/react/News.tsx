@@ -98,7 +98,7 @@ export default function News({ news, categories }: Props) {
               <img
                 src={img(latest.coverUrl, 1200)}
                 alt={latest.title}
-                className="order-1 h-56 w-full object-cover md:order-2 md:h-72 md:rounded-xl lg:h-80"
+                className="order-1 h-48 w-full object-cover md:order-2 md:h-72 md:rounded-xl lg:h-80"
                 loading="lazy"
               />
             )}
