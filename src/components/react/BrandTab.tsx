@@ -63,7 +63,7 @@ export default function BrandTabs({
           <button
             key={i}
             onClick={() => setActiveIndex(i)}
-            className="text-button relative cursor-pointer px-2 py-4 font-semibold transition-all duration-200"
+            className="text-button relative cursor-pointer px-2 py-2.5 font-semibold transition-all duration-200 md:py-4"
             style={{
               background: activeIndex === i ? 'var(--color-onda-blue)' : '#ffffff',
               color: activeIndex === i ? '#ffffff' : 'var(--color-onda-blue)',
