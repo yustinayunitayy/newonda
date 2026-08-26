@@ -1,0 +1,45 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import Navbar from '../../components/global/Navbar.astro'
+import { RichTextRenderer } from '../../components/react/RichTextRenderer'
+import { fetchPrivacyPolicy } from '../../lib/data/blocks/cookie'
+
+const data = await fetchPrivacyPolicy()
+
+const updated = data?.lastUpdated
+  ? new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }).format(
+      new Date(data.lastUpdated)
+    )
+  : null
+---
+
+<Layout
+  title="Kebijakan Privasi — ONDA Sanitary & Plumbing"
+  description="Kebijakan privasi dan penggunaan cookie situs ONDA — bagaimana kami mengumpulkan, menggunakan, dan melindungi data Anda."
+>
+  <Navbar variant="white" />
+  <main class="min-h-screen bg-white pt-16">
+    <section class="section max-w-3xl py-12 md:py-16">
+      <p class="text-mini-label text-onda-blue font-bold tracking-[0.2em]">LEGAL</p>
+      <h1 class="text-h2 text-onda-blue mt-1 font-extrabold">Kebijakan Privasi</h1>
+      {
+        updated && (
+          <p class="text-dark-blue-shade/60 mt-2 text-sm">Terakhir diperbarui: {updated}</p>
+        )
+      }
+
+      <div class="prose-onda mt-8">
+        {
+          data?.content ? (
+            <RichTextRenderer
+              content={data.content}
+              className="text-dark-blue-shade/85 leading-relaxed"
+            />
+          ) : (
+            <p class="text-dark-blue-shade/60">Naskah kebijakan privasi belum tersedia.</p>
+          )
+        }
+      </div>
+    </section>
+  </main>
+</Layout>

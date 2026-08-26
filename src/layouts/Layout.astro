@@ -12,8 +12,15 @@ import Floating from '../components/global/Floating.astro'
 import { fetchSiteSettings } from '../lib/data/site-settings'
 import PopUp from '../components/section/PopUp.astro'
 import { fetchPopup } from '../lib/data/pop-up'
+import { fetchPrivacyPolicy } from '../lib/data/blocks/cookie'
+import CookieConsent from '../components/global/CookieConsent.astro'
 
-const [settings, popup] = await Promise.all([fetchSiteSettings(), fetchPopup()])
+const [settings, popup, privacy] = await Promise.all([
+  fetchSiteSettings(),
+  fetchPopup(),
+  fetchPrivacyPolicy(),
+])
+
 interface Props {
   title?: string
   description?: string
@@ -41,6 +48,19 @@ const seo = await resolveSeo({ title, description, ogImage })
 <!doctype html>
 <html lang="id">
   <head>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || []
+      function gtag() {
+        dataLayer.push(arguments)
+      }
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+        wait_for_update: 500,
+      })
+    </script>
     <GTMHeader />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -72,35 +92,25 @@ const seo = await resolveSeo({ title, description, ogImage })
     {settings && <Footer settings={settings} variant={footerVariant} />}
     <Floating {settings} />
     {showPopup && popup && <PopUp popup={popup} settings={settings ?? undefined} />}
+    <CookieConsent {...privacy?.banner ?? {}} />
 
     <script>
       function show(el: HTMLElement, delay: number) {
         el.style.transitionDelay = delay + 'ms'
         el.classList.add('is-visible')
       }
-      function hide(el: HTMLElement) {
-        el.classList.remove('is-visible')
-      }
 
       const io = new IntersectionObserver(
         (entries) => {
           entries.forEach((e) => {
+            if (!e.isIntersecting) return
             const el = e.target as HTMLElement
-            const isGroup = el.hasAttribute('data-reveal-group')
-
-            if (e.isIntersecting) {
-              if (isGroup) {
-                Array.from(el.children).forEach((child, i) => show(child as HTMLElement, i * 100))
-              } else {
-                show(el, Number(el.dataset.revealDelay ?? 0))
-              }
+            if (el.hasAttribute('data-reveal-group')) {
+              Array.from(el.children).forEach((child, i) => show(child as HTMLElement, i * 100))
             } else {
-              if (isGroup) {
-                Array.from(el.children).forEach((child) => hide(child as HTMLElement))
-              } else {
-                hide(el)
-              }
+              show(el, Number(el.dataset.revealDelay ?? 0))
             }
+            io.unobserve(el)
           })
         },
         { threshold: 0.15 }

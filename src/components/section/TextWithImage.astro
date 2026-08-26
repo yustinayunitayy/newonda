@@ -36,7 +36,7 @@ const resolvedId = enableSectionId && sectionId ? sectionId : undefined
     ]}
   >
     <!-- Text side -->
-    <div class="flex flex-1 flex-col gap-4" data-reveal-group>
+    <div class="order-2 flex flex-1 flex-col gap-2 md:gap-4 lg:order-none" data-reveal-group>
       {
         miniLabel && (
           <p class="text-mini-label" style={`color:${resolveColor(labelTextColor, 'darkBlue')}`}>
@@ -66,7 +66,7 @@ const resolvedId = enableSectionId && sectionId ? sectionId : undefined
     <!-- Image side -->
     {
       image && (
-        <div class="w-full flex-1" data-reveal-group>
+        <div class="order-1 w-full flex-1 lg:order-none" data-reveal-group>
           <img
             src={img(image.url, 1200)}
             alt={image.alt ?? heading}

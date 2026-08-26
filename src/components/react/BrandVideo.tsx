@@ -55,7 +55,7 @@ export default function BrandVideoGrid({
       aria-label={`Putar ${v.title ?? 'video'}`}
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: false, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.5, delay: Math.min(i, 4) * 0.1, ease: EASE }}
     >
       <img
@@ -89,7 +89,7 @@ export default function BrandVideoGrid({
             style={{ color: resolveColor(headingColor, 'blue') }}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.5 }}
+            viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.5, ease: EASE }}
           >
             {heading}
