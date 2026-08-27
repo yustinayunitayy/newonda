@@ -14,6 +14,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     let hp = ''
     let source = ''
     let list = ''
+    let wantNews = true
 
     const contentType = request.headers.get('content-type') || ''
 
@@ -24,6 +25,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       hp = (body._hp || '').toString().trim()
       source = (body.source || '').toString().trim().toLowerCase().slice(0, 50)
       list = (body.list || '').toString().trim().toLowerCase()
+      wantNews = body.newsletter !== false
     } else {
       const form = await request.formData()
       email = (form.get('email')?.toString() || '').trim().toLowerCase()
@@ -31,10 +33,15 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       hp = (form.get('_hp')?.toString() || '').trim()
       source = (form.get('source')?.toString() || '').trim().toLowerCase().slice(0, 50)
       list = (form.get('list')?.toString() || '').trim().toLowerCase()
+      wantNews = form.get('newsletter')?.toString() !== 'false'
     }
 
     const isPopup = list === 'popup' && !!BREVO_POPUP_LIST_ID
-    const targetList = isPopup ? BREVO_POPUP_LIST_ID : BREVO_LIST_ID
+    const wantLists = isPopup
+      ? wantNews
+        ? [BREVO_POPUP_LIST_ID, BREVO_LIST_ID]
+        : [BREVO_POPUP_LIST_ID]
+      : [BREVO_LIST_ID]
 
     if (hp) return json({ status: 'ok' }, 200)
 
@@ -57,10 +64,9 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       const contact = await check.json()
 
       if (contact.emailBlacklisted) return json({ status: 'unsubscribed' }, 200)
-      if (contact.listIds?.includes(targetList)) return json({ status: 'already' }, 200)
 
-      const wantLists = isPopup ? [BREVO_POPUP_LIST_ID, BREVO_LIST_ID] : [targetList]
       const missing = wantLists.filter((id) => !contact.listIds?.includes(id))
+      if (missing.length === 0) return json({ status: 'already' }, 200)
 
       for (const id of missing) {
         const add = await fetch(`https://api.brevo.com/v3/contacts/lists/${id}/contacts/add`, {
@@ -86,7 +92,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       headers,
       body: JSON.stringify({
         email,
-        listIds: isPopup ? [BREVO_LIST_ID, BREVO_POPUP_LIST_ID] : [BREVO_LIST_ID],
+        listIds: wantLists,
         ...(source ? { attributes: { SOURCE: source } } : {}),
       }),
     })

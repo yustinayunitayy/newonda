@@ -43,27 +43,25 @@ const initials = (name: string) =>
   >
     {
       items.map((t) => (
-        <figure class="border-onda-blue/15 flex shrink-0 basis-full snap-start flex-col rounded-2xl border bg-white p-6 shadow-sm sm:basis-[calc(50%-12px)] lg:basis-[calc(33.333%-16px)]">
-          <div class="flex items-center gap-3">
-            {t.avatar?.url ? (
-              <img
-                src={img(t.avatar.url, 96)}
-                alt={t.name}
-                loading="lazy"
-                class="h-12 w-12 flex-none rounded-full object-cover"
-              />
-            ) : (
-              <div class="bg-light-blue-shade text-onda-blue text-body flex h-12 w-12 flex-none items-center justify-center rounded-full font-bold">
-                {initials(t.name)}
-              </div>
-            )}
-            <figcaption>
-              <p class="text-dark-blue-shade text-body leading-tight font-bold">{t.name}</p>
-              {t.position && <p class="text-dark-blue-shade/60 text-button">{t.position}</p>}
-            </figcaption>
-          </div>
+        <figure class="border-onda-blue/15 flex shrink-0 basis-full snap-start flex-col items-center rounded-2xl border bg-white p-6 shadow-sm sm:basis-[calc(50%-12px)] lg:basis-[calc(33.333%-16px)]">
+          {t.avatar?.url ? (
+            <img
+              src={img(t.avatar.url, 192)}
+              alt={t.name}
+              loading="lazy"
+              class="h-24 w-24 flex-none rounded-full object-cover"
+            />
+          ) : (
+            <div class="bg-light-blue-shade text-onda-blue flex h-24 w-24 flex-none items-center justify-center rounded-full text-2xl font-bold">
+              {initials(t.name)}
+            </div>
+          )}
+          <figcaption class="mt-4 text-center">
+            <p class="text-dark-blue-shade text-h4 leading-tight font-bold">{t.name}</p>
+            {t.position && <p class="text-dark-blue-shade/70 text-body mt-1">{t.position}</p>}
+          </figcaption>
           <blockquote class="text-dark-blue-shade/80 text-button mt-4 leading-relaxed italic">
-            "{t.quote}"
+            "&thinsp;{t.quote}&thinsp;"
           </blockquote>
         </figure>
       ))

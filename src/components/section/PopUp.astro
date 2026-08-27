@@ -82,12 +82,28 @@ const show = popup?.active && (isNewsletter || hasImage)
                   data-theme="light"
                   data-language="id"
                 />
+                <label class="flex items-start gap-2 text-left text-xs text-slate-600">
+                  <input
+                    type="checkbox"
+                    name="newsletter"
+                    checked
+                    class="accent-onda-blue mt-0.5"
+                  />
+                  Saya ingin menerima update terbaru dari ONDA melalui email
+                </label>
                 <button
                   type="submit"
                   class="bg-onda-blue rounded-lg px-6 py-2.5 text-sm font-semibold text-white transition hover:brightness-110"
                 >
                   Kirim
                 </button>
+                <p class="text-[11px] leading-snug text-slate-400">
+                  Dengan mengisi form ini, Anda menyetujui{' '}
+                  <a href="/privacy-policy" class="underline">
+                    Kebijakan Privasi
+                  </a>{' '}
+                  ONDA.
+                </p>
               </form>
             ) : (
               popup.linkUrl && (

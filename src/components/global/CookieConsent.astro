@@ -8,55 +8,76 @@ const MODE: 'implied' | 'strict' = 'implied'
 const { text, acceptLabel = 'Terima', rejectLabel = 'Tolak' } = Astro.props
 ---
 
-<div
-  id="cookie-consent"
-  data-mode={MODE}
-  class="fixed inset-x-3 bottom-3 z-[70] hidden justify-center sm:inset-x-0 sm:px-4"
->
+<div id="cookie-consent" data-mode={MODE} class="fixed inset-x-0 bottom-0 z-[70] hidden">
   <div
-    class="border-onda-blue/15 flex w-full flex-col gap-3 rounded-2xl border bg-white p-4 shadow-2xl sm:flex-row sm:items-center sm:gap-4 sm:p-5"
+    class="cc-card border-onda-blue/10 w-full border-t bg-white shadow-[0_-8px_30px_rgba(0,0,0,0.08)]"
   >
-    <div
-      class="[&_p]:text-dark-blue-shade/80 flex-1 text-sm leading-relaxed [&_p]:mb-0 [&_p]:text-sm"
-    >
-      {
-        text ? (
-          <RichTextRenderer content={text} />
-        ) : (
-          <p>
-            Kami menggunakan cookie untuk membantu meningkatkan pengalaman Anda, menganalisis
-            penggunaan website, dan memastikan website berfungsi dengan baik. Dengan melanjutkan
-            penggunaan website, Anda menyetujui penggunaan cookie sesuai dengan
-            <a href="/privacy-policy" class="text-onda-blue font-semibold underline">
-              Kebijakan Privasi
-            </a>
-          </p>
-        )
-      }
-    </div>
-    <div class="flex flex-none items-center gap-2">
-      <button
-        id="cc-reject"
-        type="button"
-        class="text-dark-blue-shade/70 hover:text-dark-blue-shade rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
+    <div class="section flex flex-col gap-4 py-4 md:flex-row md:items-center md:gap-10 md:py-6">
+      <div
+        class="[&_p]:text-dark-blue-shade/80 flex-1 text-xs leading-relaxed sm:text-sm [&_p]:mb-0 [&_p]:text-xs [&_p]:leading-relaxed sm:[&_p]:text-sm"
       >
-        {rejectLabel}
-      </button>
-      <button
-        id="cc-accept"
-        type="button"
-        class="bg-onda-blue rounded-lg px-6 py-2 text-sm font-bold text-white transition hover:brightness-110"
-      >
-        {acceptLabel}
-      </button>
+        {
+          text ? (
+            <RichTextRenderer content={text} />
+          ) : (
+            <p>
+              Kami menggunakan cookie untuk membantu meningkatkan pengalaman Anda, menganalisis
+              penggunaan website, dan memastikan website berfungsi dengan baik. Dengan melanjutkan
+              penggunaan website, Anda menyetujui penggunaan cookie sesuai dengan{' '}
+              <a href="/privacy-policy" class="text-onda-blue font-semibold underline">
+                Kebijakan Privasi
+              </a>
+            </p>
+          )
+        }
+      </div>
+      <div class="flex flex-none items-center gap-3">
+        <button
+          id="cc-reject"
+          type="button"
+          class="border-onda-blue text-onda-blue hover:bg-onda-blue/5 rounded-lg border px-5 py-2.5 text-sm font-semibold transition-colors"
+        >
+          {rejectLabel}
+        </button>
+        <button
+          id="cc-accept"
+          type="button"
+          class="bg-onda-blue rounded-lg px-6 py-2.5 text-sm font-bold text-white transition hover:brightness-110"
+        >
+          {acceptLabel}
+        </button>
+      </div>
     </div>
   </div>
 </div>
+
+<style>
+  @keyframes ccIn {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .cc-card {
+    animation: ccIn 0.45s ease-out both;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cc-card {
+      animation: none;
+    }
+  }
+</style>
+
 <script>
   const el = document.getElementById('cookie-consent')
   if (el) {
     const KEY = 'onda_consent'
     const mode = el.dataset.mode
+    const SHOW_DELAY = 3000
     const w = window as any
     w.dataLayer = w.dataLayer || []
 
@@ -98,29 +119,32 @@ const { text, acceptLabel = 'Terima', rejectLabel = 'Tolak' } = Astro.props
     if (stored === 'granted') {
       grant()
     } else if (stored !== 'denied') {
-      el.classList.remove('hidden')
-      el.classList.add('flex')
+      const showTimer = setTimeout(() => {
+        el.classList.remove('hidden')
+        el.classList.add('flex')
 
-      document.getElementById('cc-accept')?.addEventListener('click', () => decide('granted'))
-      document.getElementById('cc-reject')?.addEventListener('click', () => decide('denied'))
+        document.getElementById('cc-accept')?.addEventListener('click', () => decide('granted'))
+        document.getElementById('cc-reject')?.addEventListener('click', () => decide('denied'))
 
-      if (mode === 'implied') {
-        const scrollHandler = () => {
-          if (window.scrollY > 300) decide('granted')
+        if (mode === 'implied') {
+          const scrollHandler = () => {
+            if (window.scrollY > 300) decide('granted')
+          }
+          const clickHandler = (e: MouseEvent) => {
+            if (!el.contains(e.target as Node)) decide('granted')
+          }
+          const t = setTimeout(() => {
+            window.addEventListener('scroll', scrollHandler, { passive: true })
+            document.addEventListener('click', clickHandler)
+          }, 1500)
+          cleanup = () => {
+            clearTimeout(t)
+            window.removeEventListener('scroll', scrollHandler)
+            document.removeEventListener('click', clickHandler)
+          }
         }
-        const clickHandler = (e: MouseEvent) => {
-          if (!el.contains(e.target as Node)) decide('granted')
-        }
-        const t = setTimeout(() => {
-          window.addEventListener('scroll', scrollHandler, { passive: true })
-          document.addEventListener('click', clickHandler)
-        }, 1500)
-        cleanup = () => {
-          clearTimeout(t)
-          window.removeEventListener('scroll', scrollHandler)
-          document.removeEventListener('click', clickHandler)
-        }
-      }
+      }, SHOW_DELAY)
+      cleanup = () => clearTimeout(showTimer)
     }
   }
 </script>

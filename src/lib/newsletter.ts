@@ -28,6 +28,8 @@ export function attachNewsletter(form: HTMLFormElement | null, onSuccess?: () =>
     const token =
       (form.querySelector('[name="cf-turnstile-response"]') as HTMLInputElement)?.value || ''
     const hp = (form.elements.namedItem('_hp') as HTMLInputElement)?.value || ''
+    const newsCb = form.elements.namedItem('newsletter') as HTMLInputElement | null
+    const wantNews = newsCb ? newsCb.checked : true
 
     btn.disabled = true
     Swal.fire({
@@ -42,7 +44,7 @@ export function attachNewsletter(form: HTMLFormElement | null, onSuccess?: () =>
       const res = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, token, _hp: hp, source, list }),
+        body: JSON.stringify({ email, token, _hp: hp, source, list, newsletter: wantNews }),
       })
       const data = await res.json().catch(() => ({}))
 
