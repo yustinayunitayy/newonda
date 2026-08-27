@@ -5,7 +5,10 @@ export const prerender = false
 
 const BREVO_API_KEY = import.meta.env.BREVO_API_KEY
 const SENDER_EMAIL = import.meta.env.BREVO_SENDER_EMAIL || 'noreply@onda.id'
-const RECIPIENT = import.meta.env.CAREER_RECIPIENT || 'it07@onda.id'
+const RECIPIENT = (import.meta.env.CAREER_RECIPIENT || 'it07@onda.id')
+  .split(',')
+  .map((e: string) => e.trim())
+  .filter(Boolean)
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -51,12 +54,12 @@ async function notifyHR(d: {
   const html = `
     <h2>Halo HR Team,</h2>
     <p>Ada pengajuan baru melalui halaman Career di website ONDA.</p>
-    <table cellpadding="6" style="border-collapse:collapse;font-family:sans-serif">
-      <tr><td><b>Nama</b></td><td>${esc(d.name)}</td></tr>
-      <tr><td><b>Email</b></td><td>${esc(d.email)}</td></tr>
-      <tr><td><b>Institusi/Perusahaan</b></td><td>${esc(d.institution)}</td></tr>
-      <tr><td><b>Jenis Kolaborasi</b></td><td>${esc(d.jenis)}</td></tr>
-      <tr><td valign="top"><b>Pesan</b></td><td>${esc(d.message).replace(/\n/g, '<br>')}</td></tr>
+    <table cellpadding="4" style="border-collapse:collapse;font-family:sans-serif">
+      <tr><td><b>Nama</b></td><td>&nbsp;:&nbsp;</td><td>${esc(d.name)}</td></tr>
+      <tr><td><b>Email</b></td><td>&nbsp;:&nbsp;</td><td>${esc(d.email)}</td></tr>
+      <tr><td><b>Institusi/Perusahaan</b></td><td>&nbsp;:&nbsp;</td><td>${esc(d.institution)}</td></tr>
+      <tr><td><b>Jenis Kolaborasi</b></td><td>&nbsp;:&nbsp;</td><td>${esc(d.jenis)}</td></tr>
+      <tr><td valign="top"><b>Pesan</b></td><td valign="top">&nbsp;:&nbsp;</td><td>${esc(d.message).replace(/\n/g, '<br>')}</td></tr>
     </table>`
   const res = await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',
@@ -67,7 +70,7 @@ async function notifyHR(d: {
     },
     body: JSON.stringify({
       sender: { email: SENDER_EMAIL, name: 'ONDA Sanitary & Plumbing' },
-      to: [{ email: RECIPIENT }],
+      to: RECIPIENT.map((email: string) => ({ email })),
       replyTo: { email: d.email, name: d.name },
       subject: `New Career Collaboration Inquiry - ${d.jenis}, ${d.institution}`,
       htmlContent: html,
