@@ -150,14 +150,6 @@ const show = popup?.active && (isNewsletter || hasImage)
     const inWindow = (!start || now >= start) && (!end || now <= end)
     const seen = sessionStorage.getItem('onda_promo_seen')
 
-    if (inWindow && !seen && !(hideForAds && fromAds)) {
-      setTimeout(() => {
-        el.classList.remove('hidden')
-        el.classList.add('flex')
-        attachNewsletter(document.getElementById('popup-newsletter-form') as HTMLFormElement)
-      }, 5500)
-    }
-
     const close = () => {
       el.classList.add('hidden')
       el.classList.remove('flex')

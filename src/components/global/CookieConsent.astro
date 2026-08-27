@@ -4,7 +4,7 @@ import { RichTextRenderer } from '../react/RichTextRenderer'
 
 type Props = NonNullable<PrivacyPolicyData['banner']>
 
-const MODE: 'implied' | 'strict' = 'implied'
+const MODE: 'implied' | 'strict' = 'strict'
 const { text, acceptLabel = 'Terima', rejectLabel = 'Tolak' } = Astro.props
 ---
 
@@ -96,9 +96,21 @@ const { text, acceptLabel = 'Terima', rejectLabel = 'Tolak' } = Astro.props
       w.dataLayer.push({ event: 'consent_granted' })
     }
 
+    const floating = () => document.getElementById('to-top')?.parentElement as HTMLElement | null
+    const lift = () => {
+      const f = floating()
+      if (f) f.style.bottom = el.offsetHeight + 16 + 'px'
+    }
+    const unlift = () => {
+      const f = floating()
+      if (f) f.style.bottom = ''
+      window.removeEventListener('resize', lift)
+    }
+
     const hide = () => {
       el.classList.add('hidden')
       el.classList.remove('flex')
+      unlift()
     }
 
     let cleanup = () => {}
@@ -122,6 +134,8 @@ const { text, acceptLabel = 'Terima', rejectLabel = 'Tolak' } = Astro.props
       const showTimer = setTimeout(() => {
         el.classList.remove('hidden')
         el.classList.add('flex')
+        lift()
+        window.addEventListener('resize', lift)
 
         document.getElementById('cc-accept')?.addEventListener('click', () => decide('granted'))
         document.getElementById('cc-reject')?.addEventListener('click', () => decide('denied'))
