@@ -1,19 +1,25 @@
 ---
 import '../styles/global.css'
 import '../styles/base.css'
+
+// ── SEO & analytics ──
 import SEO from '../components/seo/SEO.astro'
 import JsonLd from '../components/seo/JsonLd.astro'
-import GlobalLoader from '../components/global/GlobalLoader.astro'
-import { resolveSeo } from '../lib/data/seo-fetch'
 import GTMHeader from '../components/seo/GTMHeader.astro'
 import GTMBody from '../components/seo/GTMBody.astro'
+import { resolveSeo } from '../lib/data/seo-fetch'
+
+// ── UI global ──
+import GlobalLoader from '../components/global/GlobalLoader.astro'
 import Footer from '../components/global/Footer.astro'
 import Floating from '../components/global/Floating.astro'
-import { fetchSiteSettings } from '../lib/data/site-settings'
 import PopUp from '../components/section/PopUp.astro'
+import CookieConsent from '../components/global/CookieConsent.astro'
+
+// ── Data CMS ──
+import { fetchSiteSettings } from '../lib/data/site-settings'
 import { fetchPopup } from '../lib/data/pop-up'
 import { fetchPrivacyPolicy } from '../lib/data/blocks/cookie'
-import CookieConsent from '../components/global/CookieConsent.astro'
 
 const [settings, popup, privacy] = await Promise.all([
   fetchSiteSettings(),
@@ -40,14 +46,15 @@ const {
   footerVariant = 'blue',
   showPopup = false,
 } = Astro.props
-const isHome = Astro.url.pathname === '/'
 
+const isHome = Astro.url.pathname === '/'
 const seo = await resolveSeo({ title, description, ogImage })
 ---
 
 <!doctype html>
 <html lang="id">
   <head>
+    <!-- Google Consent Mode -->
     <script is:inline>
       window.dataLayer = window.dataLayer || []
       function gtag() {
@@ -62,6 +69,8 @@ const seo = await resolveSeo({ title, description, ogImage })
       })
     </script>
     <GTMHeader />
+
+    <!-- Meta & favicon -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="apple-mobile-web-app-title" content="Onda.id" />
@@ -70,6 +79,8 @@ const seo = await resolveSeo({ title, description, ogImage })
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Font & RSS -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="alternate" type="application/rss+xml" title="Berita ONDA" href="/rss.xml" />
@@ -77,23 +88,41 @@ const seo = await resolveSeo({ title, description, ogImage })
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
       rel="stylesheet"
     />
+
+    <!-- iconify -->
     <script is:inline defer src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"
     ></script>
+
+    <!-- SEO  -->
     <SEO {...seo} {noIndex} ogType={ogType} />
     <JsonLd title={seo.title} description={seo.description} />
+
+    <!-- Cloudflare Web Analytics -->
+    <script
+      is:inline
+      type="module"
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "aae61a9f69ea40658ffe0f07e0a7c338"}'></script>
   </head>
 
   <body class="flex min-h-svh flex-col">
     <GTMBody />
+
+    <!-- Loader intro -->
     <GlobalLoader isHome={isHome} />
+
     <main class="flex-1">
       <slot />
     </main>
+
     {settings && <Footer settings={settings} variant={footerVariant} />}
+
+    <!-- Popup & floating -->
     <Floating {settings} />
     {showPopup && popup && <PopUp popup={popup} settings={settings ?? undefined} />}
     <CookieConsent {...privacy?.banner ?? {}} />
 
+    <!-- Scroll-reveal -->
     <script>
       function show(el: HTMLElement, delay: number) {
         el.style.transitionDelay = delay + 'ms'
