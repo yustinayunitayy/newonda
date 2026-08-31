@@ -1,24 +1,39 @@
 ---
 import { Image } from 'astro:assets'
 import LogoBlue from '../../assets/Logo.png'
+import LogoWhite from '../../assets/LogoWhite.png'
 
 interface Props {
   isHome?: boolean
+  variant?: 'default' | 'exclusive'
 }
 
-const { isHome = false } = Astro.props
+const { isHome = false, variant = 'default' } = Astro.props
+const isExclusive = variant === 'exclusive'
 ---
 
 <div
   id="global-loader"
   data-is-home={isHome ? '1' : '0'}
-  class="fixed inset-0 z-9999 grid place-items-center bg-white"
+  class:list={[
+    'fixed inset-0 z-9999 grid place-items-center transition-opacity duration-500 ease-out',
+    isExclusive ? 'bg-black' : 'bg-white',
+  ]}
 >
   <div class="flex flex-col items-center gap-5">
-    <Image src={LogoBlue} alt="ONDA" class="h-10 w-auto" loading="eager" />
+    <Image
+      src={isExclusive ? LogoWhite : LogoBlue}
+      alt="ONDA"
+      class="h-10 w-auto"
+      loading="eager"
+    />
     <span
-      class="border-onda-blue/30 border-t-onda-blue h-10 w-10 animate-spin rounded-full border-4"
-    ></span>
+      class:list={[
+        'h-10 w-10 animate-spin rounded-full border-4',
+        isExclusive
+          ? 'border-t-onda-yellow border-white/20'
+          : 'border-onda-blue/30 border-t-onda-blue',
+      ]}></span>
   </div>
 </div>
 
@@ -38,7 +53,11 @@ const { isHome = false } = Astro.props
       if (done) return
       done = true
       html.style.overflow = ''
-      loader.remove()
+      loader.style.opacity = '0'
+      loader.style.pointerEvents = 'none'
+      setTimeout(function () {
+        loader.remove()
+      }, 500)
     }
 
     if (isHome && !introSeen) {
