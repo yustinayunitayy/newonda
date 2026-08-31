@@ -19,26 +19,28 @@ const updated = data?.lastUpdated
 >
   <Navbar variant="white" />
   <main class="min-h-screen bg-white pt-16">
-    <section class="section max-w-3xl py-12 md:py-16">
-      <p class="text-mini-label text-onda-blue font-bold tracking-[0.2em]">LEGAL</p>
-      <h1 class="text-h2 text-onda-blue mt-1 font-extrabold">Kebijakan Privasi</h1>
-      {
-        updated && (
-          <p class="text-dark-blue-shade/60 mt-2 text-sm">Terakhir diperbarui: {updated}</p>
-        )
-      }
-
-      <div class="prose-onda mt-8">
+    <section class="section py-12 md:py-16">
+      <div class="mx-auto max-w-3xl">
+        <p class="text-mini-label text-onda-blue font-bold tracking-[0.2em]">LEGAL</p>
+        <h1 class="text-h2 text-onda-blue mt-1 font-extrabold">Kebijakan Privasi</h1>
         {
-          data?.content ? (
-            <RichTextRenderer
-              content={data.content}
-              className="text-dark-blue-shade/85 leading-relaxed"
-            />
-          ) : (
-            <p class="text-dark-blue-shade/60">Naskah kebijakan privasi belum tersedia.</p>
+          updated && (
+            <p class="text-dark-blue-shade/60 mt-2 text-sm">Terakhir diperbarui: {updated}</p>
           )
         }
+
+        <div class="prose-onda mt-8">
+          {
+            data?.content ? (
+              <RichTextRenderer
+                content={data.content}
+                className="text-dark-blue-shade/85 leading-relaxed"
+              />
+            ) : (
+              <p class="text-dark-blue-shade/60">Naskah kebijakan privasi belum tersedia.</p>
+            )
+          }
+        </div>
       </div>
     </section>
   </main>
