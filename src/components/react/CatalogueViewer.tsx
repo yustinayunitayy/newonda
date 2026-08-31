@@ -10,8 +10,27 @@ type Props = {
 
 export default function CatalogueViewer({ catalogs = [] }: Props) {
   const [active, setActive] = useState<number | null>(null)
+  const [highlighted, setHighlighted] = useState<number | null>(null)
   const current = active !== null ? catalogs[active] : null
   const previewRef = useRef<HTMLDivElement>(null)
+
+  // Buka dari anchor: /catalogue#anchor-katalog
+  useEffect(() => {
+    const hash = decodeURIComponent(window.location.hash.replace('#', ''))
+    if (!hash) return
+    const idx = catalogs.findIndex(
+      (c) => c.anchor === hash || c.anchor.includes(hash) || hash.includes(c.anchor)
+    )
+    if (idx < 0) return
+    setHighlighted(idx)
+    if (window.innerWidth >= 768) setActive(idx)
+    setTimeout(() => {
+      document
+        .getElementById(catalogs[idx].anchor)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }, 200)
+  }, [catalogs])
+
   useEffect(() => {
     if (active !== null) {
       const t = setTimeout(() => {
@@ -27,6 +46,7 @@ export default function CatalogueViewer({ catalogs = [] }: Props) {
         {catalogs.map((c, i) => (
           <button
             key={i}
+            id={c.anchor}
             onClick={() => {
               if (window.innerWidth < 768) {
                 if (c.fileUrl) window.open(c.fileUrl, '_blank', 'noopener')
@@ -34,12 +54,16 @@ export default function CatalogueViewer({ catalogs = [] }: Props) {
                 setActive(i)
               }
             }}
-            className="group flex flex-col gap-3 text-left"
+            className="group flex scroll-mt-28 flex-col gap-3 text-left"
             aria-label={`Buka ${c.title}`}
           >
             <div
               className={`aspect-[3/4] overflow-hidden rounded-2xl border-2 shadow-md transition-all group-hover:-translate-y-1 group-hover:shadow-xl ${
-                active === i ? 'border-onda-blue shadow-xl' : 'border-transparent'
+                active === i
+                  ? 'border-onda-blue shadow-xl'
+                  : highlighted === i
+                    ? 'border-onda-yellow ring-onda-blue/30 shadow-xl ring-4'
+                    : 'border-transparent'
               }`}
             >
               {c.coverUrl && (
@@ -75,16 +99,14 @@ export default function CatalogueViewer({ catalogs = [] }: Props) {
                 </span>
                 <div className="flex items-center gap-2">
                   {current.fileUrl && (
-                    <>
-                      <a
-                        href={current.fileUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="bg-onda-yellow text-onda-blue rounded-md px-3 py-1.5 text-xs font-semibold hover:brightness-95"
-                      >
-                        Buka PDF di Tab Baru
-                      </a>
-                    </>
+                    <a
+                      href={current.fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-onda-yellow text-onda-blue rounded-md px-3 py-1.5 text-xs font-semibold hover:brightness-95"
+                    >
+                      Buka PDF di Tab Baru
+                    </a>
                   )}
                   <button
                     onClick={() => setActive(null)}

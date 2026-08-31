@@ -65,8 +65,22 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
       if (contact.emailBlacklisted) return json({ status: 'unsubscribed' }, 200)
 
+      // Kontak lama ikutan campaign popup baru → stempel campaign terakhir.
+      // SOURCE tetep first-touch; LAST_SOURCE = kampanye terbaru (buat welcome email).
+      if (isPopup && source) {
+        const upd = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify({ attributes: { LAST_SOURCE: source } }),
+        })
+        if (!upd.ok) console.error('Brevo LAST_SOURCE update error:', await upd.text())
+      }
+
       const missing = wantLists.filter((id) => !contact.listIds?.includes(id))
-      if (missing.length === 0) return json({ status: 'already' }, 200)
+      if (missing.length === 0) {
+        // popup + campaign: tetep sukses (biar dapet welcome campaign baru), bukan "already"
+        return json({ status: isPopup && source ? 'ok' : 'already' }, 200)
+      }
 
       for (const id of missing) {
         const add = await fetch(`https://api.brevo.com/v3/contacts/lists/${id}/contacts/add`, {
@@ -93,7 +107,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       body: JSON.stringify({
         email,
         listIds: wantLists,
-        ...(source ? { attributes: { SOURCE: source } } : {}),
+        ...(source ? { attributes: { SOURCE: source, LAST_SOURCE: source } } : {}),
       }),
     })
 
