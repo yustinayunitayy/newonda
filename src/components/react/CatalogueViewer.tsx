@@ -11,6 +11,7 @@ type Props = {
 
 export default function CatalogueViewer({ catalogs = [] }: Props) {
   const [active, setActive] = useState<number | null>(null)
+  const [highlighted, setHighlighted] = useState<number | null>(null)
   const current = active !== null ? catalogs[active] : null
   const previewRef = useRef<HTMLDivElement>(null)
 
@@ -18,7 +19,9 @@ export default function CatalogueViewer({ catalogs = [] }: Props) {
     const hash = decodeURIComponent(window.location.hash.replace('#', ''))
     if (!hash) return
     const idx = catalogs.findIndex((c) => c.anchor === hash)
-    if (idx >= 0 && window.innerWidth >= 768) setActive(idx)
+    if (idx < 0) return
+    if (window.innerWidth >= 768) setActive(idx)
+    else setHighlighted(idx)
   }, [catalogs])
 
   useEffect(() => {
@@ -49,7 +52,9 @@ export default function CatalogueViewer({ catalogs = [] }: Props) {
           >
             <div
               className={`aspect-[3/4] overflow-hidden rounded-2xl shadow-md transition-all group-hover:-translate-y-1 group-hover:shadow-xl ${
-                active === i ? 'ring-onda-blue shadow-xl ring-4 ring-offset-4' : ''
+                active === i || highlighted === i
+                  ? 'ring-onda-blue shadow-xl ring-4 ring-offset-4'
+                  : ''
               }`}
             >
               {c.coverUrl && (
