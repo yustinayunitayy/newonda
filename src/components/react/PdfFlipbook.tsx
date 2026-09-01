@@ -8,6 +8,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = workerSrc
 
 export default function PdfFlipbook({ url }: { url: string }) {
   const [numPages, setNumPages] = useState(0)
+  const [progress, setProgress] = useState(0)
 
   const WIDTH = 420
   const HEIGHT = 594
@@ -16,8 +17,21 @@ export default function PdfFlipbook({ url }: { url: string }) {
     <div className="flex justify-center py-6">
       <Document
         file={url}
+        onLoadProgress={({ loaded, total }) => {
+          if (total) setProgress(Math.min(100, Math.round((loaded / total) * 100)))
+        }}
         onLoadSuccess={({ numPages }) => setNumPages(numPages)}
-        loading={<p className="p-10 text-center text-sm text-gray-500">Memuat katalog…</p>}
+        loading={
+          <div className="flex w-72 flex-col items-center gap-3 p-10">
+            <p className="text-sm text-gray-500">Memuat katalog… {progress}%</p>
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-200">
+              <div
+                className="bg-onda-blue h-full rounded-full transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
+        }
         error={<p className="p-10 text-center text-sm text-red-500">Gagal memuat PDF.</p>}
       >
         {numPages > 0 && (

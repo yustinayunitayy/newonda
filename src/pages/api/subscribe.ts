@@ -63,8 +63,21 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     if (check.ok) {
       const contact = await check.json()
 
-      if (contact.emailBlacklisted) return json({ status: 'unsubscribed' }, 200)
+      // Pernah unsub tapi isi form lagi = persetujuan baru → buka blokirnya
+      if (contact.emailBlacklisted) {
+        const unb = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify({ emailBlacklisted: false }),
+        })
+        if (!unb.ok) {
+          console.error('Brevo un-blacklist error:', await unb.text())
+          return json({ status: 'unsubscribed' }, 200)
+        }
+      }
 
+      // Kontak lama ikutan campaign popup → stempel campaign terakhir
+      // (SOURCE tetep first-touch; LAST_SOURCE = kampanye terbaru)
       if (isPopup && source) {
         const upd = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
           method: 'PUT',
@@ -77,6 +90,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       const missing = wantLists.filter((id) => !contact.listIds?.includes(id))
       if (missing.length === 0) {
         if (isPopup && source) {
+          // Peserta ulang: cabut-pasang dari list popup biar automation
+          // "Contact added to list" nembak welcome lagi
           await fetch(
             `https://api.brevo.com/v3/contacts/lists/${BREVO_POPUP_LIST_ID}/contacts/remove`,
             { method: 'POST', headers, body: JSON.stringify({ emails: [email] }) }

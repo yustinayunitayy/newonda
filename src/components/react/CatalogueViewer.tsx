@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import type { CatalogItem } from '../../lib/data/catalog'
-import PdfFlipbook from './PdfFlipbook'
 import { img } from '../../lib/image'
+
+const PdfFlipbook = lazy(() => import('./PdfFlipbook'))
 
 type Props = {
   catalogs: CatalogItem[]
@@ -54,7 +55,7 @@ export default function CatalogueViewer({ catalogs = [] }: Props) {
                 setActive(i)
               }
             }}
-            className="group flex scroll-mt-28 flex-col gap-3 text-left"
+            className="group flex scroll-mt-28 flex-col gap-3 text-left focus:outline-none"
             aria-label={`Buka ${c.title}`}
           >
             <div
@@ -118,7 +119,13 @@ export default function CatalogueViewer({ catalogs = [] }: Props) {
               </div>
               <div className="bg-gray-100">
                 {current.fileUrl ? (
-                  <PdfFlipbook url={current.fileUrl} />
+                  <Suspense
+                    fallback={
+                      <p className="p-10 text-center text-sm text-gray-500">Menyiapkan viewer…</p>
+                    }
+                  >
+                    <PdfFlipbook url={current.fileUrl} />
+                  </Suspense>
                 ) : (
                   <p className="p-8 text-center text-sm text-gray-500">PDF tidak tersedia.</p>
                 )}

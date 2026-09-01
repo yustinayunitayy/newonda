@@ -22,6 +22,6 @@ const catalogs = await getCatalogs()
         </p>
       </div>
     </section>
-    <CatalogueViewer client:only="react" catalogs={catalogs} />
+    <CatalogueViewer client:load catalogs={catalogs} />
   </main>
 </Layout>
