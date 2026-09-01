@@ -15,27 +15,51 @@ const isExclusive = variant === 'exclusive'
 <div
   id="global-loader"
   data-is-home={isHome ? '1' : '0'}
+  data-variant={variant}
   class:list={[
-    'fixed inset-0 z-9999 grid place-items-center transition-opacity duration-500 ease-out',
-    isExclusive ? 'bg-black' : 'bg-white',
+    'fixed inset-0 z-9999 grid place-items-center',
+    isExclusive ? 'oe-loader bg-black' : 'bg-white',
   ]}
 >
-  <div class="flex flex-col items-center gap-5">
-    <Image
-      src={isExclusive ? LogoWhite : LogoBlue}
-      alt="ONDA"
-      class="h-10 w-auto"
-      loading="eager"
-    />
-    <span
-      class:list={[
-        'h-10 w-10 animate-spin rounded-full border-4',
-        isExclusive
-          ? 'border-t-onda-yellow border-white/20'
-          : 'border-onda-blue/30 border-t-onda-blue',
-      ]}></span>
-  </div>
+  {
+    isExclusive ? (
+      <Image src={LogoWhite} alt="ONDA Exclusive" class="oe-logo h-10 w-auto" loading="eager" />
+    ) : (
+      <div class="flex flex-col items-center gap-5">
+        <Image src={LogoBlue} alt="ONDA" class="h-10 w-auto" loading="eager" />
+        <span class="border-onda-blue/30 border-t-onda-blue h-10 w-10 animate-spin rounded-full border-4" />
+      </div>
+    )
+  }
 </div>
+
+<style>
+  /* Logo OE: fade-in -> nahan -> fade-out */
+  @keyframes oeLogo {
+    0% {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    30% {
+      opacity: 1;
+      transform: none;
+    }
+    70% {
+      opacity: 1;
+      transform: none;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.02);
+    }
+  }
+  .oe-loader .oe-logo {
+    animation: oeLogo 1.2s ease-in-out both;
+  }
+  .oe-loader {
+    transition: opacity 0.5s ease-out;
+  }
+</style>
 
 <script is:inline>
   ;(function () {
@@ -43,7 +67,10 @@ const isExclusive = variant === 'exclusive'
     if (!loader) return
 
     var isHome = loader.dataset.isHome === '1'
+    var isExclusive = loader.dataset.variant === 'exclusive'
     var introSeen = sessionStorage.getItem('intro-seen') === 'true'
+    var oeSeen = sessionStorage.getItem('oe-intro-seen') === 'true'
+    var start = Date.now()
 
     var html = document.documentElement
     html.style.overflow = 'hidden'
@@ -52,12 +79,30 @@ const isExclusive = variant === 'exclusive'
     function hide() {
       if (done) return
       done = true
+
+      // Ritual OE cuma buat kunjungan pertama per sesi
+      if (isExclusive && !oeSeen) {
+        sessionStorage.setItem('oe-intro-seen', 'true')
+        var wait = Math.max(0, 1200 - (Date.now() - start))
+        setTimeout(function () {
+          html.style.overflow = ''
+          loader.style.opacity = '0'
+          loader.style.pointerEvents = 'none'
+          setTimeout(function () {
+            loader.remove()
+          }, 500)
+        }, wait)
+        return
+      }
+
       html.style.overflow = ''
-      loader.style.opacity = '0'
-      loader.style.pointerEvents = 'none'
-      setTimeout(function () {
-        loader.remove()
-      }, 500)
+      loader.remove()
+    }
+
+    // OE yang udah pernah liat ritual: sembunyiin logonya biar ga kedip
+    if (isExclusive && oeSeen) {
+      var logo = loader.querySelector('.oe-logo')
+      if (logo) logo.style.display = 'none'
     }
 
     if (isHome && !introSeen) {

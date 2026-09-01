@@ -35,6 +35,7 @@ interface Props {
   noIndex?: boolean
   footerVariant?: 'blue' | 'black'
   showPopup?: boolean
+  loaderVariant?: 'default' | 'exclusive'
 }
 
 const {
@@ -45,6 +46,7 @@ const {
   noIndex = false,
   footerVariant = 'blue',
   showPopup = false,
+  loaderVariant = 'default',
 } = Astro.props
 
 const isHome = Astro.url.pathname === '/'
@@ -109,7 +111,7 @@ const seo = await resolveSeo({ title, description, ogImage })
     <GTMBody />
 
     <!-- Loader intro -->
-    <GlobalLoader isHome={isHome} />
+    <GlobalLoader isHome={isHome} variant={loaderVariant} />
 
     <main class="flex-1">
       <slot />

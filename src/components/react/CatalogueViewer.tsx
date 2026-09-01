@@ -11,25 +11,14 @@ type Props = {
 
 export default function CatalogueViewer({ catalogs = [] }: Props) {
   const [active, setActive] = useState<number | null>(null)
-  const [highlighted, setHighlighted] = useState<number | null>(null)
   const current = active !== null ? catalogs[active] : null
   const previewRef = useRef<HTMLDivElement>(null)
 
-  // Buka dari anchor: /catalogue#anchor-katalog
   useEffect(() => {
     const hash = decodeURIComponent(window.location.hash.replace('#', ''))
     if (!hash) return
-    const idx = catalogs.findIndex(
-      (c) => c.anchor === hash || c.anchor.includes(hash) || hash.includes(c.anchor)
-    )
-    if (idx < 0) return
-    setHighlighted(idx)
-    if (window.innerWidth >= 768) setActive(idx)
-    setTimeout(() => {
-      document
-        .getElementById(catalogs[idx].anchor)
-        ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    }, 200)
+    const idx = catalogs.findIndex((c) => c.anchor === hash)
+    if (idx >= 0 && window.innerWidth >= 768) setActive(idx)
   }, [catalogs])
 
   useEffect(() => {
@@ -59,12 +48,8 @@ export default function CatalogueViewer({ catalogs = [] }: Props) {
             aria-label={`Buka ${c.title}`}
           >
             <div
-              className={`aspect-[3/4] overflow-hidden rounded-2xl border-2 shadow-md transition-all group-hover:-translate-y-1 group-hover:shadow-xl ${
-                active === i
-                  ? 'border-onda-blue shadow-xl'
-                  : highlighted === i
-                    ? 'border-onda-yellow ring-onda-blue/30 shadow-xl ring-4'
-                    : 'border-transparent'
+              className={`aspect-[3/4] overflow-hidden rounded-2xl shadow-md transition-all group-hover:-translate-y-1 group-hover:shadow-xl ${
+                active === i ? 'ring-onda-blue shadow-xl ring-4 ring-offset-4' : ''
               }`}
             >
               {c.coverUrl && (
