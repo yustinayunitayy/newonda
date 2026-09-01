@@ -67,6 +67,13 @@ export function attachNewsletter(form: HTMLFormElement | null, onSuccess?: () =>
           text: 'Email ini sudah terdaftar sebagai pelanggan newsletter ONDA. Nantikan informasi dan update terbaru dari kami.',
           confirmButtonText: 'Mengerti',
         })
+      } else if (data.status === 'already_campaign') {
+        await Swal.fire({
+          icon: 'info',
+          title: 'Kamu Sudah Terdaftar di Promo Ini',
+          text: 'Email ini sudah ikut promo yang sama. Tunggu info dan penawaran selanjutnya dari ONDA ya!',
+          confirmButtonText: 'Oke',
+        })
       } else if (data.status === 'unsubscribed') {
         await Swal.fire({
           icon: 'info',
