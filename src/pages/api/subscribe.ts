@@ -65,8 +65,6 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
       if (contact.emailBlacklisted) return json({ status: 'unsubscribed' }, 200)
 
-      // Kontak lama ikutan campaign popup baru → stempel campaign terakhir.
-      // SOURCE tetep first-touch; LAST_SOURCE = kampanye terbaru (buat welcome email).
       if (isPopup && source) {
         const upd = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
           method: 'PUT',
@@ -78,8 +76,19 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
       const missing = wantLists.filter((id) => !contact.listIds?.includes(id))
       if (missing.length === 0) {
-        // popup + campaign: tetep sukses (biar dapet welcome campaign baru), bukan "already"
-        return json({ status: isPopup && source ? 'ok' : 'already' }, 200)
+        if (isPopup && source) {
+          await fetch(
+            `https://api.brevo.com/v3/contacts/lists/${BREVO_POPUP_LIST_ID}/contacts/remove`,
+            { method: 'POST', headers, body: JSON.stringify({ emails: [email] }) }
+          )
+          const readd = await fetch(
+            `https://api.brevo.com/v3/contacts/lists/${BREVO_POPUP_LIST_ID}/contacts/add`,
+            { method: 'POST', headers, body: JSON.stringify({ emails: [email] }) }
+          )
+          if (!readd.ok) console.error('Brevo re-add error:', await readd.text())
+          return json({ status: 'ok' }, 200)
+        }
+        return json({ status: 'already' }, 200)
       }
 
       for (const id of missing) {
