@@ -17,6 +17,7 @@ const FIELDS = {
   company: 'Nama Toko',
   area: 'Area',
   industri: 'Industri',
+  address: 'Alamat',
   jenis: 'Jenis Kemitraan',
   message: 'Pesan',
 } as const
@@ -28,6 +29,7 @@ type Lead = {
   company: string
   area: string
   industri: string
+  address: string
   jenis: string
   message: string
 }
@@ -43,6 +45,7 @@ export const POST: APIRoute = async ({ request }) => {
     company: clean(body.company, 120),
     area: clean(body.area, 120),
     industri: clean(body.industri, 120),
+    address: clean(body.address, 250),
     jenis: clean(body.jenis, 120),
     message: clean(body.message, 5000),
   }
@@ -64,8 +67,8 @@ export const POST: APIRoute = async ({ request }) => {
 async function saveSupabase(l: Lead): Promise<void> {
   const sql = getSql()
   await sql`
-    insert into mitra_submissions (name, email, phone, company, area, industri, jenis, message)
-    values (${l.name}, ${l.email}, ${l.phone}, ${l.company}, ${l.area}, ${l.industri}, ${l.jenis}, ${l.message})`
+    insert into mitra_submissions (name, email, phone, company, area, industri, address, jenis, message)
+    values (${l.name}, ${l.email}, ${l.phone}, ${l.company}, ${l.area}, ${l.industri}, ${l.address}, ${l.jenis}, ${l.message})`
 }
 
 async function saveLark(l: Lead): Promise<void> {
@@ -81,6 +84,7 @@ async function saveLark(l: Lead): Promise<void> {
   put(FIELDS.company, l.company)
   put(FIELDS.area, l.area)
   put(FIELDS.industri, l.industri)
+  put(FIELDS.address, l.address)
   put(FIELDS.message, l.message)
 
   const jenisId = await findJenisRecordId(token, l.jenis)
