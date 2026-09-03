@@ -51,12 +51,13 @@ const restBlocks = blocks.filter(
     }
     {statsBlock && <StatsBar {...statsBlock} />}
 
-    <div class="flex flex-col gap-14 pt-20 md:gap-24 md:pt-28">
-      <div class="flex flex-col gap-14 bg-[url('/bg.png')] bg-cover bg-center md:gap-24">
+    <div class="flex flex-col gap-14 md:gap-24">
+      <div
+        class="flex flex-col gap-14 bg-[url('/bg.png')] bg-cover bg-center pt-20 md:gap-24 md:pt-28"
+      >
         {twiBlock && <TextWithImage {...twiBlock} />}
         {brandTabsBlock && <BrandTabs client:load {...brandTabsBlock} />}
       </div>
-
       {
         restBlocks.map((block: any) => {
           switch (block.blockType) {
