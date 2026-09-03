@@ -71,9 +71,13 @@ function CultureCard({
   const [idx, setIdx] = useState(0)
   const [hover, setHover] = useState(false)
 
+  // Slide HANYA pas hover. Lepas hover → balik ke cover (foto 1).
   useEffect(() => {
-    if (images.length < 2) return
-    const t = setInterval(() => setIdx((p) => (p + 1) % images.length), hover ? 1000 : 3000)
+    if (!hover || images.length < 2) {
+      setIdx(0)
+      return
+    }
+    const t = setInterval(() => setIdx((p) => (p + 1) % images.length), 1200)
     return () => clearInterval(t)
   }, [hover, images.length])
 
@@ -91,12 +95,25 @@ function CultureCard({
             key={i}
             src={img(src, 800)}
             alt={item.title}
-            loading="lazy"
+            loading={i === 0 ? 'eager' : 'lazy'}
             className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
               i === idx ? 'opacity-100' : 'opacity-0'
             }`}
           />
         ))}
+        {/* indikator cuma muncul pas hover & ada >1 foto */}
+        {hover && images.length > 1 && (
+          <div className="absolute inset-x-3 bottom-2 z-10 flex gap-1">
+            {images.map((_, i) => (
+              <span
+                key={i}
+                className={`h-1 flex-1 rounded-full transition-all duration-300 ${
+                  i === idx ? 'bg-white' : 'bg-white/40'
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col p-5">
@@ -149,7 +166,7 @@ function CultureModal({
       onClick={onClose}
     >
       <motion.div
-        className="relative flex max-h-[85dvh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl bg-white"
+        className="relative flex max-h-[95dvh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white"
         initial={{ y: 48 }}
         animate={{ y: 0 }}
         exit={{ y: 48 }}
@@ -160,13 +177,14 @@ function CultureModal({
           type="button"
           onClick={onClose}
           aria-label="Tutup"
-          className="text-dark-blue-shade absolute right-3 bottom-3 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-xl leading-none shadow-md transition-colors hover:bg-white"
+          className="text-dark-blue-shade absolute top-3 right-3 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-xl leading-none shadow-md transition-colors hover:bg-white"
         >
           ✕
         </button>
 
+        {/* FOTO — dipendekin (tinggi tetap) biar teks dapet ruang banyak */}
         {images.length > 0 && (
-          <div className="bg-light-blue-shade relative aspect-video w-full shrink-0 overflow-hidden">
+          <div className="bg-light-blue-shade relative h-48 w-full shrink-0 overflow-hidden sm:h-56 md:h-72">
             {images.map((src, i) => (
               <img
                 key={i}
