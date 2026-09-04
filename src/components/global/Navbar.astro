@@ -75,7 +75,7 @@ const extAttrs = (link?: string) =>
     </a>
 
     <!-- Desktop -->
-    <ul class="hidden items-center gap-6 lg:flex">
+    <ul class="hidden items-center gap-6 xl:flex">
       {
         menu.map((item) => {
           const isActive = item.link === activeLink
@@ -84,7 +84,7 @@ const extAttrs = (link?: string) =>
               <a
                 href={item.link}
                 class:list={[
-                  'nav-link relative text-sm transition-all',
+                  'nav-link text-body relative transition-all',
                   s.text,
                   {
                     'font-bold after:absolute after:-bottom-1.5 after:left-0 after:h-0.5 after:w-full after:rounded-full after:content-[""]':
@@ -105,7 +105,7 @@ const extAttrs = (link?: string) =>
     <button
       id="hamburger"
       class:list={[
-        'p-2 lg:hidden',
+        'p-2 xl:hidden',
         variant === 'transparent' || variant === 'black' ? 'text-white' : 'text-onda-blue',
       ]}
       aria-label="Toggle menu"
@@ -242,6 +242,6 @@ const extAttrs = (link?: string) =>
   overlay.addEventListener('click', () => setDrawer(false))
   $('drawer-logo')?.addEventListener('click', () => setDrawer(false))
   window.addEventListener('resize', () => {
-    if (window.innerWidth >= 1024 && isOpen()) setDrawer(false)
+    if (window.innerWidth >= 1280 && isOpen()) setDrawer(false)
   })
 </script>
