@@ -84,7 +84,11 @@ export default function IntroHero(block: HeroBlock & { videoUrl?: string }) {
     'rounded-xl px-3 py-2 font-medium md:px-8 text-button transition-all duration-200 cursor-pointer'
 
   return (
-    <section className="relative min-h-[75svh] w-full overflow-hidden bg-black md:min-h-[90vh]">
+    <section
+      className={`relative w-full overflow-hidden bg-black transition-[min-height] duration-700 ease-out ${
+        phase === 'intro' ? 'min-h-svh' : 'min-h-[75svh] md:min-h-[90vh]'
+      }`}
+    >
       {!videoReady && mediaType === 'video' && <div className="absolute inset-0 bg-black" />}
 
       {mediaType === 'video' ? (
