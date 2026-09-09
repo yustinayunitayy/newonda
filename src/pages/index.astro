@@ -44,7 +44,7 @@ const restBlocks = blocks.filter(
   <div class="relative">
     {
       heroBlock && (
-        <div class="min-h-svh bg-black">
+        <div class="bg-black">
           <IntroHero client:only="react" {...heroBlock} videoUrl={heroBlock.video?.url} />
         </div>
       )

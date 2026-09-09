@@ -7,9 +7,10 @@ const PdfFlipbook = lazy(() => import('./PdfFlipbook'))
 
 type Props = {
   catalogs: CatalogItem[]
+  storeUrl?: string
 }
 
-export default function CatalogueViewer({ catalogs = [] }: Props) {
+export default function CatalogueViewer({ catalogs = [], storeUrl }: Props) {
   const [active, setActive] = useState<number | null>(null)
   const [highlighted, setHighlighted] = useState<number | null>(null)
   const current = active !== null ? catalogs[active] : null
@@ -32,6 +33,8 @@ export default function CatalogueViewer({ catalogs = [] }: Props) {
       return () => clearTimeout(t)
     }
   }, [active])
+
+  const toolBtn = 'rounded-md px-3 py-1.5 text-xs font-semibold transition'
 
   return (
     <section className="section pt-0 pb-16 md:pb-24">
@@ -83,31 +86,42 @@ export default function CatalogueViewer({ catalogs = [] }: Props) {
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="mt-10 scroll-mt-24 overflow-hidden"
           >
-            <div className="overflow-hidden rounded-2xl border border-gray-200">
-              <div className="bg-dark-blue-shade flex flex-wrap items-center justify-between gap-3 px-5 py-3 text-white">
+            <div className="flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-gray-100">
+              <div className="bg-dark-blue-shade flex shrink-0 flex-wrap items-center justify-between gap-3 px-5 py-3 text-white">
                 <span className="text-sm font-semibold">
                   Sedang dibaca: <span className="text-onda-yellow">{current.title}</span>
                 </span>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  {storeUrl && (
+                    <a
+                      href={storeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${toolBtn} text-onda-blue bg-white hover:brightness-95`}
+                    >
+                      Lihat Produknya di E-Store
+                    </a>
+                  )}
                   {current.fileUrl && (
                     <a
                       href={current.fileUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-onda-yellow text-onda-blue rounded-md px-3 py-1.5 text-xs font-semibold hover:brightness-95"
+                      className={`${toolBtn} bg-onda-yellow text-onda-blue hover:brightness-95`}
                     >
                       Buka PDF di Tab Baru
                     </a>
                   )}
                   <button
                     onClick={() => setActive(null)}
-                    className="rounded-md border border-white/30 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-500/90"
+                    className={`${toolBtn} border border-white/30 text-white hover:bg-red-500/90`}
                   >
                     ✕
                   </button>
                 </div>
               </div>
-              <div className="bg-gray-100">
+
+              <div className="flex-1">
                 {current.fileUrl ? (
                   <Suspense
                     fallback={
