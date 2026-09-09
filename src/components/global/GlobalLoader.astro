@@ -34,7 +34,6 @@ const isExclusive = variant === 'exclusive'
 </div>
 
 <style>
-  /* Logo OE: fade-in -> nahan -> fade-out */
   @keyframes oeLogo {
     0% {
       opacity: 0;
@@ -79,8 +78,6 @@ const isExclusive = variant === 'exclusive'
     function hide() {
       if (done) return
       done = true
-
-      // Ritual OE cuma buat kunjungan pertama per sesi
       if (isExclusive && !oeSeen) {
         sessionStorage.setItem('oe-intro-seen', 'true')
         var wait = Math.max(0, 1200 - (Date.now() - start))
@@ -99,7 +96,6 @@ const isExclusive = variant === 'exclusive'
       loader.remove()
     }
 
-    // OE yang udah pernah liat ritual: sembunyiin logonya biar ga kedip
     if (isExclusive && oeSeen) {
       var logo = loader.querySelector('.oe-logo')
       if (logo) logo.style.display = 'none'
@@ -111,7 +107,7 @@ const isExclusive = variant === 'exclusive'
       return
     }
 
-    if (document.readyState === 'complete') hide()
-    else window.addEventListener('load', hide, { once: true })
+    if (document.readyState !== 'loading') hide()
+    else document.addEventListener('DOMContentLoaded', hide, { once: true })
   })()
 </script>

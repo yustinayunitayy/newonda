@@ -148,7 +148,8 @@ export default function HeroCarouselSection({
                     src={cdnimg(img.image.url, 1200)}
                     alt={img.image.alt ?? heading}
                     className="max-h-full max-w-full object-contain drop-shadow-xl"
-                    loading="lazy"
+                    loading={isCenter ? 'eager' : 'lazy'}
+                    fetchPriority={isCenter ? 'high' : 'auto'}
                   />
                 </motion.div>
               )
