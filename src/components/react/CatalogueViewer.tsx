@@ -38,7 +38,7 @@ export default function CatalogueViewer({ catalogs = [], storeUrl }: Props) {
 
   return (
     <section className="section pt-0 pb-16 md:pb-24">
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
         {catalogs.map((c, i) => (
           <button
             key={i}
