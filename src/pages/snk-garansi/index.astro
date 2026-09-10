@@ -2,11 +2,29 @@
 import Layout from '../../layouts/Layout.astro'
 import Navbar from '../../components/global/Navbar.astro'
 import BlockRenderer from '../../components/section/BlockRenderer.astro'
+import Buttons from '../../components/section/Buttons.astro'
 import { getPage } from '../../lib/data/pages'
 import { fetchSiteSettings } from '../../lib/data/site-settings'
+import { resolveColor } from '../../lib/colour'
 
 const [page, settings] = await Promise.all([getPage('snk-garansi'), fetchSiteSettings()])
 const blocks = page?.blocks ?? []
+
+const infoCards = blocks.find((b: any) => b.blockType === 'info-cards') as any
+const header = infoCards
+  ? {
+      miniLabel: infoCards.miniLabel,
+      labelColor: resolveColor(infoCards.labelTextColor, 'darkBlue'),
+      heading: infoCards.heading,
+      headingColor: resolveColor(infoCards.headingTextColor, 'blue'),
+      subheading: infoCards.subheading,
+      subheadingColor: resolveColor(infoCards.subheadingTextColor, 'darkBlue'),
+    }
+  : null
+
+const renderBlocks = blocks.map((b: any) =>
+  b === infoCards ? { ...b, miniLabel: null, heading: null, subheading: null } : b
+)
 ---
 
 <Layout
@@ -17,6 +35,45 @@ const blocks = page?.blocks ?? []
   <Navbar variant="white" />
   <h1 class="sr-only">Syarat & Ketentuan Garansi Resmi ONDA</h1>
   <main class="relative pt-24 pb-24">
-    <BlockRenderer blocks={blocks} settings={settings ?? undefined} />
+    {
+      header && (
+        <section class="section mb-10">
+          <div
+            class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
+            data-reveal-group
+          >
+            <div class="flex flex-col gap-2">
+              {header.miniLabel && (
+                <p class="text-mini-label" style={`color:${header.labelColor}`}>
+                  {header.miniLabel}
+                </p>
+              )}
+              <h2 class="text-h2 font-extrabold" style={`color:${header.headingColor}`}>
+                {header.heading}
+              </h2>
+              {header.subheading && (
+                <p class="text-body leading-relaxed" style={`color:${header.subheadingColor}`}>
+                  {header.subheading}
+                </p>
+              )}
+            </div>
+            <Buttons
+              class="shrink-0"
+              buttons={[
+                {
+                  text: 'Ingin Klaim Garansi? Hubungi Kami',
+                  buttonType: 'link',
+                  url: '/contact',
+                  variant: 'blue',
+                  openInNewTab: false,
+                },
+              ]}
+            />
+          </div>
+        </section>
+      )
+    }
+
+    <BlockRenderer blocks={renderBlocks} settings={settings ?? undefined} />
   </main>
 </Layout>
