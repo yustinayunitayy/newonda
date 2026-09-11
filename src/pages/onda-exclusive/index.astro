@@ -17,6 +17,7 @@ const blocks = page?.blocks ?? []
   loaderVariant="exclusive"
 >
   <Navbar variant="transparent" scrollBehavior="scroll-to-black" />
+  <h1 class="sr-only">{page?.title}</h1>
   <div class="relative bg-black">
     <BlockRenderer blocks={blocks} settings={settings ?? undefined} />
   </div>

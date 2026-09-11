@@ -264,32 +264,32 @@
     },
     {
       "source": "/wp-content/uploads/2021/08/CATALOG-AT-2020-2.pdf",
-      "destination": "https://ondasystem.work/media/CATALOG%20AT-1.pdf",
+      "destination": "/catalogue/agen-teknik.pdf",
       "permanent": true
     },
     {
       "source": "/wp-content/uploads/2021/08/Catalog-Onda-Exclusive-Non-Pricelist.pdf",
-      "destination": "https://ondasystem.work/media/Catalog%20oe.pdf",
+      "destination": "/catalogue/exclusive.pdf",
       "permanent": true
     },
     {
       "source": "/wp-content/uploads/2023/02/ALL-IN-ONE-NON-PRICE-LOW-1.pdf",
-      "destination": "/catalogue",
+      "destination": "/catalogue/onda.pdf",
       "permanent": true
     },
     {
       "source": "/wp-content/uploads/2023/05/ALL-IN-ONE-NON-PRICE-REV-compress.pdf",
-      "destination": "/catalogue",
+      "destination": "/catalogue/onda.pdf",
       "permanent": true
     },
     {
       "source": "/wp-content/uploads/2024/02/CATALOG-TERBARU-NON-PRICELIST-2023.pdf",
-      "destination": "/catalogue",
+      "destination": "/catalogue/onda.pdf",
       "permanent": true
     },
     {
       "source": "/wp-content/uploads/2025/08/NEW-CATALOG-2025-OMI.pdf",
-      "destination": "https://ondasystem.work/media/NEW-CATALOG-2025-OMI.pdf",
+      "destination": "/catalogue/onda.pdf",
       "permanent": true
     }
   ],

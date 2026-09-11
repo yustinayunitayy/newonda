@@ -18,6 +18,7 @@ export default defineConfig({
     },
   }),
   site: env.SITE_URL,
+  trailingSlash: 'never',
 
   vite: {
     plugins: [tailwindcss()],

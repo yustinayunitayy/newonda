@@ -20,6 +20,7 @@ const partnershipBlocks = cut === -1 ? [] : blocks.slice(cut)
   ogImage={page?.meta?.image?.url}
 >
   <Navbar variant="transparent" scrollBehavior="scroll-to-white" />
+  <h1 class="sr-only">{page?.title}</h1>
   <div class="relative">
     <BlockRenderer blocks={topBlocks} settings={settings ?? undefined} formVariant="partnership" />
     {
