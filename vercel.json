@@ -153,6 +153,13 @@
       "source": "/wp-content/uploads/2025/08/NEW-CATALOG-2025-OMI.pdf",
       "destination": "/catalogue/onda.pdf",
       "permanent": true
+    },
+    { "source": "/author/:path*", "destination": "/news", "permanent": true },
+    { "source": "/index.php/:path*", "destination": "/", "permanent": true },
+    {
+      "source": "/wp-content/uploads/2024/09/NEW-CATALOG-NON-PRICELIST-ONDA-2024.pdf",
+      "destination": "/catalogue/onda.pdf",
+      "permanent": true
     }
   ],
   "headers": [
