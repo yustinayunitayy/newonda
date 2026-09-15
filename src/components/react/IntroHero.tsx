@@ -86,7 +86,7 @@ export default function IntroHero(block: HeroBlock & { videoUrl?: string }) {
   return (
     <section
       className={`relative w-full overflow-hidden bg-black transition-[min-height] duration-700 ease-out ${
-        phase === 'intro' ? 'min-h-svh' : 'min-h-[75svh] md:min-h-[90vh]'
+        phase === 'intro' ? 'min-h-svh' : 'min-h-[85svh] md:min-h-[90vh]'
       }`}
     >
       {!videoReady && mediaType === 'video' && <div className="absolute inset-0 bg-black" />}
