@@ -86,6 +86,122 @@
     },
     { "source": "/kategori/shower-all/shower", "destination": "/onda#shower", "permanent": true },
     { "source": "/kategori/:path*", "destination": "/onda", "permanent": true },
+    {
+      "source": "/produk/:s(v-688-ca.*|v-632-ca.*)",
+      "destination": "/news/kran-dapur-mana-nih-yang-bikin-kamu-nggak-kesel",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(v-649-gku.*)",
+      "destination": "/news/new-item-onda-v-649-gku-andalan-keluarga-jaman-now",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(v-696-gku.*)",
+      "destination": "/news/new-item-onda-v-696-gku-andalan-keluarga-jaman-now",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(v-648-gk.*)",
+      "destination": "/news/new-item-onda-v-648-gku-andalan-keluarga-jaman-now",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(v-.*)",
+      "destination": "/news/cara-memilih-kran-dapur-onda-yang-bagus-dan-awet",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(y-[0-9].*)",
+      "destination": "/news/panduan-memilih-kran-wastafel-minimalis-yang-tepat-untuk-rumah-modern",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(jf-.*)",
+      "destination": "/news/apa-itu-stop-kran-kenali-fungsi-dan-cara-memilihnya",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(pvcbv|pvbg|pvag)",
+      "destination": "/news/ball-valve-kuningan-atau-pvc-ini-yang-perlu-dipahami-sebelum-membeli",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(ball-valve.*)",
+      "destination": "/news/ball-valve-fungsi-dan-hal-yang-perlu-diperhatikan-sebelum-membeli",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(s-[0-9].*)",
+      "destination": "/news/masalah-yang-sering-ditemukan-pada-jet-shower",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(rs-.*)",
+      "destination": "/news/rain-shower-atau-shower-set-ini-cara-menentukan-yang-paling-cocok-untuk-rumah",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(so-.*)",
+      "destination": "/news/saatnya-mandi-dengan-shower-andalan",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(k-412-gku.*)",
+      "destination": "/news/mudah-cara-memasang-keran-mixer-di-kamar-mandi",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(seal-tape.*|sealteape.*|sealtape.*)",
+      "destination": "/news/bucket-seal-tape-onda-seal-tape-tebal-dengan-kemasan-ember-yang-bisa-dipakai-kembali",
+      "permanent": true
+    },
+    {
+      "source": "/produk/sambungan-kran-flexible",
+      "destination": "/news/kran-dapur-bisa-jadi-flexible-coba-pakai-alat-ini",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(flexible-hose.*|fh-.*|flexible-rubber-joint.*|fchs.*|shower-hose.*)",
+      "destination": "/news/instalasi-air-lebih-rapi-jangan-lupakan-flexible-hose-seal-tape-dan-fitting-yang-tepat",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(.*elbow.*|.*tee.*|.*socket.*|.*nipple.*|.*water-moor.*|pex-.*|reducing-.*|extension-piece.*|verlop-ring.*|hose-coupler|uhc-.*|qc-1-.*)",
+      "destination": "/news/jenis-jenis-fitting-pipa-dan-fungsinya-dalam-instalasi-air",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(fls-.*|rfs-.*|roof-drain.*|fco|kunci-fco)",
+      "destination": "/news/merawat-floor-drain-dengan-baik",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(water-meter-flange.*)",
+      "destination": "/news/produk-terbaru-onda-water-meter-flange-2",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(water-meter.*|water-gauge)",
+      "destination": "/news/pt-onda-mega-integra-resmi-jadi-pelopor-water-meter-halal-pertama-di-indonesia",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(water-level-control-switch|floater-.*)",
+      "destination": "/news/alat-ajaib-yang-dibutuhkan-di-rumah",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(mt-.*)",
+      "destination": "/news/selang-air-onda-juara",
+      "permanent": true
+    },
+    {
+      "source": "/produk/:s(osd.*)",
+      "destination": "/news/perlukah-soap-dispenser-di-area-dapur-temukan-jawabannya-di-sini",
+      "permanent": true
+    },
+
     { "source": "/produk/:path*", "destination": "/catalogue", "permanent": true },
     { "source": "/product/:path*", "destination": "/catalogue", "permanent": true },
     { "source": "/material/:path*", "destination": "/catalogue", "permanent": true },
