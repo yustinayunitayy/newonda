@@ -98,7 +98,7 @@ export default function News({ news, categories }: Props) {
               <img
                 src={img(latest.coverUrl, 1200)}
                 alt={latest.title}
-                className="order-1 h-48 w-full object-cover md:order-2 md:h-72 md:rounded-xl lg:h-80"
+                className="order-1 aspect-video w-full object-cover md:order-2 md:rounded-xl"
                 loading="lazy"
               />
             )}
@@ -140,7 +140,7 @@ export default function News({ news, categories }: Props) {
                   <img
                     src={img(n.coverUrl, 1200)}
                     alt={n.title}
-                    className="h-48 w-full object-cover sm:h-52 md:h-56"
+                    className="aspect-video w-full object-cover"
                     loading="lazy"
                   />
                 )}
