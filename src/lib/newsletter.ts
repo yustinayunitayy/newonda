@@ -102,7 +102,7 @@ export function attachNewsletter(form: HTMLFormElement | null, onSuccess?: () =>
       })
     } finally {
       btn.disabled = false
-      ;(window as any).turnstile?.reset()
+      ;(window as any).turnstile?.reset(form.querySelector('.cf-turnstile, #popup-turnstile'))
     }
   })
 }

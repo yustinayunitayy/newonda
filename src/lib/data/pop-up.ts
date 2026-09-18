@@ -6,6 +6,8 @@ export interface PopupData {
   image?: {
     url: string
     alt?: string
+    width?: number
+    height?: number
   }
   heading?: string
   body?: string

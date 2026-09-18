@@ -39,10 +39,22 @@ const show = popup?.active && (isNewsletter || hasImage)
 
         {hasImage &&
           (isNewsletter || !popup.linkUrl ? (
-            <img src={img(imageUrl, 1080)} alt={imageAlt} class="w-full" />
+            <img
+              src={img(imageUrl, 1080)}
+              alt={imageAlt}
+              width={popup.image?.width}
+              height={popup.image?.height}
+              class="h-auto w-full"
+            />
           ) : (
             <a href={popup.linkUrl}>
-              <img src={img(imageUrl, 1080)} alt={imageAlt} class="w-full" />
+              <img
+                src={img(imageUrl, 1080)}
+                alt={imageAlt}
+                width={popup.image?.width}
+                height={popup.image?.height}
+                class="h-auto w-full"
+              />
             </a>
           ))}
 
@@ -74,14 +86,7 @@ const show = popup?.active && (isNewsletter || hasImage)
                   class="hidden"
                   aria-hidden="true"
                 />
-                <div
-                  class="cf-turnstile"
-                  data-sitekey={TURNSTILE_SITE_KEY}
-                  data-appearance="interaction-only"
-                  data-size="flexible"
-                  data-theme="light"
-                  data-language="id"
-                />
+                <div id="popup-turnstile" data-sitekey={TURNSTILE_SITE_KEY} />
                 <label class="flex items-start gap-2 text-left text-xs text-slate-600">
                   <input
                     type="checkbox"
@@ -164,6 +169,17 @@ const show = popup?.active && (isNewsletter || hasImage)
       setTimeout(() => {
         el.classList.remove('hidden')
         el.classList.add('flex')
+        const slot = document.getElementById('popup-turnstile')
+        const ts = (window as any).turnstile
+        if (slot && ts && !slot.hasChildNodes()) {
+          ts.render(slot, {
+            sitekey: slot.dataset.sitekey,
+            appearance: 'interaction-only',
+            size: 'flexible',
+            theme: 'light',
+            language: 'id',
+          })
+        }
         attachNewsletter(document.getElementById('popup-newsletter-form') as HTMLFormElement, close)
       }, 5500)
     }
