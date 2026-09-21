@@ -27,13 +27,16 @@ export async function GET({ site }: APIContext) {
     .map((n) => {
       const url = new URL(`/news/${n.slug}`, base).href
       const pub = n.date ? `<pubDate>${new Date(n.date).toUTCString()}</pubDate>` : ''
-      const body = `${n.coverUrl ? `<img src="${emailImg(n.coverUrl, 1000)}" alt="${esc(n.title)}" style="max-width:100%;height:auto;" />` : ''}<p>${esc(n.preview ?? '')}</p>`
+      const enc = n.coverUrl
+        ? `<enclosure url="${esc(emailImg(n.coverUrl, 1000))}" length="0" type="image/jpeg" />`
+        : ''
       return `  <item>
     <title>${esc(n.title)}</title>
     <link>${url}</link>
     <guid isPermaLink="true">${url}</guid>
     ${pub}
-    <description><![CDATA[${body}]]></description>
+    ${enc}
+    <description><![CDATA[<p>${esc(n.preview ?? '')}</p>]]></description>
   </item>`
     })
     .join('\n')
