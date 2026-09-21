@@ -28,7 +28,7 @@ export async function GET({ site }: APIContext) {
       const url = new URL(`/news/${n.slug}`, base).href
       const pub = n.date ? `<pubDate>${new Date(n.date).toUTCString()}</pubDate>` : ''
       const enc = n.coverUrl
-        ? `<enclosure url="${esc(emailImg(n.coverUrl, 1000))}" length="0" type="image/jpeg" />`
+        ? `<enclosure url="${new URL(`/news/${n.slug}/cover.jpg`, base).href}" length="0" type="image/jpeg" />`
         : ''
       return `  <item>
     <title>${esc(n.title)}</title>
