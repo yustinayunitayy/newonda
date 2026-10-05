@@ -10,11 +10,9 @@ export type Job = {
   slug: string
   jobDescription: string
   kualifikasi: string
-  jenisKelamin: string
-  usiaMaks: string
   pendidikan: string
   jurusan: string
-  pengalamanKerja: string
+  statusKaryawan: string
   penempatan: string
   applyUrl: string
 }
@@ -26,6 +24,7 @@ function asText(v: unknown): string {
   if (Array.isArray(v)) return v.map(asText).join('')
   if (typeof v === 'object') {
     const o = v as Record<string, unknown>
+    if ('value' in o) return asText(o.value)
     if ('text' in o) return asText(o.text)
     if ('link' in o) return asText(o.link)
     if ('name' in o) return asText(o.name)
@@ -77,26 +76,25 @@ async function fetchRecords(): Promise<any[]> {
 
 function toJob(rec: any): Job | null {
   const f = rec.fields ?? {}
-  const title = asText(f['Position']).trim()
-  const penempatan = asText(f['Penempatan']).trim()
-  const generated = f['Generate Link?'] === true
-  const opening = asText(f['Status']).trim().toLowerCase()
+  const title = asText(f['Posisi']).trim()
+  const rawPenempatan = asText(f['Penempatan']).trim()
+  const penempatanValid = rawPenempatan && !rawPenempatan.startsWith('#') ? rawPenempatan : ''
+  const generated = f['Generate Link Form'] === true
+  const opening = asText(f['Status Text']).trim().toLowerCase()
 
   if (opening !== 'on process' || !generated || !title) return null
 
   return {
     recordId: rec.record_id,
     title,
-    slug: slugify(`${title}-${penempatan}`),
-    jobDescription: asText(f['Job description']).trim(),
+    slug: slugify(`${title}-${penempatanValid}`),
+    jobDescription: asText(f['Job Desc']).trim(),
     kualifikasi: asText(f['Kualifikasi']).trim(),
-    jenisKelamin: asText(f['Jenis Kelamin']).trim(),
-    usiaMaks: asText(f['Usia maks']).trim(),
-    pendidikan: asText(f['Pendidikan']).trim(),
+    pendidikan: asText(f['Pendidikan Text']).trim(),
     jurusan: asText(f['Jurusan']).trim(),
-    pengalamanKerja: asText(f['Pengalaman Kerja']).trim(),
-    penempatan,
-    applyUrl: asText(f['Link Apply Prefilled']).trim(),
+    statusKaryawan: asText(f['Status Karyawan Text']).trim(),
+    penempatan: penempatanValid || '-',
+    applyUrl: asText(f['Link Form']).trim(),
   }
 }
 

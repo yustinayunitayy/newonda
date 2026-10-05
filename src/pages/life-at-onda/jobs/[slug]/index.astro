@@ -12,11 +12,9 @@ if (!job) return Astro.redirect('/life-at-onda/jobs', 302)
 
 const details = [
   { label: 'Penempatan', value: job.penempatan, icon: 'mdi:map-marker-outline' },
+  { label: 'Status Karyawan', value: job.statusKaryawan, icon: 'mdi:briefcase-outline' },
   { label: 'Pendidikan', value: job.pendidikan, icon: 'mdi:school-outline' },
   { label: 'Jurusan', value: job.jurusan, icon: 'mdi:book-open-variant-outline' },
-  { label: 'Pengalaman', value: job.pengalamanKerja, icon: 'mdi:briefcase-outline' },
-  { label: 'Jenis Kelamin', value: job.jenisKelamin, icon: 'mdi:account-outline' },
-  { label: 'Usia Maks.', value: job.usiaMaks, icon: 'mdi:calendar-account-outline' },
 ].filter((d) => d.value)
 ---
 
