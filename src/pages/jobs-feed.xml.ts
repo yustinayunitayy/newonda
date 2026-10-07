@@ -29,7 +29,23 @@ function toParagraphs(text: string): string {
 }
 function description(j: Job): string {
   const parts: string[] = []
-  if (j.overview) parts.push(toParagraphs(j.overview))
+  if (j.overview) {
+    const paras = j.overview
+      .split(/\r?\n+/)
+      .map((p) => clean(p))
+      .filter(Boolean)
+    if (paras.length > 1) {
+      parts.push(`<p><strong>About Company</strong></p><p>${paras[0]}</p>`)
+      parts.push(
+        `<p><strong>Overview</strong></p>${paras
+          .slice(1)
+          .map((p) => `<p>${p}</p>`)
+          .join('')}`
+      )
+    } else if (paras.length === 1) {
+      parts.push(`<p>${paras[0]}</p>`)
+    }
+  }
   if (j.kualifikasi)
     parts.push(`<p><strong>What We're Looking For:</strong></p>${toHtml(j.kualifikasi)}`)
   if (j.jobDescription)

@@ -7,6 +7,12 @@ export const prerender = false
 
 const { slug } = Astro.params
 const job = slug ? await getJobBySlug(slug) : null
+const paras = (job?.overview ?? '')
+  .split(/\r?\n\s*\r?\n|\r?\n/)
+  .map((p) => p.trim())
+  .filter(Boolean)
+const aboutCompany = paras.length > 1 ? paras[0] : ''
+const overview = paras.length > 1 ? paras.slice(1).join('\n\n') : (paras[0] ?? '')
 
 if (!job) return Astro.redirect('/life-at-onda/jobs', 302)
 
@@ -68,11 +74,21 @@ const details = [
           )
         }
         {
-          job.overview && (
+          aboutCompany && (
+            <section class="mt-10">
+              <h2 class="text-onda-blue text-h4 mb-3 font-bold">About Company</h2>
+              <div class="text-dark-blue-shade/90 text-body leading-relaxed whitespace-pre-line">
+                {aboutCompany}
+              </div>
+            </section>
+          )
+        }
+        {
+          overview && (
             <section class="mt-10">
               <h2 class="text-onda-blue text-h4 mb-3 font-bold">Overview</h2>
               <div class="text-dark-blue-shade/90 text-body leading-relaxed whitespace-pre-line">
-                {job.overview}
+                {overview}
               </div>
             </section>
           )
