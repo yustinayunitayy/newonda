@@ -8,6 +8,7 @@ export type Job = {
   recordId: string
   title: string
   slug: string
+  overview: string
   jobDescription: string
   kualifikasi: string
   pendidikan: string
@@ -88,12 +89,13 @@ function toJob(rec: any): Job | null {
     recordId: rec.record_id,
     title,
     slug: slugify(`${title}-${penempatanValid}`),
+    overview: asText(f['Overview']).trim(),
     jobDescription: asText(f['Job Desc']).trim(),
     kualifikasi: asText(f['Kualifikasi']).trim(),
     pendidikan: asText(f['Pendidikan Text']).trim(),
     jurusan: asText(f['Jurusan']).trim(),
     statusKaryawan: asText(f['Status Karyawan Text']).trim(),
-    penempatan: penempatanValid || '-',
+    penempatan: penempatanValid,
     applyUrl: asText(f['Link Form']).trim(),
   }
 }

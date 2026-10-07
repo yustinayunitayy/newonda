@@ -19,18 +19,21 @@ function toHtml(text: string): string {
   if (lines.length === 1) return `<p>${lines[0]}</p>`
   return `<ul>${lines.map((l) => `<li>${l}</li>`).join('')}</ul>`
 }
-
+function toParagraphs(text: string): string {
+  return text
+    .split(/\r?\n+/)
+    .map((p) => clean(p))
+    .filter(Boolean)
+    .map((p) => `<p>${p}</p>`)
+    .join('')
+}
 function description(j: Job): string {
   const parts: string[] = []
+  if (j.overview) parts.push(toParagraphs(j.overview))
+  if (j.kualifikasi)
+    parts.push(`<p><strong>What We're Looking For:</strong></p>${toHtml(j.kualifikasi)}`)
   if (j.jobDescription)
-    parts.push(`<p><strong>Deskripsi Pekerjaan</strong></p>${toHtml(j.jobDescription)}`)
-  if (j.kualifikasi) parts.push(`<p><strong>Kualifikasi</strong></p>${toHtml(j.kualifikasi)}`)
-  const extra = [
-    j.pendidikan && `Pendidikan: ${clean(j.pendidikan)}`,
-    j.jurusan && `Jurusan: ${clean(j.jurusan)}`,
-    j.statusKaryawan && `Status: ${clean(j.statusKaryawan)}`,
-  ].filter(Boolean) as string[]
-  if (extra.length) parts.push(`<p>${extra.join('<br>')}</p>`)
+    parts.push(`<p><strong>What You'll Do:</strong></p>${toHtml(j.jobDescription)}`)
   return parts.join('')
 }
 

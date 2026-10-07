@@ -67,7 +67,16 @@ const details = [
             </div>
           )
         }
-
+        {
+          job.overview && (
+            <section class="mt-10">
+              <h2 class="text-onda-blue text-h4 mb-3 font-bold">Overview</h2>
+              <div class="text-dark-blue-shade/90 text-body leading-relaxed whitespace-pre-line">
+                {job.overview}
+              </div>
+            </section>
+          )
+        }
         {
           job.jobDescription && (
             <section class="mt-10">
@@ -119,5 +128,4 @@ const details = [
       </div>
     </div>
   </main>
-  ></Layout
->
+</Layout>
