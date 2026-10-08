@@ -35,7 +35,7 @@ function description(j: Job): string {
       .map((p) => clean(p))
       .filter(Boolean)
     if (paras.length > 1) {
-      parts.push(`<p><strong>About Company</strong></p><p>${paras[0]}</p>`)
+      parts.push(`<p><strong>${paras[0]}</strong></p>`)
       parts.push(
         `<p><strong>Overview</strong></p>${paras
           .slice(1)
