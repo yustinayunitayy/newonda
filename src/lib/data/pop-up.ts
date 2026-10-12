@@ -12,7 +12,6 @@ export interface PopupData {
   heading?: string
   body?: string
   linkUrl?: string
-  ctaLabel?: string
   source?: string
   hideForAds?: boolean
   startDate?: string

@@ -14,8 +14,7 @@ const csEmail = settings?.contact?.email
 const isNewsletter = popup?.type === 'newsletter'
 const imageUrl = popup?.image?.url ?? ''
 const imageAlt = popup?.image?.alt ?? 'Promo ONDA'
-const hasImage = !!imageUrl
-const show = popup?.active && (isNewsletter || hasImage)
+const show = popup?.active && !!imageUrl
 ---
 
 {
@@ -27,7 +26,9 @@ const show = popup?.active && (isNewsletter || hasImage)
       data-end={popup.endDate ?? ''}
       data-hideads={popup.hideForAds ? '1' : ''}
     >
-      <div class={`relative w-full overflow-hidden rounded-2xl bg-white shadow-2xl ${isNewsletter ? 'max-w-md' : 'max-w-2xl'}`}>
+      <div
+        class={`relative w-full overflow-hidden rounded-2xl bg-white shadow-2xl ${isNewsletter ? 'max-w-md' : 'max-w-2xl'}`}
+      >
         <button
           id="promo-close"
           type="button"
@@ -37,88 +38,72 @@ const show = popup?.active && (isNewsletter || hasImage)
           <iconify-icon icon="mdi:close" width="20" />
         </button>
 
-        {hasImage &&
-          (isNewsletter || !popup.linkUrl ? (
+        {!isNewsletter && popup.linkUrl ? (
+          <a href={popup.linkUrl}>
             <img
-              src={img(imageUrl, 1080)}
+              src={img(imageUrl, 1280)}
               alt={imageAlt}
               width={popup.image?.width}
               height={popup.image?.height}
               class="h-auto w-full"
             />
-          ) : (
-            <a href={popup.linkUrl}>
-              <img
-                src={img(imageUrl, 1080)}
-                alt={imageAlt}
-                width={popup.image?.width}
-                height={popup.image?.height}
-                class="h-auto w-full"
-              />
-            </a>
-          ))}
-          {(popup.heading || popup.body || isNewsletter) && (
+          </a>
+        ) : (
+          <img
+            src={img(imageUrl, 1280)}
+            alt={imageAlt}
+            width={popup.image?.width}
+            height={popup.image?.height}
+            class="h-auto w-full"
+          />
+        )}
+
+        {isNewsletter && (
           <div class="p-5 text-center">
             {popup.heading && <h3 class="text-onda-blue text-lg font-bold">{popup.heading}</h3>}
             {popup.body && <p class="text-body mt-1 text-slate-500">{popup.body}</p>}
 
-            {isNewsletter ? (
-              <form
-                id="popup-newsletter-form"
-                data-cs-email={csEmail}
-                data-list="popup"
-                data-source={popup.source ?? 'popup'}
-                class="mt-4 flex flex-col gap-2"
+            <form
+              id="popup-newsletter-form"
+              data-cs-email={csEmail}
+              data-list="popup"
+              data-source={popup.source ?? 'popup'}
+              class="mt-4 flex flex-col gap-2"
+            >
+              <input
+                type="email"
+                name="email"
+                required
+                placeholder="Masukkan email Anda"
+                class="text-dark-blue-shade w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm outline-none"
+              />
+              <input
+                type="text"
+                name="_hp"
+                tabindex="-1"
+                autocomplete="off"
+                class="hidden"
+                aria-hidden="true"
+              />
+              <div id="popup-turnstile" data-sitekey={TURNSTILE_SITE_KEY} />
+              <label class="flex items-start gap-2 text-left text-xs text-slate-600">
+                <input type="checkbox" name="newsletter" checked class="accent-onda-blue mt-0.5" />
+                Saya ingin menerima update terbaru dari ONDA melalui email
+              </label>
+              <button
+                type="submit"
+                class="bg-onda-blue rounded-lg px-6 py-2.5 text-sm font-semibold text-white transition hover:brightness-110"
               >
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  placeholder="Masukkan email Anda"
-                  class="text-dark-blue-shade w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm outline-none"
-                />
-                <input
-                  type="text"
-                  name="_hp"
-                  tabindex="-1"
-                  autocomplete="off"
-                  class="hidden"
-                  aria-hidden="true"
-                />
-                <div id="popup-turnstile" data-sitekey={TURNSTILE_SITE_KEY} />
-                <label class="flex items-start gap-2 text-left text-xs text-slate-600">
-                  <input
-                    type="checkbox"
-                    name="newsletter"
-                    checked
-                    class="accent-onda-blue mt-0.5"
-                  />
-                  Saya ingin menerima update terbaru dari ONDA melalui email
-                </label>
-                <button
-                  type="submit"
-                  class="bg-onda-blue rounded-lg px-6 py-2.5 text-sm font-semibold text-white transition hover:brightness-110"
-                >
-                  Kirim
-                </button>
-                <p class="text-[11px] leading-snug text-slate-400">
-                  Dengan mengisi form ini, Anda menyetujui{' '}
-                  <a href="/privacy-policy" class="underline">
-                    Kebijakan Privasi
-                  </a>{' '}
-                  ONDA.
-                </p>
-              </form>
-            ) : (
-              popup.linkUrl && (
-                <a
-                  href={popup.linkUrl}
-                  class="bg-onda-blue mt-4 inline-block rounded-lg px-6 py-2.5 text-sm font-semibold text-white transition hover:brightness-110"
-                >
-                  {popup.ctaLabel ?? 'Lihat Sekarang'}
-                </a>
-              )
-            )}
+                Kirim
+              </button>
+              <p class="text-[11px] leading-snug text-slate-400">
+                Dengan mengisi form ini, Anda menyetujui{' '}
+                <a href="/privacy-policy" class="underline">
+                  Kebijakan Privasi
+                </a>{' '}
+                ONDA.
+              </p>
+            </form>
           </div>
         )}
       </div>
