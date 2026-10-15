@@ -1,5 +1,5 @@
 import type { APIContext } from 'astro'
-import { getJobs, type Job } from '../lib/data/job'
+import { getJobs, toListItems, type Job } from '../lib/data/job'
 
 export const prerender = false
 
@@ -11,22 +11,11 @@ const cdata = (s: string) => `<![CDATA[${s.replace(/\]\]>/g, ']]]]><![CDATA[>')}
 const clean = (s: string) => s.replace(/[<>]/g, '').trim()
 
 function toHtml(text: string): string {
-  const lines = text
-    .split(/\r?\n/)
-    .map((l) => clean(l.replace(/^\s*(\d+[.)]|[-•*])\s*/, '')))
-    .filter(Boolean)
-  if (lines.length === 0) return ''
-  if (lines.length === 1) return `<p>${lines[0]}</p>`
-  return `<ul>${lines.map((l) => `<li>${l}</li>`).join('')}</ul>`
+  const items = toListItems(text).map(clean).filter(Boolean)
+  if (items.length === 0) return ''
+  return `<ol>${items.map((l) => `<li>${l}</li>`).join('')}</ol>`
 }
-function toParagraphs(text: string): string {
-  return text
-    .split(/\r?\n+/)
-    .map((p) => clean(p))
-    .filter(Boolean)
-    .map((p) => `<p>${p}</p>`)
-    .join('')
-}
+
 function description(j: Job): string {
   const parts: string[] = []
   if (j.overview) {

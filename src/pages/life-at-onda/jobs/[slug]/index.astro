@@ -1,7 +1,7 @@
 ---
 import Layout from '../../../../layouts/Layout.astro'
 import Navbar from '../../../../components/global/Navbar.astro'
-import { getJobBySlug } from '../../../../lib/data/job'
+import { getJobBySlug, toListItems } from '../../../../lib/data/job'
 
 export const prerender = false
 
@@ -15,6 +15,9 @@ const aboutCompany = paras.length > 1 ? paras[0] : ''
 const overview = paras.length > 1 ? paras.slice(1).join('\n\n') : (paras[0] ?? '')
 
 if (!job) return Astro.redirect('/life-at-onda/jobs', 302)
+
+const descItems = toListItems(job.jobDescription)
+const kualItems = toListItems(job.kualifikasi)
 
 const details = [
   { label: 'Penempatan', value: job.penempatan, icon: 'mdi:map-marker-outline' },
@@ -94,23 +97,27 @@ const details = [
           )
         }
         {
-          job.jobDescription && (
+          descItems.length > 0 && (
             <section class="mt-10">
               <h2 class="text-onda-blue text-h4 mb-3 font-bold">Deskripsi Pekerjaan</h2>
-              <div class="text-dark-blue-shade/90 text-body leading-relaxed whitespace-pre-line">
-                {job.jobDescription}
-              </div>
+              <ol class="text-dark-blue-shade/90 text-body list-decimal space-y-1.5 pl-5 leading-relaxed">
+                {descItems.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ol>
             </section>
           )
         }
 
         {
-          job.kualifikasi && (
+          kualItems.length > 0 && (
             <section class="mt-8">
               <h2 class="text-onda-blue text-h4 mb-3 font-bold">Kualifikasi</h2>
-              <div class="text-dark-blue-shade/90 text-body leading-relaxed whitespace-pre-line">
-                {job.kualifikasi}
-              </div>
+              <ol class="text-dark-blue-shade/90 text-body list-decimal space-y-1.5 pl-5 leading-relaxed">
+                {kualItems.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ol>
             </section>
           )
         }

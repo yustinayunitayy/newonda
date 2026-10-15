@@ -3,6 +3,7 @@ const APP_SECRET = import.meta.env.LARK_APP_SECRET
 const APP_TOKEN = import.meta.env.HR_APP_TOKEN
 const TABLE_ID = import.meta.env.HR_TABLE_ID
 const BASE = 'https://open.larksuite.com/open-apis'
+const LIST_MARKER = /^\s*(?:\d+\s*[.)](?!\d)|[-–•·*])\s*/
 
 export type Job = {
   recordId: string
@@ -108,4 +109,11 @@ export async function getJobs(): Promise<Job[]> {
 export async function getJobBySlug(slug: string): Promise<Job | null> {
   const jobs = await getJobs()
   return jobs.find((j) => j.slug === slug) ?? null
+}
+
+export function toListItems(text?: string | null): string[] {
+  return (text ?? '')
+    .split(/\r?\n/)
+    .map((l) => l.replace(LIST_MARKER, '').trim())
+    .filter(Boolean)
 }
