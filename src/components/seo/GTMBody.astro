@@ -1,5 +1,5 @@
 ---
-const GTM_ID = import.meta.env.PUBLIC_GTM_ID
+const GTM_ID = import.meta.env.PUBLIC_ENV === 'production' ? import.meta.env.PUBLIC_GTM_ID : ''
 ---
 
 <!-- Developed by : Yustina Yunita --><!-- Google Tag Manager (noscript) -->{
